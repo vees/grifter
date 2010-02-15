@@ -155,4 +155,10 @@ class Old_Picture(models.Model):
 	counter = models.IntegerField(null=False)
 	block = models.BooleanField()
 
+class PictureSimple(models.Model):
+	filename = models.CharField(max_length=200)
+	directory = models.CharField(max_length=200)
+	stamp = models.DateTimeField(null=False)
+	file_hash = models.CharField(max_length=200)
+	old_id = models.ForeignKey(Old_Picture, null=True)
 
