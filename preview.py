@@ -1,6 +1,6 @@
 import os
 import glob
-#from regatta.models import Picture, Moment
+from regatta.models import Picture, Moment
 import EXIF
 import itertools
 from datetime import datetime
@@ -31,7 +31,7 @@ def md5_parse(filename):
 		content = f.read()
 		md5hash = hashlib.md5(content).hexdigest()
 		return md5hash
-	except:
+	except ValueError:
 		return 'No hash'
 	finally:
 		f.close()
@@ -43,9 +43,31 @@ def import_images(dirname):
 		if os.path.isfile(fullpath):
 			#print os.path.splitext(f)[1]
 			if os.path.splitext(f)[1] in [".jpg",".JPG"]:
-				print fullpath, datetime.fromtimestamp(os.stat(fullpath).st_mtime), exim_fetch(fullpath), md5_parse(fullpath)
+				print fullpath, datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath), md5_parse(fullpath)
+				print fullpath, create_moment(datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath)), md5_parse(fullpath)
+
 		if os.path.isdir(fullpath):
 			import_images(fullpath)
+
+def create_moment( mtime, ctime, exim):
+	m = Moment()
+	try:
+		m.mtime = mtime
+	except:
+		pass
+	try:
+		m.ctime = ctime
+	except:
+		pass
+	try:
+		m.exim = exim
+	except:
+		pass
+	try:
+		m.save()
+	except:
+		pass
+	return m.mtime, m.ctime, m.exim
 
 try:
 	import_images(path)

@@ -22,14 +22,26 @@ class Venue(models.Model):
 	pass
 
 class Moment(models.Model):
-	# Date
-	# Time
-	ctime = models.DateTimeField(null=False)
-	exim = models.DateTimeField(null=False)
-	# File guess
-	# EXIM guess
-	# Best start guess
-	# Best end guess
+	def best_guess(self):
+		if (self.userdatetime):
+			return self.userdatetime
+		if (self.exim):
+			return self.exim
+		if (self.ctime):
+			return self.ctime
+		if (self.range_guess_start and self.range_guess_end):
+			return (self.range_guess_start, self.range_guess_end)
+		if (self.range_guess_start):
+			return self.range_guess_start
+		if (self.range_guess_end):
+			return self.range_guess_end
+
+	userdatetime = models.DateTimeField(null=True)
+	atime = models.DateTimeField(null=True)
+	ctime = models.DateTimeField(null=True)
+	exim = models.DateTimeField(null=True)
+	range_guess_start = models.DateTimeField(null=True)
+	range_guess_end = models.DateTimeField(null=True)
 
 class Album(models.Model):
 	pass
@@ -90,7 +102,7 @@ class Picture(models.Model):
 	# Points back to vees.net/g2/{old_id}.html
 	old_id = models.IntegerField(null=True)
 	# http://flickr.com/photos/vees/4116008755/
-	flickr_id = models.CharField(max_length=200) 
+	flickr_id = models.CharField(max_length=200, null=True) 
 	better_version_id = models.IntegerField(null=True)
 	taken_on = models.ForeignKey(Moment)
 	subject_can_id = models.IntegerField(null=True)
@@ -128,6 +140,8 @@ class Old_Theme(models.Model):
 	description = models.CharField(max_length=200)
 
 class Old_Picture(models.Model):
+	def __unicode__(self):
+		return self.filename + ": " + self.title + " in " + self.theme.description + " " + str(self.stamp)
 	#old_id = models.IntegerField(null=False)
 	filename = models.CharField(max_length=200)
 	theme = models.ForeignKey(Old_Theme)

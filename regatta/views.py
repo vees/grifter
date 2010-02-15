@@ -51,13 +51,13 @@ def random(request):
 
 def randomold(request):
 	match=0
-	while match==0:
+	while 1:
 		try:
 			g=Random()
 			p=Old_Picture.objects.get(pk=g.randint(1,Old_Picture.objects.count()))
-			match=1
+			break
 		except Old_Picture.DoesNotExist:
-			match=0
+			pass
 	return HttpResponse(
 		thumbnail_it('/local/img/'+p.theme.directory+"/"+p.filename+'.jpg'),
 		mimetype="image/jpeg"
