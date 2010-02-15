@@ -50,8 +50,14 @@ def random(request):
 		)
 
 def randomold(request):
-	g=Random()
-	p=Old_Picture.objects.get(pk=g.randint(1,Old_Picture.objects.count()))
+	match=0
+	while match==0:
+		try:
+			g=Random()
+			p=Old_Picture.objects.get(pk=g.randint(1,Old_Picture.objects.count()))
+			match=1
+		except Old_Picture.DoesNotExist:
+			match=0
 	return HttpResponse(
 		thumbnail_it('/local/img/'+p.theme.directory+"/"+p.filename+'.jpg'),
 		mimetype="image/jpeg"
