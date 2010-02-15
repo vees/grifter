@@ -103,41 +103,42 @@ class Subject(models.Model):
 	picture = models.ForeignKey(Picture)
 	model_permission = models.BooleanField()
 
-class OldCamera(models.Model):
-	old_id = models.IntegerField(null=False)
+class Old_Camera(models.Model):
+	#old_id = models.IntegerField(null=False)
 	manufacturer = models.CharField(max_length=50)
 	model = models.CharField(max_length=50)
 
-class OldLocation(models.Model):
-	old_id = models.IntegerField(null=False)
+class Old_Location(models.Model):
+	#old_id = models.IntegerField(null=False)
 	city = models.CharField(max_length=200)
 	state = models.CharField(max_length=2)
 
-class OldPhotographer(models.Model):
-	old_id = models.IntegerField(null=False)
+class Old_Photographer(models.Model):
+	#old_id = models.IntegerField(null=False)
 	first = models.CharField(max_length=200)
 	last = models.CharField(max_length=200)
-	email = models.CharField(max_length=200)
+	email = models.EmailField()
 	nick = models.CharField(max_length=200)
-	url = models.CharField(max_length=200)
+	url = models.URLField(verify_exists=True, max_length=200, null=True)
 
-class OldPicture(models.Model):
-	old_id = models.IntegerField(null=False)
-	filename = models.CharField(max_length=200)
-	theme = models.IntegerField(null=False)
-	title = models.CharField(max_length=200)
-	location = models.IntegerField(null=False)
-	stamp = models.DateTimeField(null=False)
-	photographer = models.IntegerField(null=False)
-	special = models.CharField(max_length=200)
-	description = models.CharField(max_length=200)
-	camera = models.IntegerField(null=False)
-	counter = models.IntegerField(null=False)
-	block = models.BooleanField()
-
-class OldTheme(models.Model):
-	old_id = models.IntegerField(null=False)
+class Old_Theme(models.Model):
+	#old_id = models.IntegerField(null=False)
 	server = models.CharField(max_length=200)
 	directory = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
+
+class Old_Picture(models.Model):
+	#old_id = models.IntegerField(null=False)
+	filename = models.CharField(max_length=200)
+	theme = models.ForeignKey(Old_Theme)
+	title = models.CharField(max_length=200)
+	location = models.ForeignKey(Old_Location)
+	stamp = models.DateTimeField(null=False)
+	photographer = models.ForeignKey(Old_Photographer)
+	special = models.CharField(max_length=2000)
+	description = models.CharField(max_length=2000)
+	camera = models.ForeignKey(Old_Camera)
+	counter = models.IntegerField(null=False)
+	block = models.BooleanField()
+
 

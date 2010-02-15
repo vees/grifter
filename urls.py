@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 	 (r'^regatta/image/(?P<image_id>\d+)/$', 'grifter.regatta.views.image'),
 	 (r'^regatta/thumb/(?P<image_id>\d+)/$', 'grifter.regatta.views.thumbnail'),
 	 (r'^regatta/random/$', 'grifter.regatta.views.random'),
+	 (r'^regatta/randomold/$', 'grifter.regatta.views.randomold'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
