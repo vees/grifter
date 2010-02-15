@@ -4,21 +4,27 @@ import glob
 import EXIF
 import itertools
 from datetime import datetime
-
+import hashlib
 
 path = '/home/rob/photos'
 
 def exim_fetch(filename):
 	try:
 		f = open(filename, 'rb')
+		content = f.read()
+		md5hash = hashlib.md5(content).hexdigest()
+		f.seek(0)
 		tags = EXIF.process_file(f)
 		timelist = [ item.split(':') for item in str(tags['EXIF DateTimeOriginal']).split(' ') ] 
-		timelist = list(itertools.chain(*test))
-		timelist = [ int(item) for item in test ]
-		when = datetime(timelist[0], timelist[1], timelist[2], timelist[3], timelist[4], timelist[5])
-		return str(when), tags['EXIF DateTimeOriginal']
+		timelist = list(itertools.chain(*timelist))
+		timelist = [ int(item) for item in timelist ]
+		try:
+			when = datetime(timelist[0], timelist[1], timelist[2], timelist[3], timelist[4], timelist[5])
+		except ValueError:  # When 0000:00:00 00:00:00
+			return str(tags['EXIF DateTimeOriginal'])
+		return str(when), md5hash
 	except KeyError:
-		return '',''
+		return '','',''
 
 def import_images(dirname):
 	for f in os.listdir(dirname):
