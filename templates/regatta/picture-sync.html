@@ -1,6 +1,7 @@
 <img src="/regatta/migration/oldthumb/{{oldpicture.id}}">
 <hr>
 {% for picture in newpics %}
-<img src="/regatta/migration/newthumb/{{picture.id}}">
+<a href="/regatta/migration/connect/{{oldpicture.id}}/{{picture.id}}/"><img src="/regatta/migration/newthumb/{{picture.id}}"></a>
 {% endfor %}
+<a href="/regatta/migration/{{nextid}}">No match</a>
 

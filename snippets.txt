@@ -1,0 +1,6 @@
+SELECT p.id, o.id, p.filename 
+from regatta_old_picture as o left outer join regatta_picturesimple as p 
+on o.filename=p.filename where o.id<1000
+
+select o.id,o.filename from regatta_old_picture as o where o.id<1000
+

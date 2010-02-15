@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 	 (r'^regatta/migration/(?P<image_id>\d+)$', 'grifter.regatta.migration.index'),
 	 (r'^regatta/migration/oldthumb/(?P<image_id>\d+)$', 'grifter.regatta.migration.thumbnail_old'),
 	 (r'^regatta/migration/newthumb/(?P<image_id>\d+)$', 'grifter.regatta.migration.thumbnail_new'),
+	 (r'^regatta/migration/connect/(?P<original>\d+)/(?P<new>\d+)/$', 'grifter.regatta.migration.connect'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

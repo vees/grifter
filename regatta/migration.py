@@ -6,11 +6,20 @@ from django.http import HttpResponse
 from random import Random
 from django.shortcuts import render_to_response
 
+def connect(request, original, new):
+	np = PictureSimple.objects.get(pk=new)
+	op = Old_Picture.objects.get(pk=original)
+	np.old_id = op
+	np.save()
+	nextid = Old_Picture.objects.filter(id__gt=original)[0].id
+	return index(request, nextid)
+
 def index(request, image_id):
 	op = Old_Picture.objects.get(pk=image_id)
 	print op.filename
 	newpics = PictureSimple.objects.filter(filename=op.filename+".jpg")
-	return render_to_response("picture-sync.html", { 'oldpicture': op, 'newpics': newpics})
+	nextid = Old_Picture.objects.filter(id__gt=image_id)[0].id
+	return render_to_response("picture-sync.html", { 'oldpicture': op, 'newpics': newpics, 'nextid': nextid })
 
 def image(request, image_id):
 	p=Picture.objects.get(pk=image_id)
