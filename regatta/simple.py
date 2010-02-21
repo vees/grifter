@@ -5,20 +5,38 @@ from regatta.models import PictureSimple
 from django.http import HttpResponse
 from random import Random
 from django.shortcuts import render_to_response
+import watermark
 
 def index(request, image_id):
 	forward=get_picture_id_forward(image_id)
 	backward=get_picture_id_backward(image_id)
 	random=get_picture_id_random()
-	current=image_id
+	current_id=image_id
+	current=PictureSimple.objects.get(pk=image_id)
+	if (current.legacy):
+		legacy = current.legacy
+	else:
+		legacy = None
 	return render_to_response(
 		'random-off.html',
 		{
 			'forward': forward,
 			'backward': backward,
-			'current': current,
-			'random': random
+			'current': current_id,
+			'random': random,
+			'legacy': legacy
 		} 
+	)
+
+def hundred(request, image_id):
+	hundred=PictureSimple.objects.filter(pk__gte=image_id)[0:100]
+	forward = hundred[99].id
+	return render_to_response(
+		'hundred.html',
+		{
+			'hundred': hundred,
+			'forward': forward,
+		}
 	)
 
 def image(request, image_id):
@@ -36,14 +54,21 @@ def thumbnail(request, image_id):
 		)
 
 def get_picture_id_forward(image_id):
-	return PictureSimple.objects.filter(pk__gt=image_id)[0].id
+	try:
+		return PictureSimple.objects.filter(pk__gt=image_id)[0].id
+	except IndexError:
+		return None
 
 def get_picture_id_backward(image_id):
-	return PictureSimple.objects.filter(pk__lt=image_id).order_by('-id')[0].id
+	try:
+		return PictureSimple.objects.filter(pk__lt=image_id).order_by('-id')[0].id
+	except IndexError:
+		return None
 
 def get_picture_id_random():
 	g=Random()
-	return g.randint(1,PictureSimple.objects.count())
+	#return g.randint(1,PictureSimple.objects.count())
+	return PictureSimple.objects.all()[g.randint(1,PictureSimple.objects.count())].id
 
 def random(request):
 	g=Random()
@@ -78,10 +103,13 @@ def thumbnail_it(path_to_original):
 
 def image_it(path_to_original):
 	im = Image.open(path_to_original)
+	mark = Image.open('/home/rob/grifter/newcard-trans2.png')
 	#size = 500,375,180
 	size = 800,500,180
 	im.thumbnail(size, Image.ANTIALIAS)
 	buf= StringIO.StringIO()
-	im.save(buf, format= 'JPEG')
+	#im.save(buf, format= 'JPEG')
+	out = watermark.watermark(im, mark, "scale", 0.4)
+	out.save(buf, format='JPEG')
 	return buf.getvalue()
 

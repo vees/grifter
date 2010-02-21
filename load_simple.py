@@ -6,7 +6,7 @@ import itertools
 from datetime import datetime
 import hashlib
 
-path = '/local/photos'
+path = '/local/photos/Pictures200711Card1'
 
 def exim_fetch(filename):
 	try:
