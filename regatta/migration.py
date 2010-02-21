@@ -17,9 +17,15 @@ def connect(request, original, new):
 def index(request, image_id):
 	op = Old_Picture.objects.get(pk=image_id)
 	print op.filename
-	newpics = PictureSimple.objects.filter(filename=op.filename+".jpg")
-	nextid = Old_Picture.objects.filter(id__gt=image_id)[0].id
-	return render_to_response("picture-sync.html", { 'oldpicture': op, 'newpics': newpics, 'nextid': nextid })
+	newpics = PictureSimple.objects.filter(filename=op.filename+".jpg", old_id__isnull=True)
+	ids_greater = Old_Picture.objects.filter(id__gt=image_id)
+	nextid = ids_greater[0].id
+	#remaining = float(ids_greater.count())/Old_Picture.objects.count()
+	remaining = float(ids_greater.count())
+	remaining = round(remaining/60.0, 2)
+	return render_to_response("picture-sync.html", 
+		{ 'oldpicture': op, 'newpics': newpics, 'nextid': nextid,
+			'remaining': remaining })
 
 def image(request, image_id):
 	p=Picture.objects.get(pk=image_id)
