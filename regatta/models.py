@@ -2,6 +2,13 @@ from django.db import models
 
 # Create your models here.
 
+ROTATION = (
+	(0, 'None'),
+	(90, '90 CW'),
+	(180, '180'),
+	(270, '90 CCW')
+)
+
 class Rating(models.Model):
 	# Picture
 	# User
@@ -109,6 +116,7 @@ class Picture(models.Model):
 	subject_no_id = models.IntegerField(null=True)
 	#photographer = models.ForeignKey(Photographer)
 	photographer_permission = models.BooleanField()
+	rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
 
 class Subject(models.Model):
 	person = models.ForeignKey(Person)
@@ -161,4 +169,5 @@ class PictureSimple(models.Model):
 	stamp = models.DateTimeField(null=False)
 	file_hash = models.CharField(max_length=200)
 	legacy = models.ForeignKey(Old_Picture, null=True)
+	rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
 

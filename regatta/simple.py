@@ -96,6 +96,7 @@ def thumbnail_it(path_to_original):
 	im = Image.open(path_to_original)
 	#size = 240,180
 	size = 120,80
+	# Tips: http://www.daniweb.com/code/snippet216637.html
 	im.thumbnail(size, Image.ANTIALIAS)
 	buf= StringIO.StringIO()
 	im.save(buf, format= 'JPEG')
