@@ -42,14 +42,14 @@ def hundred(request, image_id):
 def image(request, image_id):
 	p=PictureSimple.objects.get(pk=image_id)
 	return HttpResponse(
-		image_it(p.directory+"/"+p.filename),
+		image_it(p.directory+"/"+p.filename, p.rotation),
 		mimetype="image/jpeg"
 		)
 
 def thumbnail(request, image_id):
 	p=PictureSimple.objects.get(pk=image_id)
 	return HttpResponse(
-		thumbnail_it(p.directory+"/"+p.filename),
+		thumbnail_it(p.directory+"/"+p.filename, p.rotation),
 		mimetype="image/jpeg"
 		)
 
@@ -92,22 +92,27 @@ def randomold(request):
 		mimetype="image/jpeg"
 		)
 
-def thumbnail_it(path_to_original):
+def thumbnail_it(path_to_original, rotation):
 	im = Image.open(path_to_original)
 	#size = 240,180
-	size = 120,80
+	#size = 120,80
+	size = 240,160
 	# Tips: http://www.daniweb.com/code/snippet216637.html
 	im.thumbnail(size, Image.ANTIALIAS)
+	if (rotation!=180):
+		im = im.rotate(360-rotation)
 	buf= StringIO.StringIO()
 	im.save(buf, format= 'JPEG')
 	return buf.getvalue()
 
-def image_it(path_to_original):
+def image_it(path_to_original, rotation):
 	im = Image.open(path_to_original)
 	mark = Image.open('/home/rob/grifter/newcard-trans2.png')
 	#size = 500,375,180
 	size = 800,500,180
 	im.thumbnail(size, Image.ANTIALIAS)
+	if (rotation!=180):
+		im = im.rotate(360-rotation)
 	buf= StringIO.StringIO()
 	#im.save(buf, format= 'JPEG')
 	out = watermark.watermark(im, mark, "scale", 0.4)

@@ -3,10 +3,10 @@ from django.db import models
 # Create your models here.
 
 ROTATION = (
-	(0, 'None'),
 	(90, '90 CW'),
+	(270, '90 CCW'),
+	(0, 'None'),
 	(180, '180'),
-	(270, '90 CCW')
 )
 
 class Rating(models.Model):
@@ -164,6 +164,11 @@ class Old_Picture(models.Model):
 	block = models.BooleanField()
 
 class PictureSimple(models.Model):
+	#def __unicode__(self):
+	#return self.id
+	def imgtag(self):
+		return '<a href="/regatta/image/'+str(self.id)+'"><img src="/regatta/thumb/'+str(self.id)+'/"></a>'
+	imgtag.allow_tags = True
 	filename = models.CharField(max_length=200)
 	directory = models.CharField(max_length=200)
 	stamp = models.DateTimeField(null=False)
