@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: ascii -*-
+
+"""
+Module Base32
+Using Douglas Crockford's Base32 scheme on top of base64 module's version.
+I want my URLs to be in lowercase, and Crockford works better in typical web 
+font by excluding the commonly confused I and L combination, while RFC 4648
+base32 does not.
+Thanks to ingydotnet for https://github.com/ingydotnet/crockford-py
+
+"""
 import base64, string, hashlib, binascii
 
 #base64.b32encode(hashlib.md5('test').digest())[:-6].translate(string.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567","0123456789ABCDEFGHJKMNPQRSTVWXYZ"),"=").lower()
@@ -21,10 +33,11 @@ def b32decode(b32, casefold=None, map01=None):
     return base64.b32decode(b32.translate(__crock2std),
         casefold=casefold, map01=map01)
 
-if __name__ == '__main__':
-    #binascii.a2b_hex("00000000000000000000000000000000")
-    hello = hashlib.md5('hello world')
-    print hello.hexdigest()
-    print b32encode(hello.digest())
-    print b32decode('btv3qez03vqd14yb4axryppdrc').encode('hex')
+def test():
+    binline = hashlib.md5('hello world').digest()
+    encoded = b32encode(binline)
+    decoded = b32decode(encoded)
+    assert binline == decoded, "Encode and decode values do not match"
 
+if __name__ == '__main__':
+    test()
