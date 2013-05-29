@@ -173,6 +173,6 @@ class PictureSimple(models.Model):
 	directory = models.CharField(max_length=200)
 	stamp = models.DateTimeField(null=False)
 	file_hash = models.CharField(max_length=200)
-	legacy = models.ForeignKey(Old_Picture, null=True)
+	#legacy = models.ForeignKey(Old_Picture, null=True)
 	rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
 

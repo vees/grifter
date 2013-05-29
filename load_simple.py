@@ -6,7 +6,7 @@ import itertools
 from datetime import datetime
 import hashlib
 
-path = '/local/photos/Pictures200711Card1'
+path = '/media/dev/photos'
 
 def exim_fetch(filename):
 	try:
@@ -48,6 +48,9 @@ def import_images(dirname):
 			import_images(fullpath)
 
 def import_simple_picture(filename, directory, stamp, file_hash):
+	"""
+	Create a new picture object. Save filename, directory, and stamp information. Save.
+	"""
 	ps=PictureSimple()
 	ps.filename = filename
 	ps.directory = directory

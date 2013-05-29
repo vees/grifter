@@ -6,7 +6,7 @@ import itertools
 from datetime import datetime
 
 
-path = '/home/rob/photos'
+path = '/media/dev/photos'
 
 def exim_fetch(filename):
 	f = open(filename, 'rb')

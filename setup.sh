@@ -1,4 +1,4 @@
 #!source
-PYTHONPATH=/home/rob/; export PYTHONPATH
+PYTHONPATH=/media/dev/projects/; export PYTHONPATH
 DJANGO_SETTINGS_MODULE=settings; export DJANGO_SETTINGS_MODULE
 echo $DJANGO_SETTINGS_MODULE
