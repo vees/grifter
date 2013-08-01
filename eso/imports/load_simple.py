@@ -1,7 +1,7 @@
 import os
 import glob
-from regatta.models import Picture, Moment, PictureSimple
-import EXIF
+from exo.models import Picture, Moment, PictureSimple
+import eso.exif.EXIF
 import itertools
 from datetime import datetime
 import hashlib
@@ -78,11 +78,16 @@ def create_moment( mtime, ctime, exim):
 		pass
 	return m.mtime, m.ctime, m.exim
 
-try:
-	import_images(path)
-except KeyboardInterrupt:
-	print "Done."
-	exit
+def main():
+	try:
+		import_images(path)
+	except KeyboardInterrupt:
+		print "Done."
+		exit
 
 #for infile in glob.glob( os.path.join(path, '*.JPG' ) ):
 #	print("current file is: " + infile)
+
+if __name__ == '__main__':
+    main()
+

@@ -1,8 +1,9 @@
 # Create your views here.
 from PIL import Image
 import StringIO
-from regatta.models import Picture, Old_Picture, PictureSimple
+from exo.models import Picture, Old_Picture, PictureSimple
 from django.http import HttpResponse
+from django.conf import settings
 from random import Random
 from django.shortcuts import render_to_response
 
