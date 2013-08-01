@@ -1,4 +1,5 @@
 import sys
+from django.conf import settings 
 
 def take_commands():
 	while 1:
@@ -17,5 +18,6 @@ def main_menu():
 		exit()
 
 def test():
+	print settings.ROB_TEST 
 	print "Successful"
 
