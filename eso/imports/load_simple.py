@@ -8,8 +8,43 @@ from django.conf import settings
 import eso.exif.EXIF
 from exo.models import Picture, Moment, PictureSimple
 
+class ImportRecursiveCount:
+    def __init__(self, success, ignored, failure):
+        print "Created IRC"
+        self._import_success = success
+        self._import_ignored = ignored
+        self._import_failure = failure
+        pass
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return "Stats: %s %s %s" % (
+            self._import_success, self._import_ignored, self._import_failure)
+
+    def add(self, count_to_add):
+        if isinstance(count_to_add, ImportRecursiveCount):
+            self._import_success += count_to_add._import_success
+            self._import_ignored += count_to_add._import_ignored
+            self._import_failure += count_to_add._import_failure
+        else:
+            print "Failed to add object"
+            pass
+
+    def add_success(self):
+        self._import_success += 1
+
+    def add_ignored(self):
+        self._import_ignored += 1
+        #print self.__str__()
+
+    def add_failure(self):
+        self._import_failure += 1
+
 #path = '/media/dev/photos'
 path = settings.NARTHEX_PHOTO_PATH
+import_debug = False
 
 def exim_fetch(filename):
     """Read and reform file's EXIF timestamp as datetime string"""
@@ -43,15 +78,32 @@ def md5_parse(filename):
 
 def import_images(dirname):
     """Recurse through the directory structure given the root directory"""
+    import_stats = ImportRecursiveCount(0,0,0)
+    all_pictures = [ps.directory +'/'+ ps.filename for ps in PictureSimple.objects.filter(directory=dirname)]
     for f in os.listdir(dirname):
         fullpath = os.path.join(dirname, f)
         if os.path.isfile(fullpath):
             if os.path.splitext(f)[1] in [".jpg",".JPG"]:
-                print fullpath
-                import_simple_picture(
-                    f,dirname,datetime.fromtimestamp(os.stat(fullpath).st_mtime), md5_parse(fullpath))
+                #match_count = all_pictures.filter(directory=dirname, filename=f).count()
+                if fullpath not in all_pictures:
+                    import_simple_picture(
+                        f,dirname,datetime.fromtimestamp(
+                            os.stat(fullpath).st_mtime), md5_parse(fullpath))
+                    if import_debug == True:
+                        print "Import of " + fullpath
+                    else:
+                        import_stats.add_success()
+                else:
+                    if import_debug == True:
+                        print "Cowardly not importing " + fullpath
+                    else:
+                        import_stats.add_ignored()
         if os.path.isdir(fullpath):
-            import_images(fullpath)
+            subrecurse_stats = import_images(fullpath)
+            print subrecurse_stats
+            import_stats.add(subrecurse_stats)
+            print import_stats
+    return import_stats
 
 def import_simple_picture(filename, directory, stamp, file_hash):
     """Create a new picture object. Save filename, directory, and stamp information. Save. """
@@ -86,7 +138,7 @@ def create_moment( mtime, ctime, exim):
 def main():
     """Import images from the default path"""
     try:
-        import_images(path)
+        print import_images(path)
     except KeyboardInterrupt:
         print "Done."
         exit
