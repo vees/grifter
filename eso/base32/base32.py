@@ -18,18 +18,19 @@ import base64, string, hashlib, binascii
 __std2crock = string.maketrans(
     u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
     u"0123456789ABCDEFGHJKMNPQRSTVWXYZ"
-).decode("latin-1")
+)
 
 __crock2std = string.maketrans(
     u"0123456789ABCDEFGHJKMNPQRSTVWXYZ",
     u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-).decode("latin-1")
+)
 
 def b32encode(s):
     return base64.b32encode(s).translate(__std2crock, '=').lower()
 
 def b32decode(b32, casefold=None, map01=None):
     # Ensure the manatory padding is correct:
+    b32=str(b32)
     b32=b32.upper()
     b32 += '=' * ((8 - len(b32) % 8) % 8)
     b32=b32.translate(__crock2std)

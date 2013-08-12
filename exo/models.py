@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from eso.base32 import base32
+import binascii
 
 # Create your models here.
 
@@ -205,12 +207,18 @@ class Old_Theme(models.Model):
 #    block = models.BooleanField()
 
 class PictureSimple(models.Model):
+    def __str__(self):
+        return self.get_local_path()
     def get_local_path(self):
         return "%s/%s/%s" % (
             settings.NARTHEX_PHOTO_PATH, self.directory, self.filename)
+    @property
+    def b32md5(self):
+        return base32.b32encode(binascii.unhexlify(self.file_hash))
     filename = models.CharField(max_length=200)
     directory = models.CharField(max_length=200)
     stamp = models.DateTimeField(null=False)
     file_hash = models.CharField(max_length=200)
     rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
+    private = private = models.NullBooleanField(null=True)
 

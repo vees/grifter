@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.template import RequestContext, loader
 
 from exo.models import PictureSimple
 from eso.base32 import base32
@@ -32,6 +33,33 @@ def image_by_base32(request, base32md5):
         image_it(p.get_local_path()),
         mimetype="image/jpeg"
         )
+
+def privacy_unchecked(request):
+    unchecked=PictureSimple.objects.filter(private=None)
+    remaining=unchecked.count()
+    pictures = unchecked[0:6]
+    allbutton = ",".join([x.b32md5 for x in pictures])
+    template = loader.get_template("private.html")
+    context = RequestContext(request, {'pictures': pictures, 'allbutton': allbutton, 'remaining':remaining})
+    return HttpResponse(template.render(context))
+
+def update_privacy(request, actiontext, md5list):
+    """Take a comma delimited string of base32 md5 plus an action text of private or public
+and iterate over the results to change the status of individual images"""
+    if actiontext not in ['private','public']:
+        return HttpResponse("Invalid command")
+
+    try:
+        md5hexlist = [binascii.hexlify(base32.b32decode(md5)) for md5 in md5list.split(",")]
+    except:
+        return HttpResponse("Bad list of elements")
+
+    for md5hex in md5hexlist:
+        p=PictureSimple.objects.get(file_hash=md5hex)
+        p.private = (actiontext == 'private')
+        p.save()
+
+    return HttpResponseRedirect("/")
 
 def image(request, image_id):
     p=Picture.objects.get(pk=image_id)

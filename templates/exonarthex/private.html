@@ -1,0 +1,9 @@
+<p>{{remaining}} <a href="/action/public/{{allbutton}}">Set all of these public</a>
+
+<p>
+{% for picture in pictures %}
+<a href="/action/private/{{ picture.b32md5 }}">
+<img src="/file/{{picture.b32md5 }}">
+</a>
+{% endfor %}
+</p>
