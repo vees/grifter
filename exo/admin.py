@@ -1,4 +1,4 @@
-from grifter.regatta.models import Picture, Moment, Old_Picture, PictureSimple
+from exo.models import PictureSimple
 from django.contrib import admin
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
@@ -21,8 +21,8 @@ class PictureSimpleAdmin(admin.ModelAdmin):
 	rotate_90_cw.short_description = "Rotate 90 CW"
 	rotate_90_ccw.short_description = "Rotate 90 CCW"
 
-admin.site.register(Picture)
-admin.site.register(Moment)
-admin.site.register(Old_Picture)
-admin.site.register(PictureSimple, PictureSimpleAdmin)
+#admin.site.register(Picture)
+#admin.site.register(Moment)
+#admin.site.register(Old_Picture)
+#admin.site.register(PictureSimple, PictureSimpleAdmin)
 

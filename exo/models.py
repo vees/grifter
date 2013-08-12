@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
@@ -128,21 +129,21 @@ identify individuals in the photograph, at the very least to restrict anything
 with people in it.
 """
     directory = models.CharField(max_length=200)
-    filename = models.CharField(max_length=200)
+    file_name = models.CharField(max_length=200)
     file_hash = models.CharField(max_length=200)
-    file_size = models.IntegerField(null=True)
+    file_size = models.IntegerField(null=False)
     file_timestamp = models.DateTimeField(null=False)
-    old_id = models.IntegerField(null=True)
+    old_g2_id = models.IntegerField(null=True)
     flickr_id = models.CharField(max_length=200, null=True)
     rotation = models.IntegerField(choices=ROTATION, null=True)
-    private = models.BooleanField(null=True)
+    private = models.NullBooleanField(null=True)
     #taken_on = models.ForeignKey(Moment)
     #subject_can_id = models.IntegerField(null=True)
     #subject_no_id = models.IntegerField(null=True)
     #photographer = models.ForeignKey(Photographer)
     #photographer_permission = models.BooleanField()
 
-class ServerInstance(models.model):
+class ServerInstance(models.Model):
     """The challenge with this table becomes the sharing of data between instances of
 this program on various servers. The file_hash will be the primary detection of
 duplicates. Each server should know its own instance name and directory tree.
@@ -186,33 +187,30 @@ class Old_Theme(models.Model):
     directory = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
 
-class Old_Picture(models.Model):
-    def __unicode__(self):
-        return "%s: %s in %s %s" % (
-            self.filename, self.title, self.theme.description, str(self.stamp) )
-    #old_id = models.IntegerField(null=False)
-    filename = models.CharField(max_length=200)
-    theme = models.ForeignKey(Old_Theme)
-    title = models.CharField(max_length=200)
-    location = models.ForeignKey(Old_Location)
-    stamp = models.DateTimeField(null=False)
-    photographer = models.ForeignKey(Old_Photographer)
-    special = models.CharField(max_length=2000)
-    description = models.CharField(max_length=2000)
-    camera = models.ForeignKey(Old_Camera)
-    counter = models.IntegerField(null=False)
-    block = models.BooleanField()
+#class Old_Picture(models.Model):
+#    def __unicode__(self):
+#        return "%s: %s in %s %s" % (
+#            self.filename, self.title, self.theme.description, str(self.stamp) )
+#    #old_id = models.IntegerField(null=False)
+#    filename = models.CharField(max_length=200)
+#    theme = models.ForeignKey(Old_Theme)
+#    title = models.CharField(max_length=200)
+#    location = models.ForeignKey(Old_Location)
+#    stamp = models.DateTimeField(null=False)
+#    photographer = models.ForeignKey(Old_Photographer)
+#    special = models.CharField(max_length=2000)
+#    description = models.CharField(max_length=2000)
+#    camera = models.ForeignKey(Old_Camera)
+#    counter = models.IntegerField(null=False)
+#    block = models.BooleanField()
 
 class PictureSimple(models.Model):
-    #def __unicode__(self):
-    #return self.id
-    def imgtag(self):
-        return '<a href="/regatta/image/'+str(self.id)+'"><img src="/regatta/thumb/'+str(self.id)+'/"></a>'
-    imgtag.allow_tags = True
+    def get_local_path(self):
+        return "%s/%s/%s" % (
+            settings.NARTHEX_PHOTO_PATH, self.directory, self.filename)
     filename = models.CharField(max_length=200)
     directory = models.CharField(max_length=200)
     stamp = models.DateTimeField(null=False)
     file_hash = models.CharField(max_length=200)
-    #legacy = models.ForeignKey(Old_Picture, null=True)
     rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
 

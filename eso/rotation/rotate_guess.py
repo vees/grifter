@@ -100,8 +100,8 @@ def main():
     for pic in pix:
         try:
             #print exif_fetch(pic.directory+"/"+pic.filename)
-            print ExifReduced(exif_tags(pic.directory+"/"+pic.filename))
-            er = exif_translate(exif_fetch(pic.directory+"/"+pic.filename))
+            print ExifReduced(exif_tags(pic.get_local_path()))
+            er = exif_translate(exif_fetch(pic.get_local_path()))
             print "%s/%s as %s" % (pic.directory, pic.filename, er)
         except KeyboardInterrupt:
             print "Done loading: Interrupted by user"

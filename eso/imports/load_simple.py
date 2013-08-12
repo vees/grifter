@@ -42,9 +42,8 @@ class ImportRecursiveCount:
     def add_failure(self):
         self._import_failure += 1
 
-#path = '/media/dev/photos'
-path = settings.NARTHEX_PHOTO_PATH
-import_debug = False
+basepath = settings.NARTHEX_PHOTO_PATH
+import_debug = settings.NARTHEX_DEBUG_IMPORT
 
 def exim_fetch(filename):
     """Read and reform file's EXIF timestamp as datetime string"""
@@ -76,19 +75,21 @@ def md5_parse(filename):
     finally:
         f.close()
 
-def import_images(dirname):
+def import_images(reldirname):
     """Recurse through the directory structure given the root directory"""
+    dirname = basepath + "/" + reldirname
     import_stats = ImportRecursiveCount(0,0,0)
-    all_pictures = [ps.directory +'/'+ ps.filename for ps in PictureSimple.objects.filter(directory=dirname)]
+    all_pictures = [basepath + '/' + ps.directory +'/'+ ps.filename
+                    for ps in PictureSimple.objects.filter(directory=reldirname)]
     for f in os.listdir(dirname):
         fullpath = os.path.join(dirname, f)
         if os.path.isfile(fullpath):
             if os.path.splitext(f)[1] in [".jpg",".JPG"]:
                 #match_count = all_pictures.filter(directory=dirname, filename=f).count()
                 if fullpath not in all_pictures:
-                    import_simple_picture(
-                        f,dirname,datetime.fromtimestamp(
-                            os.stat(fullpath).st_mtime), md5_parse(fullpath))
+                    #import_simple_picture(
+                    #    f,reldirname,datetime.fromtimestamp(
+                    #        os.stat(fullpath).st_mtime), md5_parse(fullpath))
                     if import_debug == True:
                         print "Import of " + fullpath
                     else:
@@ -99,7 +100,7 @@ def import_images(dirname):
                     else:
                         import_stats.add_ignored()
         if os.path.isdir(fullpath):
-            subrecurse_stats = import_images(fullpath)
+            subrecurse_stats = import_images(fullpath.replace(basepath + "/",''))
             print subrecurse_stats
             import_stats.add(subrecurse_stats)
             print import_stats
@@ -138,7 +139,7 @@ def create_moment( mtime, ctime, exim):
 def main():
     """Import images from the default path"""
     try:
-        print import_images(path)
+        print import_images("")
     except KeyboardInterrupt:
         print "Done."
         exit
