@@ -24,7 +24,7 @@ def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL
 for another load"""
     #p=PictureSimple.objects.get(file_hash=base32.b32decode(base32md5)
-    return HttpResponse("<a href='/'><img src='/file/%s'></a>" % (base32md5))
+    return HttpResponse("<a href='/'><img src='http://10.160.40.158:8001/%s.jpg'></a>" % (base32md5))
 
 def image_by_base32(request, base32md5):
     """Return a resized file by the base32md5"""
@@ -35,9 +35,10 @@ def image_by_base32(request, base32md5):
         )
 
 def privacy_unchecked(request):
-    unchecked=PictureSimple.objects.filter(private=None)
-    remaining=unchecked.count()
-    pictures = unchecked[0:6]
+    batchsize=24
+    unchecked=PictureSimple.objects.filter(private=None).order_by('directory','filename')
+    remaining=unchecked.count()/batchsize
+    pictures = unchecked[0:batchsize]
     allbutton = ",".join([x.b32md5 for x in pictures])
     template = loader.get_template("private.html")
     context = RequestContext(request, {'pictures': pictures, 'allbutton': allbutton, 'remaining':remaining})
@@ -46,7 +47,7 @@ def privacy_unchecked(request):
 def update_privacy(request, actiontext, md5list):
     """Take a comma delimited string of base32 md5 plus an action text of private or public
 and iterate over the results to change the status of individual images"""
-    if actiontext not in ['private','public']:
+    if actiontext not in ['private','public','reset']:
         return HttpResponse("Invalid command")
 
     try:
@@ -54,10 +55,13 @@ and iterate over the results to change the status of individual images"""
     except:
         return HttpResponse("Bad list of elements")
 
-    for md5hex in md5hexlist:
-        p=PictureSimple.objects.get(file_hash=md5hex)
-        p.private = (actiontext == 'private')
-        p.save()
+    privacy=None
+    if actiontext=='private':
+        privacy=1
+    if actiontext=='public':
+        privacy=0
+
+    PictureSimple.objects.filter(file_hash__in=md5hexlist).update(private = privacy)
 
     return HttpResponseRedirect("/")
 

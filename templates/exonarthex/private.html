@@ -1,9 +1,24 @@
-<p>{{remaining}} <a href="/action/public/{{allbutton}}">Set all of these public</a>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<meta http-equiv="Expires" CONTENT="-1">
+<meta http-equiv="cache-control" CONTENT="no-cache">
+<meta name="HandHeldFriendly" content="true" />
+<meta name="mobileoptimized" content="320" />
+<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale="0.4" />
+</head>
+<body>
+<p style="font-size: 24pt">{{remaining}} <a href="/action/public/{{allbutton}}">Set all of these public</a></p>
 
 <p>
 {% for picture in pictures %}
 <a href="/action/private/{{ picture.b32md5 }}">
-<img src="/file/{{picture.b32md5 }}">
+<img border=1 src="http://10.160.40.158:8001/{{picture.b32md5 }}.jpg">
 </a>
 {% endfor %}
 </p>
+<p style="font-size: 36pt">{{remaining}} <a href="/action/public/{{allbutton}}">Set all of these public</a></p>
+</body>
+</html>

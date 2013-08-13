@@ -87,9 +87,9 @@ def import_images(reldirname):
             if os.path.splitext(f)[1] in [".jpg",".JPG"]:
                 #match_count = all_pictures.filter(directory=dirname, filename=f).count()
                 if fullpath not in all_pictures:
-                    #import_simple_picture(
-                    #    f,reldirname,datetime.fromtimestamp(
-                    #        os.stat(fullpath).st_mtime), md5_parse(fullpath))
+                    import_simple_picture(
+                        f,reldirname,datetime.fromtimestamp(
+                            os.stat(fullpath).st_mtime), md5_parse(fullpath))
                     if import_debug == True:
                         print "Import of " + fullpath
                     else:
