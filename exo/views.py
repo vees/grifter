@@ -2,7 +2,6 @@ import StringIO
 import binascii
 
 from PIL import Image
-from random import Random
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -17,10 +16,11 @@ from eso.base32 import base32
 def random(request):
     """Given a / URL, return another URL encoded as /meta/abcdefghij which
 returns a page containing an image url"""
-    g=Random()
-    p=PictureSimple.objects.get(pk=g.randint(1,PictureSimple.objects.count()))
+    # If this is slow in production, use this tip instead;
+    # http://stackoverflow.com/a/2118712/682915
+    p=PictureSimple.objects.order_by('?')[0]
     base32md5=(base32.b32encode(binascii.unhexlify(p.file_hash)))
-    return HttpResponseRedirect("%s" % 
+    return HttpResponseRedirect("%s" %
         (request.build_absolute_uri(reverse('exo.views.page_by_base32',args=[base32md5]))))
 
 def page_by_base32(request, base32md5):
