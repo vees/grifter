@@ -184,7 +184,7 @@ class Old_Photographer(models.Model):
     last = models.CharField(max_length=200)
     email = models.EmailField()
     nick = models.CharField(max_length=200)
-    url = models.URLField(verify_exists=True, max_length=200, null=True)
+    #url = models.URLField(verify_exists=True, max_length=200, null=True)
 
 class Old_Theme(models.Model):
     #old_id = models.IntegerField(null=False)

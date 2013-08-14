@@ -19,7 +19,9 @@ def random(request):
 returns a page containing an image url"""
     g=Random()
     p=PictureSimple.objects.get(pk=g.randint(1,PictureSimple.objects.count()))
-    return HttpResponseRedirect("/meta/%s" % (base32.b32encode(binascii.unhexlify(p.file_hash))))
+    base32md5=(base32.b32encode(binascii.unhexlify(p.file_hash)))
+    return HttpResponseRedirect("%s" % 
+        (request.build_absolute_uri(reverse('exo.views.page_by_base32',args=[base32md5]))))
 
 def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL
