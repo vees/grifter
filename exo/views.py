@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.template import RequestContext, loader
+from django.core.urlresolvers import reverse
 
 from exo.models import PictureSimple
 from eso.base32 import base32
@@ -24,7 +25,9 @@ def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL
 for another load"""
     #p=PictureSimple.objects.get(file_hash=base32.b32decode(base32md5)
-    return HttpResponse("<a href='/'><img src='http://10.160.40.158:8001/%s.jpg'></a>" % (base32md5))
+    return HttpResponse("<a href='%s'><img src='%s'></a>" %
+        (request.build_absolute_uri(reverse('exo.views.random')),
+        (request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])))))
 
 def image_by_base32(request, base32md5):
     """Return a resized file by the base32md5"""
@@ -103,7 +106,7 @@ def thumbnail_it(path_to_original):
 
 def image_it(path_to_original):
     im = Image.open(path_to_original)
-    size = 500,375,180
+    size = 1024,1024,180
     im.thumbnail(size, Image.ANTIALIAS)
     buf= StringIO.StringIO()
     im.save(buf, format= 'JPEG')

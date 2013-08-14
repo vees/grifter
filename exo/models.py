@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
+from django.core.urlresolvers import reverse
+
 from eso.base32 import base32
+
 import binascii
 
 # Create your models here.
@@ -209,6 +212,8 @@ class Old_Theme(models.Model):
 class PictureSimple(models.Model):
     def __str__(self):
         return self.get_local_path()
+    def get_absolute_url(self):
+        return reverse('exo.views.page_by_base32', args=[str(self.b32md5)])
     def get_local_path(self):
         return "%s/%s/%s" % (
             settings.NARTHEX_PHOTO_PATH, self.directory, self.filename)
