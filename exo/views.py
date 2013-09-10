@@ -1,5 +1,6 @@
 import StringIO
 import binascii
+import pprint
 
 from PIL import Image
 
@@ -26,10 +27,25 @@ returns a page containing an image url"""
 def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL
 for another load"""
-    #p=PictureSimple.objects.get(file_hash=base32.b32decode(base32md5)
-    return HttpResponse("<a href='%s'><img src='%s'></a><p>%s</p>" %
-        (request.build_absolute_uri(reverse('exo.views.random')),
-        request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])),""))
+    p=PictureSimple.objects.get(file_hash=binascii.hexlify(base32.b32decode(base32md5)))
+    import eso.exif.EXIF
+    f = open(p.get_local_path(), 'rb')
+    exifhash = eso.exif.EXIF.process_file(f)
+
+    for key in exifhash.keys():
+        try:
+            if len(str(exifhash[key])) > 50:
+                del exifhash[key]
+        except:
+                del exifhash[key]
+    exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
+    template = loader.get_template("meta.html")
+    context = RequestContext(request, {
+        'description': p.filename,
+        'destination': request.build_absolute_uri(reverse('exo.views.random')),
+        'imagesource': request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])),
+        'exifdata': exifdata })
+    return HttpResponse(template.render(context))
 
 def image_by_base32(request, base32md5):
     """Return a resized file by the base32md5"""

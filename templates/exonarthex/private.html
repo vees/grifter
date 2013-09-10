@@ -15,7 +15,7 @@
 <p>
 {% for picture in pictures %}
 <a href="/action/private/{{ picture.b32md5 }}">
-<img border=1 src="http://10.160.40.158:8001/{{picture.b32md5 }}.jpg">
+<img border=1 width=300 src="/file/{{picture.b32md5 }}">
 </a>
 {% endfor %}
 </p>
