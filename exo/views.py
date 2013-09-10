@@ -29,7 +29,7 @@ for another load"""
     #p=PictureSimple.objects.get(file_hash=base32.b32decode(base32md5)
     return HttpResponse("<a href='%s'><img src='%s'></a><p>%s</p>" %
         (request.build_absolute_uri(reverse('exo.views.random')),
-        request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5]))))
+        request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])),""))
 
 def image_by_base32(request, base32md5):
     """Return a resized file by the base32md5"""
