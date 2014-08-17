@@ -77,13 +77,9 @@ following rule:
 	In the event of two or more people having identical driver's 
 	licence numbers, this final group of digits will be used to 
 	differeniate them. Simple add one to the final group of digits until 
-	you find an unused entry.[High Programmer][1]
+	you find an unused entry.[High Programmer](http://4ve.es/JyO)
 
 The best intersecting solution appears to be the following:
 
 Create a four character file ID using the base32-encoded SHA-2 hash or 
 from a random 128 bit space.
-
-[1]: http://4ve.es/JyO
-[2]: http://vees.net/
-
