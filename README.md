@@ -79,9 +79,11 @@ following rule:
 	differeniate them. Simple add one to the final group of digits 
 	until you find an unused entry.
 
-Source [High Programmer](http://4ve.es/JyO)
+Source [High Programmer][1]
 
 The best intersecting solution appears to be the following:
 
 Create a four character file ID using the base32-encoded SHA-2 hash or 
 from a random 128 bit space.
+
+[1]: http://4ve.es/JyO "High Programmer"
