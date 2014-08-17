@@ -84,6 +84,6 @@ The best intersecting solution appears to be the following:
 Create a four character file ID using the base32-encoded SHA-2 hash or 
 from a random 128 bit space.
 
-[1]: `http://www.highprogrammer.com/alan/numbers/dl_us_shared_mmm.html`
+[1]: http://4ve.es/JyO
 [2]: http://vees.net/
 
