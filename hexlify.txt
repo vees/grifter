@@ -1,0 +1,13 @@
+>>> from exo.models import PictureSimple
+>>> PictureSimple.objects.filter(file_hash='mcwwsjjjqvg28q9k5y0pt8bfkr')
+[]
+>>> from eso.base32 import base32
+>>> import binascii
+>>> base32.b32decode('6b0t45dstd1ecnxk0hh99591er')
+'2\xc1\xa2\x15\xb9\xd3B\xe6W\xb3\x04b\x94\x95!v'
+>>> binascii.hexlify(base32.b32decode('6b0t45dstd1ecnxk0hh99591er'))
+'32c1a215b9d342e657b3046294952176'
+>>> PictureSimple.objects.filter(file_hash='32c1a215b9d342e657b3046294952176')
+[<PictureSimple: /media/dev/photos/sep13dump/IMG_4522.JPG>]
+
+
