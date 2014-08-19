@@ -74,16 +74,60 @@ collision-prone system using soundex of names and hashing of
 birthdays to create a unique ID and resolves collisions with the 
 following rule:
 
-	In the event of two or more people having identical driver's 
-	licence numbers, this final group of digits will be used to 
-	differeniate them. Simple add one to the final group of digits 
-	until you find an unused entry.
+> In the event of two or more people having identical driver's licence 
+> numbers, this final group of digits will be used to 
+> differeniate them. Simple add one to the final group of digits
+> until you find an unused entry.
 
-Source [High Programmer][1]
+(Source: [High Programmer][1])
 
 The best intersecting solution appears to be the following:
 
-Create a four character file ID using the base32-encoded SHA-2 hash or 
-from a random 128 bit space.
+* Create a four character file ID using some substring 
+base32-encoded SHA-2 hash or from a random 128 bit space.
+* Only keep patterns which match some combination of three 
+alphabetical characters and one numeric character.
+
+This results in a set of 22 possible alphabetical characters in 
+three positions and one of 10 possible digits in a fourth multipled 
+by the four possible digit positions: ``((22**3)*10)*4`` or 425,920 
+permutations. It is roughly half of the million permutations from 
+the simple base32 representation.oi
+
+The advantages to this solution are: it is easy to copy visually and 
+remember, the 
+
+The disadvantages are that it is not possible to recreate the ID set 
+given the same unordered set of files. This unorderedness refers to the 
+fact that files with arbitrary timestamps could be added to the 
+original set at a later date so any algoritm with a sequence factor 
+wouldn't be usable.
+
+Some examples of the combinations ([created with prototype randspace 
+function][2]) would be:
+
+	c1fa
+	wt2n
+	nxe7
+	sh1r
+	dr0n
+	0grv
+	h1km
+	7zkj
+	h5mk
+	tb7h
+
+To form a URL such as:
+
+	https://vees.net/nxe7/ 
+	https://vees.net/meta/tb7h/
+	https://vees.net/file/tb7h/
+
+# Consideration
+
+* Is there a master ID space?
+* If there is, do things such as tags and sets fit inside it?
+
 
 [1]: http://4ve.es/JyO "High Programmer"
+[2]: https://github.com/vees/narthex/blob/master/eso/base32/randspace.py
