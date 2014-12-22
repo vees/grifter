@@ -94,17 +94,11 @@ by the four possible digit positions: ``((22**3)*10)*4`` or 425,920
 permutations. It is roughly half of the million permutations from 
 the simple base32 representation.oi
 
-The advantages to this solution are: it is easy to copy visually and 
-remember, the 
+The advantages to this solution is that it is easy to copy visually and remember.
 
-The disadvantages are that it is not possible to recreate the ID set 
-given the same unordered set of files. This unorderedness refers to the 
-fact that files with arbitrary timestamps could be added to the 
-original set at a later date so any algoritm with a sequence factor 
-wouldn't be usable.
+The disadvantages are that it is not possible to recreate the ID set given the same unordered set of files. This unorderedness refers to the  fact that files with arbitrary timestamps could be added to the  original set at a later date so any algoritm with a sequence factor  wouldn't be usable.
 
-Some examples of the combinations ([created with prototype randspace 
-function][2]) would be:
+Some examples of the combinations ([created with prototype randspace function][2]) would be:
 
 	c1fa
 	wt2n
@@ -128,6 +122,17 @@ To form a URL such as:
 * Is there a master ID space?
 * If there is, do things such as tags and sets fit inside it?
 
+## Extended Space
+
+It is necessary to display files such as images at different resolutions depending on the context. What the indiviual ID should represent is a set of common files that share some essential quality. For an image file this would be the actual image represented, and the common files would be different resolutions, rotations, and cropping of that file.
+
+This is where the base32 encoded SHA2 can be useful.
+
+	https://vees.net/nxe7/mcwwsjjjqvg28q9k5y0pt8bfkr
+	https://vees.net/nxe7/gc3ywbbecdr3cdwhgk87tfak8470bqhzc2kgm0krv8dtsrgk5d9g
+
+Although the SHA2 seems excessive, we can truncate it until it is unique in the majority of cases and extend when necessary. The ID marker will be the canonical portion of the URL so simply redirecting the user back to the four character URL will be sufficient in most cases.
 
 [1]: http://4ve.es/JyO "High Programmer"
 [2]: https://github.com/vees/narthex/blob/master/eso/base32/randspace.py
+
