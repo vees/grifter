@@ -52,7 +52,7 @@ def image_by_base32(request, base32md5):
     p=PictureSimple.objects.get(file_hash=binascii.hexlify(base32.b32decode(base32md5)))
     return HttpResponse(
         image_it(p.get_local_path()),
-        mimetype="image/jpeg"
+        content_type="image/jpeg"
         )
 
 def privacy_unchecked(request):
@@ -90,14 +90,14 @@ def image(request, image_id):
     p=Picture.objects.get(pk=image_id)
     return HttpResponse(
         image_it(p.directory+"/"+p.filename),
-        mimetype="image/jpeg"
+        content_type="image/jpeg"
         )
 
 def thumbnail(request, image_id):
     p=Picture.objects.get(pk=image_id)
     return HttpResponse(
         thumbnail_it(p.directory+"/"+p.filename),
-        mimetype="image/jpeg"
+        content_type="image/jpeg"
         )
 
 def randomold(request):
@@ -111,7 +111,7 @@ def randomold(request):
             pass
     return HttpResponse(
         thumbnail_it('/local/img/'+p.theme.directory+"/"+p.filename+'.jpg'),
-        mimetype="image/jpeg"
+        content_type="image/jpeg"
         )
 
 def thumbnail_it(path_to_original):
