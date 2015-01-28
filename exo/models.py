@@ -166,7 +166,7 @@ settings object to perform this query on startup and hold the variable somehow.
 class Subject(models.Model):
     person = models.ForeignKey(Person)
     picture = models.ForeignKey(Picture)
-    model_permission = models.BooleanField()
+    model_permission = models.BooleanField(default=None)
 
 class Old_Camera(models.Model):
     #old_id = models.IntegerField(null=False)
