@@ -11,3 +11,15 @@ References;
 docs/motivation.md
 docs/urls.md
 
+[exo]
+    excludelist
+    finddump
+    loadphotos
+    mainmenu
+
+[veesprod@skymaster]$ python manage.py sqlmigrate exo 0003
+BEGIN;
+ALTER TABLE `exo_picturesimple` ADD COLUMN `key` varchar(4) NULL;
+ALTER TABLE `exo_picturesimple` ALTER COLUMN `key` DROP DEFAULT;
+
+COMMIT;
