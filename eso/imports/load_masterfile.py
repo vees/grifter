@@ -2,13 +2,11 @@ import os
 import glob
 import itertools
 import hashlib
+import ImportRecursiveCount
 
 from datetime import datetime
 from django.conf import settings
-
 from exo.models import Picture, Moment, PictureSimple
-
-import ImportRecursiveCount
 
 basepath = settings.NARTHEX_PHOTO_PATH
 import_debug = settings.NARTHEX_DEBUG_IMPORT
@@ -39,6 +37,7 @@ def md5_parse(filename):
         f.close()
 
 def sha2_parse(filename):
+    """Open file, compute sha2 hash and return as ascii hex string"""
     try:
         f = open(filename, 'rb')
         content = f.read()
@@ -71,15 +70,36 @@ def get_hostname():
     return socket.gethostname()
 
 def files_under_dir(dirname):
-    #Great example from http://stackoverflow.com/a/2186565/682915
+    # Great example from http://stackoverflow.com/a/2186565/682915
     matches = []
+    # Tuple is returned here, we just ignore dirnames because os.walk 
+    # is following those on its own
     for root, dirnames, filenames in os.walk(dirname):
         for filename in filenames:
             matches.append(os.path.join(root, filename))
     return matches
 
+def files_under_dir_2(dirname):
+    """
+    dirname is always the base_directory
+    """
+    # Great example from http://stackoverflow.com/a/2186565/682915
+    matches = []
+    # Tuple is returned here, we just ignore dirnames because os.walk 
+    # is following those on its own
+    for root, dirnames, filenames in os.walk(dirname):
+        for filename in filenames:
+            matches.append([root,filename])
+    compare_list = [[dirname,os.path.relpath(root,dirname),filename,get_stat_hash(os.path.join(root,filename))] 
+        for root,filename in matches]
+    return compare_list
+    
+
 def files_and_stat(files):
     return [get_stat_hash(filename) for filename in files]
+
+def import_masterfiles(reldirname):
+    pass
 
 def import_images(reldirname):
     """Recurse through the directory structure given the root directory"""

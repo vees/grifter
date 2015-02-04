@@ -192,23 +192,26 @@ class Old_Theme(models.Model):
     directory = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
 
-#class Old_Picture(models.Model):
-#    def __unicode__(self):
-#        return "%s: %s in %s %s" % (
-#            self.filename, self.title, self.theme.description, str(self.stamp) )
-#    #old_id = models.IntegerField(null=False)
-#    filename = models.CharField(max_length=200)
-#    theme = models.ForeignKey(Old_Theme)
-#    title = models.CharField(max_length=200)
-#    location = models.ForeignKey(Old_Location)
-#    stamp = models.DateTimeField(null=False)
-#    photographer = models.ForeignKey(Old_Photographer)
-#    special = models.CharField(max_length=2000)
-#    description = models.CharField(max_length=2000)
-#    camera = models.ForeignKey(Old_Camera)
-#    counter = models.IntegerField(null=False)
-#    block = models.BooleanField()
-
+class Old_Picture(models.Model):
+	"""
+    def __unicode__(self):
+        return "%s: %s in %s %s" % (
+            self.filename, self.title, self.theme.description, str(self.stamp) )
+    #old_id = models.IntegerField(null=False)
+    filename = models.CharField(max_length=200)
+    theme = models.ForeignKey(Old_Theme)
+    title = models.CharField(max_length=200)
+    location = models.ForeignKey(Old_Location)
+    stamp = models.DateTimeField(null=False)
+    photographer = models.ForeignKey(Old_Photographer)
+    special = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000)
+    camera = models.ForeignKey(Old_Camera)
+    counter = models.IntegerField(null=False)
+    block = models.BooleanField()
+	"""
+	pass
+	
 class PictureSimple(models.Model):
     def __str__(self):
         return self.get_local_path()
