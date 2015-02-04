@@ -225,5 +225,15 @@ class PictureSimple(models.Model):
     stamp = models.DateTimeField(null=False)
     file_hash = models.CharField(max_length=200)
     rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
-    private = private = models.NullBooleanField(null=True)
+    private = models.NullBooleanField(null=True)
 
+class MasterFile(models.Model):
+    filename = models.CharField(max_length=200)
+    server = models.CharField(max_length=200)
+    volume = models.CharField(max_length=200)
+    base_directory = models.CharField(max_length=200)
+    directory = models.CharField(max_length=200)
+    stat_hash = models.IntegerField(null=True)
+    hash_md5 = models.CharField(max_length=200)
+    hash_sha2 = models.CharField(max_length=200)
+    updated = models.DateTimeField(null=False)
