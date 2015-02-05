@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: ascii -*-
+
+"""
+"""
+
 import os
 import glob
 import datetime
@@ -179,6 +185,21 @@ def report_duplicates():
 	for dk in dircount.keys():
 		print "%s: %s" % (dk, dircount[dk])
 	return dupcount
+
+def report_duplicates_2():
+	"""
+	To remove duplicates we evaluate the directories and remove dups from
+	the directory that contains the fewest files
+	"""
+	from exo.models import MasterFile
+	from django.db.models import Count
+	from eso.imports import DuplicateCounter
+	duplicates = MasterFile.objects.values('hash_sha2').annotate(filecopies=Count("id")).filter(filecopies__gt=1)
+	dc=DuplicateCounter.DuplicateCounter()
+	for duplicate in duplicates:
+		dc.add([m.directory for m in MasterFile.objects.filter(hash_sha2=duplicate["hash_sha2"])])
+	dc.results()	
+	return None
 
 def main():
     """Import images from the default path"""
