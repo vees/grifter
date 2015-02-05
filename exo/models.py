@@ -239,4 +239,4 @@ class MasterFile(models.Model):
     stat_hash = models.IntegerField(null=True)
     hash_md5 = models.CharField(max_length=200)
     hash_sha2 = models.CharField(max_length=200)
-    updated = models.DateTimeField(null=False)
+    updated = models.DateTimeField(null=False, auto_now=True)
