@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-import eso.imports.load_simple 
+import eso.imports.load_masterfile 
 
 class Command(BaseCommand):
 	args = '<directory>'
@@ -7,9 +7,8 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		try:
-			print "Started import"
-			print eso.imports.load_simple.import_images("")
-			print "Done"
+			print "Started duplicates check"
+			eso.imports.load_masterfile.report_duplicates_2()
 		except KeyboardInterrupt:
 			print "Interrupted"
 			exit

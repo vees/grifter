@@ -192,23 +192,26 @@ class Old_Theme(models.Model):
     directory = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
 
-#class Old_Picture(models.Model):
-#    def __unicode__(self):
-#        return "%s: %s in %s %s" % (
-#            self.filename, self.title, self.theme.description, str(self.stamp) )
-#    #old_id = models.IntegerField(null=False)
-#    filename = models.CharField(max_length=200)
-#    theme = models.ForeignKey(Old_Theme)
-#    title = models.CharField(max_length=200)
-#    location = models.ForeignKey(Old_Location)
-#    stamp = models.DateTimeField(null=False)
-#    photographer = models.ForeignKey(Old_Photographer)
-#    special = models.CharField(max_length=2000)
-#    description = models.CharField(max_length=2000)
-#    camera = models.ForeignKey(Old_Camera)
-#    counter = models.IntegerField(null=False)
-#    block = models.BooleanField()
-
+class Old_Picture(models.Model):
+	"""
+    def __unicode__(self):
+        return "%s: %s in %s %s" % (
+            self.filename, self.title, self.theme.description, str(self.stamp) )
+    #old_id = models.IntegerField(null=False)
+    filename = models.CharField(max_length=200)
+    theme = models.ForeignKey(Old_Theme)
+    title = models.CharField(max_length=200)
+    location = models.ForeignKey(Old_Location)
+    stamp = models.DateTimeField(null=False)
+    photographer = models.ForeignKey(Old_Photographer)
+    special = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000)
+    camera = models.ForeignKey(Old_Camera)
+    counter = models.IntegerField(null=False)
+    block = models.BooleanField()
+	"""
+	pass
+	
 class PictureSimple(models.Model):
     def __str__(self):
         return self.get_local_path()
@@ -225,5 +228,15 @@ class PictureSimple(models.Model):
     stamp = models.DateTimeField(null=False)
     file_hash = models.CharField(max_length=200)
     rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
-    private = private = models.NullBooleanField(null=True)
+    private = models.NullBooleanField(null=True)
 
+class MasterFile(models.Model):
+    filename = models.CharField(max_length=200)
+    server = models.CharField(max_length=200)
+    volume = models.CharField(max_length=200)
+    base_directory = models.CharField(max_length=200)
+    directory = models.CharField(max_length=200)
+    stat_hash = models.IntegerField(null=True)
+    hash_md5 = models.CharField(max_length=200)
+    hash_sha2 = models.CharField(max_length=200)
+    updated = models.DateTimeField(null=False, auto_now=True)

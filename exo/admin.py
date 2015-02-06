@@ -1,9 +1,10 @@
-from exo.models import PictureSimple
+from exo.models import PictureSimple, MasterFile
 from django.contrib import admin
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 
 admin.site.register(PictureSimple)
+admin.site.register(MasterFile)
 
 class PictureSimpleAdmin(admin.ModelAdmin):
 	list_display = ('filename','directory','imgtag','rotation','stamp')
