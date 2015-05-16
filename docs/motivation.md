@@ -140,6 +140,8 @@ Examples of systems that already implement this:
 * git-annex
 * rdiff-backup
 
+And there's an interesting article available about [changing the base protocol that Git uses](https://rovaughn.github.io/2015-2-9.html).
+
 ### Boar
 
 * https://code.google.com/p/boar/
@@ -152,6 +154,8 @@ Examples of systems that already implement this:
 ## rdiff-backup
 
 * http://www.nongnu.org/rdiff-backup/
+
+So in the models we're managing the filename/location and hashes seperately. One or the other can be changed causing the combination of the two to become dirty. An entirely missing file can also trigger the system as dirty. After the dirty mark then the administrator makes a decision whether to recover modified file from another system, make this the new marked (authoritative) combination for this file.
 
 ### Cache Invalidation
 

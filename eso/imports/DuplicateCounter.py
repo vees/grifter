@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
 
-"""
+"""Find duplicates already residing on the system
 """
 
 class DuplicateCounter:
@@ -25,3 +25,4 @@ class DuplicateCounter:
             # http://stackoverflow.com/q/8717395/682915
             shares = ', '.join(['%s (%s)' % (key, value) for (key, value) in self._dirdict[dir1].items() if value != 0])
             print "%s shares files with: %s" % (dir1, shares)
+
