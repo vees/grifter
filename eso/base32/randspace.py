@@ -12,6 +12,10 @@ def randid():
 	random.shuffle(e)
 	return ''.join(e)
 
-# Prints ten examples of the same
-for n in range(10):
-	print "".join(randid())
+def randids(n):
+    if n<=0:
+        raise ValueError("Value must be greater than 1")
+    return [randid() for x in range(0,n)]
+
+
+randids(1)
