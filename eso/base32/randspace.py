@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: ascii -*-
+
+'''
+Tools for generating unique four character urls
+'''
+
 import random
 import string 
 
@@ -17,5 +24,5 @@ def randids(n):
         raise ValueError("Value must be greater than 1")
     return [randid() for x in range(0,n)]
 
-
-randids(1)
+if __name__ == "__main__":
+    print randids(11)
