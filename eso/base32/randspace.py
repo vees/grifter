@@ -20,6 +20,7 @@ def randid():
 	return ''.join(e)
 
 def randids(n):
+    """Creates a list of n random id""" 
     if n<=0:
         raise ValueError("Value must be greater than 1")
     return [randid() for x in range(0,n)]

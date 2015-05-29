@@ -5,14 +5,15 @@ import pprint
 from PIL import Image
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from django.conf import settings
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
 from exo.models import PictureSimple
 from eso.base32 import base32
+from eso.base32 import randspace
+
+import json
 
 def random(request):
     """Given a / URL, return another URL encoded as /meta/abcdefghij which
@@ -130,3 +131,7 @@ def image_it(path_to_original):
     im.save(buf, format= 'JPEG')
     return buf.getvalue()
 
+def new_id(request):
+    payload={'id': randspace.randid()}
+    response=json.dumps(payload, indent=4)
+    return HttpResponse(response, content_type="application/json")

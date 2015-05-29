@@ -24,3 +24,7 @@ Odd cases:
 ahnrb81b9qmertxyjym31pa7nm  appears to be rotated already
 http://10.160.40.158:8000/file/7xkgskph1f4kvn700tm9p8kx0g same thing
 
+Thu May 28 22:06:02 EDT 2015
+
+runfile('/media/dev/projects/narthex/manage.py', wdir=r'/media/dev/projects/narthex', args='shell')
+

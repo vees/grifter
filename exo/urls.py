@@ -29,12 +29,12 @@ urlpatterns = patterns('',
     #(r'^regatta/migration/newthumb/(?P<image_id>\d+)$', 'grifter.regatta.migration.thumbnail_new'),
     #(r'^regatta/migration/connect/(?P<original>\d+)/(?P<new>\d+)/$', 'grifter.regatta.migration.connect'),
     (r'^$', 'exo.views.random'),
+    (r'^api/new/id$', 'exo.views.new_id'),
     #(r'^$', 'exo.views.privacy_unchecked'),
     (r'^random/$', 'exo.views.random'),
     (r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.page_by_base32'),
     (r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.image_by_base32'),
     (r'^action/(?P<actiontext>\w+)/(?P<md5list>[[0123456789abcdefghjkmnpqrstvwxyz,]+)$', 'exo.views.update_privacy'),
-
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
