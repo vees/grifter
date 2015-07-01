@@ -1,0 +1,17 @@
+aws configure
+aws --endpoint-url https://objects.dreamhost.com s3 sync ~/dotest/ s3://20150701-test --delete
+rob@wrath:~$ aws --endpoint-url https://objects.dreamhost.com s3api head-object --bucket 20150701-test --key test2.txt 
+{
+    "AcceptRanges": "bytes", 
+    "ContentType": "text/plain", 
+    "LastModified": "Wed, 01 Jul 2015 17:09:49 GMT", 
+    "ContentLength": 29, 
+    "ETag": "\"5d91f23f9d11764d525568915cfb56b3\"", 
+    "Metadata": {}
+}
+
+rob@wrath:~/dotest$ md5sum test2.txt
+5d91f23f9d11764d525568915cfb56b3  test2.txt
+
+
+
