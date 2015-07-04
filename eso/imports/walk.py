@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul  4 09:23:28 2015
+
+@author: rob
+"""
+
 import os
 from datetime import datetime
 
@@ -9,7 +16,7 @@ def get_stat_hash(filename):
     return statinfo.__hash__()
 
 def files_under_dir(dirname):
-    #Great example from http://stackoverflow.com/a/2186565/682915
+    '''Great example from http://stackoverflow.com/a/2186565/682915'''
     matches = []
     for root, dirnames, filenames in os.walk(dirname):
         for filename in filenames:
