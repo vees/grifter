@@ -97,3 +97,53 @@ Running migrations:
   Applying exo.0004_auto_20150704_1242... OK
   Applying sessions.0001_initial... OK
   Applying sites.0001_initial... OK
+
+
+Playing Around
+====
+
+
+Bypassing manage.py
+
+If you’d rather not use manage.py, no problem. Just set the DJANGO_SETTINGS_MODULE environment variable to mysite.settings, start a plain Python shell, and set up Django:
+
+>>> import django
+>>> django.setup()
+If this raises an AttributeError, you’re probably using a version of Django that doesn’t match this tutorial version. You’ll want to either switch to the older tutorial or the newer Django version.
+
+You must run python from the same directory manage.py is in, or ensure that directory is on the Python path, so that import mysite works.
+
+
+== Playing around
+
+>>> import os
+>>> os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
+'exo.settings'
+>>> import django
+>>> django.setup()
+>>> from exo.models import *
+>>> ContentContainer()
+<ContentContainer: ContentContainer object>
+>>> c=ContentContainer()
+>>> c
+<ContentContainer: ContentContainer object>
+>>> c.server = "love"
+>>> c.drive = "love"
+>>> c.path = "/Users/rob/Desktop"
+>>> c.save()
+>>> ContentContainer.objects.all()
+[<ContentContainer: ContentContainer object>]
+>>> ContentContainer.objects.all()[0]
+<ContentContainer: ContentContainer object>
+>>> cc=ContentContainer.objects.all()
+>>> cc
+[<ContentContainer: ContentContainer object>]
+>>> cc[1]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/Users/rob/anaconda/lib/python2.7/site-packages/django/db/models/query.py", line 201, in __getitem__
+    return list(qs)[0]
+IndexError: list index out of range
+>>> cc[0]
+<ContentContainer: ContentContainer object>
+>>> 
