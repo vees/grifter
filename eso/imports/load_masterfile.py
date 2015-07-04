@@ -13,7 +13,6 @@ import ImportRecursiveCount
 
 from datetime import datetime
 from django.conf import settings
-from exo.models import Picture, Moment, PictureSimple, MasterFile
 
 basepath = settings.NARTHEX_PHOTO_PATH
 import_debug = settings.NARTHEX_DEBUG_IMPORT

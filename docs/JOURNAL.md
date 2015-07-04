@@ -147,3 +147,10 @@ IndexError: list index out of range
 >>> cc[0]
 <ContentContainer: ContentContainer object>
 >>> 
+
+
+== JSON stuff
+
+serializers.serialize("json", ContentContainer.objects.all())
+https://docs.djangoproject.com/en/1.8/topics/serialization/
+
