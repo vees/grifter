@@ -96,7 +96,10 @@ the simple base32 representation.oi
 
 The advantages to this solution is that it is easy to copy visually and remember.
 
-The disadvantages are that it is not possible to recreate the ID set given the same unordered set of files. This unorderedness refers to the  fact that files with arbitrary timestamps could be added to the  original set at a later date so any algoritm with a sequence factor  wouldn't be usable.
+The disadvantages are that it is not possible to recreate the ID set given the 
+same unordered set of files. This unorderedness refers to the  fact that files 
+with arbitrary timestamps could be added to the  original set at a later date 
+so any algoritm with a sequence factor  wouldn't be usable.
 
 Some examples of the combinations ([created with prototype randspace function][2]) would be:
 
@@ -124,7 +127,11 @@ To form a URL such as:
 
 ## Extended Space
 
-It is necessary to display files such as images at different resolutions depending on the context. What the indiviual ID should represent is a set of common files that share some essential quality. For an image file this would be the actual image represented, and the common files would be different resolutions, rotations, and cropping of that file.
+It is necessary to display files such as images at different resolutions 
+depending on the context. What the indiviual ID should represent is a set of 
+common files that share some essential quality. For an image file this would 
+be the actual image represented, and the common files would be different 
+resolutions, rotations, and cropping of that file.
 
 This is where the base32 encoded SHA2 can be useful.
 

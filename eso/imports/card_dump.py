@@ -1,11 +1,4 @@
-import os
-import glob
-import itertools
-import hashlib
-from datetime import datetime
-from django.conf import settings
-
-from exo.models import Picture, Moment, PictureSimple
+from exo.models import PictureSimple
 
 def compare_md5_file(filename):
     f = open(filename, 'r')

@@ -2,6 +2,9 @@ import os
 from datetime import datetime
 
 def get_stat_hash(filename):
+    '''Given a filename, returns a unique value for its state
+    on the filesystem. If any attribute of the file were to
+    change this number would also change'''
     statinfo = os.stat(filename)
     return statinfo.__hash__()
 
@@ -16,8 +19,13 @@ def files_under_dir(dirname):
 def files_and_stat(files):
     return [(filename,get_stat_hash(filename)) for filename in files]
 
-start = datetime.now()
-foo = files_and_stat(files_under_dir("/media/dev/photos"))
-end = datetime.now()
-print end-start
-print len(foo)
+if __name__ == "__main__":
+    '''This function demonstrates that 50k files run in about 15
+    seconds on my shitty laptop and if you run it and continue
+    the interpreter you'll get a list of all the files and 
+    signed integer representing each'''
+    start = datetime.now()
+    foo = files_and_stat(files_under_dir("/media/dev/photos"))
+    end = datetime.now()
+    print end-start
+    print len(foo)

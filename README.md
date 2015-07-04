@@ -23,3 +23,4 @@ ALTER TABLE `exo_picturesimple` ADD COLUMN `key` varchar(4) NULL;
 ALTER TABLE `exo_picturesimple` ALTER COLUMN `key` DROP DEFAULT;
 
 COMMIT;
+
