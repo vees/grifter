@@ -17,15 +17,20 @@ class ContentSignature(models.Model):
     content_key = models.ForeignKey(ContentKey, null=True)
 
 class ContentContainer(models.Model):
+    def __unicode__(self):
+        return "%s|%s|%s|%s" % (self.id, self.server, self.drive, self.path)
     server = models.CharField(max_length=200)
     drive = models.CharField(max_length=200)
     path = models.CharField(max_length=200)
+    class Meta:
+        unique_together = ["server", "drive", "path"]
     
 class ContentInstance(models.Model):
     filename = models.CharField(max_length=200)
+    content_container = models.ForeignKey(ContentContainer, null=False)
     relpath = models.CharField(max_length=200)
-    stat_hash = models.IntegerField()
+    stat_hash = models.IntegerField(null=True)
     first_seen = models.DateTimeField(null=True)
     verified_on = models.DateTimeField(null=True)
     content_signature = models.ForeignKey(ContentSignature, null=True)
-    content_container = models.ForeignKey(ContentContainer, null=True)
+

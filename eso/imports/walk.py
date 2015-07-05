@@ -15,6 +15,10 @@ def get_stat_hash(filename):
     statinfo = os.stat(filename)
     return statinfo.__hash__()
 
+def get_stat_size(filename):
+    statsize = os.path.getsize(filename)
+    return statsize
+
 def files_under_dir(dirname):
     '''Great example from http://stackoverflow.com/a/2186565/682915'''
     matches = []
@@ -24,7 +28,8 @@ def files_under_dir(dirname):
     return matches
 
 def files_and_stat(files):
-    return [(filename,get_stat_hash(filename)) for filename in files]
+    return [(filename,get_stat_hash(filename),get_stat_size(filename)) 
+        for filename in files]
 
 if __name__ == "__main__":
     '''This function demonstrates that 50k files run in about 15
