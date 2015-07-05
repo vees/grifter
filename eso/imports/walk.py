@@ -27,6 +27,14 @@ def files_under_dir(dirname):
             matches.append(os.path.join(root, filename))
     return matches
 
+def file_dir_stat_size(dirname):
+    matches = []
+    for root, dirnames, filenames in os.walk(dirname):
+        for filename in filenames:
+            fullpath = os.path.join(root, filename)
+            matches.append((root,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath)))
+    return matches
+    
 def files_and_stat(files):
     return [(filename,get_stat_hash(filename),get_stat_size(filename)) 
         for filename in files]

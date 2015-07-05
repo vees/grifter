@@ -24,8 +24,13 @@ c, created = ContentContainer.objects.get_or_create(
 
 from eso.imports import walk
 
-walked = walk.files_and_stat(walk.files_under_dir(test_path))
-len(walked)
+walked = walk.file_dir_stat_size(test_path)
+
+import sys
+sys.exit()
+
+#walked = walk.files_and_stat(walk.files_under_dir(test_path))
+#len(walked)
 
 walkedfile = walked[66]
 
