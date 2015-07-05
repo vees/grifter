@@ -10,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 import django
 django.setup()
 
-from exo.models import *
+from exo.models import ContentInstance, ContentContainer, ContentSignature
 
 test_path = "/Users/rob/Desktop"
 
@@ -19,12 +19,43 @@ test_path = "/Users/rob/Desktop"
 # https://docs.djangoproject.com/en/dev/ref/models/querysets/#get-or-create
 # http://stackoverflow.com/questions/8766222/django-create-if-doesnt-exist
 
-c, created = ContentContainer.objects.get_or_create(
-    server="love", drive="love", path=test_path)
-
 from eso.imports import walk
 
+#--or--
 walked = walk.file_dir_stat_size(test_path)
+#--or--
+import pickle
+walked = pickle.load( open( "walked.p", "rb" ) )
+#--or--
+
+walked[766][7]
+walkunit=walked[766]
+
+'''Here's a walkthrough of arbritary content into the
+data structure'''
+for walkunit in walked:
+    c, created = ContentContainer.objects.get_or_create(
+        server="love", drive="love", path=test_path)
+
+    cs, created = ContentSignature.objects.get_or_create(
+        md5=walkunit[6], sha2=walkunit[7], 
+        content_size=walkunit[5])
+    
+    ci, created = ContentInstance.objects.get_or_create(
+        filename = walkunit[2],
+        content_container = c,
+        relpath=walkunit[1],
+        stat_hash=walkunit[4],
+        content_signature=cs
+    )
+    
+#https://docs.djangoproject.com/en/dev/topics/db/queries/#following-relationships-backward
+ContentSignature.objects.all()[1].contentinstance_set.all()
+ContentSignature.objects.filter(n_contentinstance__gt=1)
+
+#http://stackoverflow.com/a/6525869
+from django.db.models import Count
+ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count=2).count()
 
 import sys
 sys.exit()

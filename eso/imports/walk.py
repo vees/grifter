@@ -6,7 +6,22 @@ Created on Sat Jul  4 09:23:28 2015
 """
 
 import os
+import hashlib
 from datetime import datetime
+
+def hash_parse(filename):
+    """Open file, compute md5 and sha2 hash and return as tuple"""
+    try:
+        print filename
+        f = open(filename, 'rb')
+        content = f.read()
+        md5hash = hashlib.md5(content).hexdigest()
+        sha2hash = hashlib.sha256(content).hexdigest()
+        return (md5hash,sha2hash)
+    except ValueError:
+        return 'No hash'
+    finally:
+        f.close()
 
 def get_stat_hash(filename):
     '''Given a filename, returns a unique value for its state
@@ -32,7 +47,8 @@ def file_dir_stat_size(dirname):
     for root, dirnames, filenames in os.walk(dirname):
         for filename in filenames:
             fullpath = os.path.join(root, filename)
-            matches.append((root,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath)))
+            hashes = hash_parse(fullpath)
+            matches.append((fullpath,dirname,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath),)+hashes)
     return matches
     
 def files_and_stat(files):
