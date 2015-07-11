@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
-from exo.models import PictureSimple
+from exo.models import PictureSimple, ContentKey
 from eso.base32 import base32
 from eso.base32 import randspace
 
@@ -24,6 +24,14 @@ returns a page containing an image url"""
     base32md5=(base32.b32encode(binascii.unhexlify(p.file_hash)))
     return HttpResponseRedirect("%s" %
         (request.build_absolute_uri(reverse('exo.views.page_by_base32',args=[base32md5]))))
+
+def page_by_contentkey(request, contentkey):
+    try:
+        zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+        filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
+    except:
+        filename="File not found"
+    return HttpResponse(filename, content_type="text/plain")
 
 def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL

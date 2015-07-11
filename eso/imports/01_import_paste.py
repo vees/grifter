@@ -44,7 +44,7 @@ for walkunit in walked:
     ci, created = ContentInstance.objects.get_or_create(
         filename = walkunit[2],
         content_container = c,
-        relpath=walkunit[1],
+        relpath=walkunit[3],
         stat_hash=walkunit[4],
         content_signature=cs
     )
@@ -55,7 +55,16 @@ ContentSignature.objects.filter(n_contentinstance__gt=1)
 
 #http://stackoverflow.com/a/6525869
 from django.db.models import Count
-ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count=2).count()
+ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).count()
+
+for hashitem in ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).all():
+    print hashitem.content_key.key,hashitem.md5,hashitem.sha2,hashitem.content_size
+    for location in hashitem.contentinstance_set.all():
+        print location.content_container.server,location.content_container.path,location.relpath,location.filename
+    print
+
+#Not exactly what I anticipated, so lets reload
+ContentInstance.objects.all().delete()
 
 import sys
 sys.exit()
@@ -93,7 +102,7 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 import django
 django.setup()
-from exo.models import *
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
 ContentContainer.objects.all()
 #ContentContainer.objects.all()[1].delete()
 
@@ -103,3 +112,42 @@ def get_hostname():
     return socket.gethostname()
 
 get_hostname()
+
+ContentSignature.objects.all()
+from eso.imports import randspace
+randspace.randid()
+
+# Give everything a content key (accession number)
+
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
+import eso.base32.randspace
+cs = ContentSignature.objects.filter(content_key=None)
+for sig in cs:
+    try:
+        duplicate_key=1
+        while duplicate_key>0:
+            newkey=eso.base32.randspace.randid()
+            duplicate_key=ContentKey.objects.filter(key=newkey).count()
+        ck = ContentKey.objects.create(key=newkey)
+        sig.content_key=ck
+        sig.save()
+    except django.db.utils.IntegrityError:
+        print "duplicate key %s for sig id %s" % (newkey, cs.id)
+        continue        
+    
+# Blow away content keys
+
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
+import django
+django.setup()
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
+ContentKey.objects.all().delete()
+
+
+zerothfile=ContentKey.objects.filter(key='pf6d')[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+"/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
+
+
+
+
