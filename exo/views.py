@@ -30,8 +30,25 @@ def page_by_contentkey(request, contentkey):
         zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
-        filename="File not found"
-    return HttpResponse('<img src="/file/%s/">' % contentkey, content_type="text/html")
+            return HttpResponse('No file for this key' % contentkey, content_type="text/html")
+    import eso.exif.EXIF
+    f = open(filename, 'rb')
+    exifhash = eso.exif.EXIF.process_file(f)
+
+    for key in exifhash.keys():
+        try:
+            if len(str(exifhash[key])) > 50:
+                del exifhash[key]
+        except:
+                del exifhash[key]
+    exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
+    template = loader.get_template("meta.html")
+    context = RequestContext(request, {
+        'description': filename,
+        'destination': '/%s/' % ContentKey.objects.order_by('?').first().key,
+        'imagesource': '/file/%s/' % contentkey,
+        'exifdata': exifdata })
+    return HttpResponse(template.render(context))
 
 def image_by_contentkey(request, contentkey):
     try:
@@ -152,5 +169,14 @@ def image_it(path_to_original):
 
 def new_id(request):
     payload={'id': randspace.randid()}
+    response=json.dumps(payload, indent=4)
+    return HttpResponse(response, content_type="application/json")
+
+def remaining_id_space(request):
+    total=22**3*10*4
+    used=ContentKey.objects.all().count()
+    remaining=total-used
+    capacity=int(ContentKey.objects.all().count()/(float(total))*100)   
+    payload={'total': total, 'used': used, 'remaining': remaining, 'capacity': capacity}
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
