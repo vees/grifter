@@ -117,6 +117,10 @@ ContentSignature.objects.all()
 from eso.imports import randspace
 randspace.randid()
 
+for sig in ContentSignature.objects.all():
+    sig.content_key=None
+    sig.save()
+
 # Give everything a content key (accession number)
 
 from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey

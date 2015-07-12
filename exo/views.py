@@ -31,7 +31,18 @@ def page_by_contentkey(request, contentkey):
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
         filename="File not found"
-    return HttpResponse(filename, content_type="text/plain")
+    return HttpResponse('<img src="/file/%s/">' % contentkey, content_type="text/html")
+
+def image_by_contentkey(request, contentkey):
+    try:
+        zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+        filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
+    except:
+        filename="File not found"
+    return HttpResponse(
+        image_it(filename),
+        content_type="image/jpeg"
+        )
 
 def page_by_base32(request, base32md5):
     """Return a page with an image link by base32md5 and a link back to / URL

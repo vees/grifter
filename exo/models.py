@@ -19,6 +19,10 @@ class ContentKey(models.Model):
         return "%s|%s" % (self.id, self.key)
     key = models.CharField(max_length=4, null=False, unique=True)
 
+#class Tag(ContentKey):
+#    slug = models.CharField(max_length=32)
+#    description = models.CharField(max_length=64)
+
 class ContentSignature(models.Model):
     def __unicode__(self):
         return "%s|%s|%s|%s" % (self.id, self.md5, self.sha2, self.content_size)    

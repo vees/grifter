@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     #(r'^$', 'exo.views.privacy_unchecked'),
     (r'^random/$', 'exo.views.random'),
     (r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.page_by_contentkey'),  # 
+    (r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.image_by_contentkey'),  # 
     (r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.page_by_base32'),
     (r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.image_by_base32'),
     (r'^action/(?P<actiontext>\w+)/(?P<md5list>[[0123456789abcdefghjkmnpqrstvwxyz,]+)$', 'exo.views.update_privacy'),
