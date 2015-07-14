@@ -140,18 +140,21 @@ for sig in cs:
         continue        
     
 # Blow away content keys
+#
+#import os
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
+#import django
+#django.setup()
+#from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
+#ContentKey.objects.all().delete()
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
-import django
-django.setup()
-from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
-ContentKey.objects.all().delete()
 
-
-zerothfile=ContentKey.objects.filter(key='pf6d')[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+zerothfile=ContentKey.objects.filter(key='pf6d').first().contentsignature_set.all().first().contentinstance_set.all().first()
 "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
 
+ContentSignature.objects.all()
 
 
+from django.core import serializers
+foo = serializers.serialize('json', list(ContentSignature.objects.all()) + list(ContentInstance.objects.all()) + list(ContentKey.objects.all()))
 

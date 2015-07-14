@@ -180,3 +180,4 @@ def remaining_id_space(request):
     payload={'total': total, 'used': used, 'remaining': remaining, 'capacity': capacity}
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
+
