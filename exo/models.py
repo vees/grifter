@@ -42,8 +42,8 @@ class ContentSignature(models.Model):
 class ContentContainer(models.Model):
     def __unicode__(self):
         return "%s|%s|%s|%s" % (self.id, self.server, self.drive, self.path)
-    server = models.CharField(max_length=200)
-    drive = models.CharField(max_length=200)
+    server = models.CharField(max_length=64)
+    drive = models.CharField(max_length=64)
     path = models.CharField(max_length=200)
     class Meta:
         unique_together = ["server", "drive", "path"]
