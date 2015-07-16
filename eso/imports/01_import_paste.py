@@ -12,7 +12,7 @@ django.setup()
 
 from exo.models import ContentInstance, ContentContainer, ContentSignature
 
-test_path = "/Users/rob/Desktop"
+test_path = "/media/dev/photos"
 
 # Working with a content container creation
 # Using a handy function from here:
@@ -22,21 +22,36 @@ test_path = "/Users/rob/Desktop"
 from eso.imports import walk
 
 #--or--
+# 43 minutes 43 seconds for 50347 records
+from datetime import datetime
+start = datetime.now()
 walked = walk.file_dir_stat_size(test_path)
+end = datetime.now()
+duration = end-start
+print duration
 #--or--
 import pickle
 walked = pickle.load( open( "walked.p", "rb" ) )
 #--or--
 
+import pickle
+pickle.dump(walked, open("walked.p", 'wb'))
+
 walked[766][7]
 walkunit=walked[766]
 
-'''Here's a walkthrough of arbritary content into the
-data structure'''
+'''
+Here's a walkthrough of arbritary content into the
+data structure.
+Even on MySQL a 50k row import takes over two hours
+'''
+n=0
+c, created = ContentContainer.objects.get_or_create(
+    server="wrath", drive="309", path=test_path)
 for walkunit in walked:
-    c, created = ContentContainer.objects.get_or_create(
-        server="love", drive="love", path=test_path)
-
+    n+=1
+    if (n % 1000 == 0):
+        print n
     cs, created = ContentSignature.objects.get_or_create(
         md5=walkunit[6], sha2=walkunit[7], 
         content_size=walkunit[5])
@@ -158,3 +173,13 @@ ContentSignature.objects.all()
 from django.core import serializers
 foo = serializers.serialize('json', list(ContentSignature.objects.all()) + list(ContentInstance.objects.all()) + list(ContentKey.objects.all()))
 
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
+import django
+django.setup()
+
+from exo.models import ContentInstance, ContentContainer, ContentSignature
+ContentInstance.objects.all()
+
+from exo.models import PictureSimple
+PictureSimple.objects.all()

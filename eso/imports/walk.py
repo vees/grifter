@@ -12,7 +12,6 @@ from datetime import datetime
 def hash_parse(filename):
     """Open file, compute md5 and sha2 hash and return as tuple"""
     try:
-        print filename
         f = open(filename, 'rb')
         content = f.read()
         md5hash = hashlib.md5(content).hexdigest()
