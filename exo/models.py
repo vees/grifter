@@ -50,16 +50,7 @@ class ContentContainer(models.Model):
     
 class ContentInstance(models.Model):
     def __unicode__(self):
-        return "%s|%s|%s|%s" % (self.id, self.filename, self.relpath, self.content_signature.id)
-    filename = models.CharField(max_length=200)
-    content_container = models.ForeignKey(ContentContainer, null=False)
-    relpath = models.CharField(max_length=200)
-    stat_hash = models.BigIntegerField(null=True)
-    first_seen = models.DateTimeField(null=True)
-    verified_on = models.DateTimeField(null=True)
-    content_signature = models.ForeignKey(ContentSignature, null=True)
-
-class Picture(ContentInstance):
+        return "%s|%s|%s|%s" % (self.id, self.filename, self.relpath, self.content_signature.id)    
 #    def __str__(self):
 #        return self.get_local_path()
 #    def get_absolute_url(self):
@@ -70,8 +61,20 @@ class Picture(ContentInstance):
 #    @property
 #    def b32md5(self):
 #        return base32.b32encode(binascii.unhexlify(self.file_hash))
+    filename = models.CharField(max_length=200)
+    content_container = models.ForeignKey(ContentContainer, null=False)
+    relpath = models.CharField(max_length=200)
+    stat_hash = models.BigIntegerField(null=True)
+    first_seen = models.DateTimeField(null=True)
+    verified_on = models.DateTimeField(null=True)
+    content_signature = models.ForeignKey(ContentSignature, null=True)
+
+class Picture(models.Model):
+    instance = models.OneToOneField(ContentInstance, primary_key=True)
     rotation = models.IntegerField(choices=ROTATION, null=True)
-    private = models.NullBooleanField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    rating = models.IntegerField(null=True)
 
 class PictureSimple(models.Model):
     filename = models.CharField(max_length=200)

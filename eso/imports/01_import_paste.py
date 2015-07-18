@@ -179,7 +179,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 import django
 django.setup()
 
-from exo.models import ContentInstance, ContentContainer, ContentSignature
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
 ContentInstance.objects.all()
 
 from exo.models import PictureSimple
