@@ -30,7 +30,7 @@ def page_by_contentkey(request, contentkey):
         zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
-            return HttpResponse('No file for this key' % contentkey, content_type="text/html")
+            return HttpResponse('No file for this key %s' % contentkey, content_type="text/html")
     import eso.exif.EXIF
     f = open(filename, 'rb')
     exifhash = eso.exif.EXIF.process_file(f)

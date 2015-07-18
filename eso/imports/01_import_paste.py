@@ -12,7 +12,8 @@ django.setup()
 
 from exo.models import ContentInstance, ContentContainer, ContentSignature
 
-test_path = "/media/dev/photos"
+test_path = "/Users/rob/Desktop"
+
 
 # Working with a content container creation
 # Using a handy function from here:
@@ -47,7 +48,7 @@ Even on MySQL a 50k row import takes over two hours
 '''
 n=0
 c, created = ContentContainer.objects.get_or_create(
-    server="wrath", drive="309", path=test_path)
+    server="love", drive="317", path=test_path)
 for walkunit in walked:
     n+=1
     if (n % 1000 == 0):
@@ -72,10 +73,10 @@ ContentSignature.objects.filter(n_contentinstance__gt=1)
 from django.db.models import Count
 ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).count()
 
-for hashitem in ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).all():
+for hashitem in ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).exclude(content_key=None):
     print hashitem.content_key.key,hashitem.md5,hashitem.sha2,hashitem.content_size
     for location in hashitem.contentinstance_set.all():
-        print location.content_container.server,location.content_container.path,location.relpath,location.filename
+        print location.content_container.server,location.content_container.drive,location.content_container.path,location.relpath,location.filename
     print
 
 #Not exactly what I anticipated, so lets reload
@@ -183,3 +184,4 @@ ContentInstance.objects.all()
 
 from exo.models import PictureSimple
 PictureSimple.objects.all()
+
