@@ -75,6 +75,7 @@ class Picture(models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     rating = models.IntegerField(null=True)
+    taken_on = models.DateTimeField(null=True)
 
 class PictureSimple(models.Model):
     filename = models.CharField(max_length=200)
