@@ -70,7 +70,7 @@ class ContentInstance(models.Model):
     content_signature = models.ForeignKey(ContentSignature, null=True)
 
 class Picture(models.Model):
-    instance = models.OneToOneField(ContentInstance, primary_key=True)
+    signature = models.OneToOneField(ContentSignature, primary_key=True)
     rotation = models.IntegerField(choices=ROTATION, null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)

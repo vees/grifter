@@ -13,6 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='picture',
+            name='signature',
+            field=models.OneToOneField(primary_key=True, default=1, serialize=False, to='exo.ContentSignature'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='picture',
             name='taken_on',
             field=models.DateTimeField(null=True),
             preserve_default=True,
