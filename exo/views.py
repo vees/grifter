@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
-from exo.models import PictureSimple, ContentKey
+from exo.models import PictureSimple, ContentKey, ContentInstance
 from eso.base32 import base32
 from eso.base32 import randspace
 
@@ -45,7 +45,7 @@ def page_by_contentkey(request, contentkey):
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
         'description': filename,
-        'destination': '/%s/' % ContentKey.objects.order_by('?').first().key,
+        'destination': '/%s/' % ContentInstance.objects.filter(content_container=1).order_by('?').first().content_signature.content_key.key,
         'imagesource': '/file/%s/' % contentkey,
         'exifdata': exifdata })
     return HttpResponse(template.render(context))
@@ -181,3 +181,12 @@ def remaining_id_space(request):
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
 
+class MyEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
+def export(request):
+    ci=ContentInstance.objects.select_related().prefetch_related('content_signature__content_key').first()
+    response = json.dumps(ci, cls=MyEncoder, sort_keys=True, indent=4)
+    return HttpResponse(response, content_type="application/json")
+    

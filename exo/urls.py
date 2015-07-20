@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     (r'^$', 'exo.views.random'),
     (r'^api/new/id$', 'exo.views.new_id'),
     (r'^api/id/space$', 'exo.views.remaining_id_space'),
+    (r'^api/export$', 'exo.views.export'),
     #(r'^$', 'exo.views.privacy_unchecked'),
     (r'^random/$', 'exo.views.random'),
     (r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.page_by_contentkey'),  # 
