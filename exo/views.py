@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 
-from exo.models import PictureSimple, ContentKey, ContentInstance
+from exo.models import PictureSimple, ContentKey, ContentInstance, ContentSignature
 from eso.base32 import base32
 from eso.base32 import randspace
 
@@ -61,36 +61,38 @@ def image_by_contentkey(request, contentkey):
         content_type="image/jpeg"
         )
 
-def page_by_base32(request, base32md5):
-    """Return a page with an image link by base32md5 and a link back to / URL
-for another load"""
-    p=PictureSimple.objects.get(file_hash=binascii.hexlify(base32.b32decode(base32md5)))
-    import eso.exif.EXIF
-    f = open(p.get_local_path(), 'rb')
-    exifhash = eso.exif.EXIF.process_file(f)
+#def page_by_base32(request, base32md5):
+#    """Return a page with an image link by base32md5 and a link back to / URL
+#for another load"""
+#    p=PictureSimple.objects.get(file_hash=binascii.hexlify(base32.b32decode(base32md5)))
+#    import eso.exif.EXIF
+#    f = open(p.get_local_path(), 'rb')
+#    exifhash = eso.exif.EXIF.process_file(f)
+#
+#    for key in exifhash.keys():
+#        try:
+#            if len(str(exifhash[key])) > 50:
+#                del exifhash[key]
+#        except:
+#                del exifhash[key]
+#    exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
+#    template = loader.get_template("meta.html")
+#    context = RequestContext(request, {
+#        'description': p.filename,
+#        'destination': request.build_absolute_uri(reverse('exo.views.random')),
+#        'imagesource': request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])),
+#        'exifdata': exifdata })
+#    return HttpResponse(template.render(context))
 
-    for key in exifhash.keys():
-        try:
-            if len(str(exifhash[key])) > 50:
-                del exifhash[key]
-        except:
-                del exifhash[key]
-    exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
-    template = loader.get_template("meta.html")
-    context = RequestContext(request, {
-        'description': p.filename,
-        'destination': request.build_absolute_uri(reverse('exo.views.random')),
-        'imagesource': request.build_absolute_uri(reverse('exo.views.image_by_base32',args=[base32md5])),
-        'exifdata': exifdata })
-    return HttpResponse(template.render(context))
+def page_by_base32(request, base32md5):
+    cs=ContentSignature.objects.get(md5=binascii.hexlify(base32.b32decode(base32md5)))
+    key=cs.content_key.key
+    return HttpResponseRedirect("/%s/" % key)
 
 def image_by_base32(request, base32md5):
-    """Return a resized file by the base32md5"""
-    p=PictureSimple.objects.get(file_hash=binascii.hexlify(base32.b32decode(base32md5)))
-    return HttpResponse(
-        image_it(p.get_local_path()),
-        content_type="image/jpeg"
-        )
+    cs=ContentSignature.objects.get(md5=binascii.hexlify(base32.b32decode(base32md5)))
+    key=cs.content_key.key
+    return HttpResponseRedirect("/file/%s/" % key)
 
 def privacy_unchecked(request):
     batchsize=24

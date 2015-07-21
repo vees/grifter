@@ -12,7 +12,7 @@ django.setup()
 
 from exo.models import ContentInstance, ContentContainer, ContentSignature
 
-test_path = "/Users/rob/Desktop"
+test_path = "/home/veesprod/vees.net/photos"
 
 
 # Working with a content container creation
@@ -32,7 +32,7 @@ duration = end-start
 print duration
 #--or--
 import pickle
-walked = pickle.load( open( "walked.p", "rb" ) )
+walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/veesprod-walked.p", "rb" ) )
 #--or--
 
 import pickle
@@ -48,22 +48,22 @@ Even on MySQL a 50k row import takes over two hours
 '''
 n=0
 c, created = ContentContainer.objects.get_or_create(
-    server="love", drive="317", path=test_path)
+    server="skymaster", drive="veesprod", path=test_path)
 for walkunit in walked:
     n+=1
     if (n % 1000 == 0):
         print n
-    cs, created = ContentSignature.objects.get_or_create(
+    cs, createds = ContentSignature.objects.get_or_create(
         md5=walkunit[6], sha2=walkunit[7], 
         content_size=walkunit[5])
-    
-    ci, created = ContentInstance.objects.get_or_create(
+    ci, createdi = ContentInstance.objects.get_or_create(
         filename = walkunit[2],
         content_container = c,
         relpath=walkunit[3],
         stat_hash=walkunit[4],
-        content_signature=cs
-    )
+        content_signature=cs)
+    print "Sig",createds,"Instance", createdi,walkunit[2]
+    
     
 #https://docs.djangoproject.com/en/dev/topics/db/queries/#following-relationships-backward
 ContentSignature.objects.all()[1].contentinstance_set.all()
