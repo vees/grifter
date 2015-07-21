@@ -43,6 +43,7 @@ def page_by_contentkey(request, contentkey):
     exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
+        'contentkey': contentkey,
         'description': filename,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
         'imagesource': '/file/%s/' % contentkey,
