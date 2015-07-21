@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from exo.models import PictureSimple, ContentKey, ContentInstance, ContentSignature
 from eso.base32 import base32
@@ -27,7 +28,7 @@ returns a page containing an image url"""
 
 def page_by_contentkey(request, contentkey):
     try:
-        zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+        zerothfile=ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
             return HttpResponse('No file for this key %s' % contentkey, content_type="text/html")
@@ -45,14 +46,14 @@ def page_by_contentkey(request, contentkey):
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
         'description': filename,
-        'destination': '/%s/' % ContentInstance.objects.filter(content_container=1).order_by('?').first().content_signature.content_key.key,
+        'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
         'imagesource': '/file/%s/' % contentkey,
         'exifdata': exifdata })
     return HttpResponse(template.render(context))
 
 def image_by_contentkey(request, contentkey):
     try:
-        zerothfile=ContentKey.objects.filter(key=contentkey)[0].contentsignature_set.all()[0].contentinstance_set.all()[0]
+        zerothfile=ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
         filename="File not found"
