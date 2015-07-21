@@ -16,7 +16,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 import django
 django.setup()
 
-from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey, Picture
 
 # Find something on this server we can play with
 ContentInstance.objects.exclude(content_container=2).last()
@@ -27,10 +27,8 @@ getattr(b,'name')
 
 import exo.models
 reload(exo.models)
-from exo.models import Picture
 
 Picture.objects.all()
-from PIL import Image
 
 #
 # Import CSV  photo_md5 with format
@@ -40,13 +38,6 @@ from PIL import Image
 # Save
 #
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
-import django
-django.setup()
-
-
-from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey, Picture
 
 cs=ContentSignature.objects.filter(md5='a120875a769b68cc35ffee887b9b82d0')
 ci=cs.first().contentinstance_set.first()
