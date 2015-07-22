@@ -7,7 +7,7 @@ django.setup()
 
 from django.conf import settings
 
-from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey, Picture
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey, Picture, Tag2
 
 contentkey='hy4r'
 contentkey='ds1z'
@@ -30,6 +30,11 @@ def addrating(key, rating):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
     return sig,p.rotation,new
+
+def addtag(key, tag):
+    t,created=Tag2.objects.update_or_create(slug=tag)
+    sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
+    sig.tags.add(t)
     
 #p,new=Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
 
@@ -55,4 +60,13 @@ Picture.objects.filter(rating=4).first().signature.content_key.key
 # nnd1 Coral reef, bad color distribution, etc.
 Picture.objects.filter(rating=5).first().signature.content_key.key
 # 7rhd - Pictuesque landscape
+
+contentkey='h7zg'
+ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().picture.__dict__
+
+
+
+contentkey='h7zg'
+ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all()
+Tag2.objects.all()
 

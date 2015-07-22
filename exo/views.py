@@ -10,7 +10,7 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from exo.models import ContentKey, ContentInstance, ContentSignature, Picture
+from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
 from eso.base32 import randspace
 
@@ -43,8 +43,12 @@ def page_by_contentkey(request, contentkey):
         except:
                 del exifhash[key]
     exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
+    pagetags = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all().order_by('slug')
+    alltags = Tag2.objects.all().order_by('slug')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
+        'pagetags': pagetags,
+        'alltags': alltags,
         'contentkey': contentkey,
         'description': filename,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
@@ -59,8 +63,9 @@ def image_by_contentkey(request, contentkey):
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
         rotation=0
         if hasattr(sig, 'picture'):
-            rotation=360-sig.picture.rotation
-    except:
+            if (hasattr(sig.picture, 'rotation') and sig.picture.rotation!=None):
+                rotation=360-sig.picture.rotation
+    except IOError:
         filename="File not found"
     return HttpResponse(
         image_it(filename, rotation=rotation),
@@ -210,12 +215,23 @@ def addrating(key, rating):
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
     return sig,p.rotation,new
 
-def api_action(request, contentkey, action, attribute):
-#    payload=(contentkey, action, attribute)
-    if action=='rotate':
-        addrotation(contentkey,attribute)
-    if action=='rating':
-        addrating(contentkey,attribute)
-#    response=json.dumps(payload, indent=4)
-#    return HttpResponse(response, content_type="application/json")
+def addtag(key, tag):
+    t,created=Tag2.objects.update_or_create(slug=tag)
+    sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
+    sig.tags.add(t)
+
+def api_action(request, contentkey, action, attribute=''):
+    try:
+        if attribute=='':
+            attribute=request.GET.get('attribute')
+        if action=='rotate':
+            addrotation(contentkey,attribute)
+        if action=='rating':
+            addrating(contentkey,attribute)
+        if action=='tag':
+            addtag(contentkey,attribute)
+    except:
+        payload=(contentkey, action, attribute)
+        response=json.dumps(payload, indent=4)
+        return HttpResponse(response, content_type="application/json")
     return HttpResponseRedirect("/%s/" % contentkey)
