@@ -13,7 +13,7 @@
 <meta name="twitter:description" content="A picture from Rob Carlson's photo gallery">
 <meta property="og:site_name" content="Rob Carlson">
 <meta property="og:image" content="{{imagesource}}">
-<meta property="og:url" content="http://vees.net/{{contentkey}}/" />
+<meta property="og:url" content="https://vees.net/{{contentkey}}/" />
 <meta property="og:title" content="{{description}}" />
 <meta property="og:description" content="{{description}}" />
 <script type="text/javascript">
@@ -29,6 +29,11 @@
   })();
 
 </script>
+<style>
+ul li{
+  display: inline;
+}
+</style>
 <title>{{description}}</title>
 
 </head>
@@ -39,8 +44,16 @@
 <p>{{description}}</p>
 
 <ul>
-<li>Rotate left
-<li>Rotate right
+<li><a href="/api/photo/{{contentkey}}/rotate/0">0</a>
+<li><a href="/api/photo/{{contentkey}}/rotate/90">90</a>
+<li><a href="/api/photo/{{contentkey}}/rotate/180">180</a>
+<li><a href="/api/photo/{{contentkey}}/rotate/270">270</a>
+<li><a href="/api/photo/{{contentkey}}/rating/0">0</a>
+<li><a href="/api/photo/{{contentkey}}/rating/1">1</a>
+<li><a href="/api/photo/{{contentkey}}/rating/2">2</a>
+<li><a href="/api/photo/{{contentkey}}/rating/3">3</a>
+<li><a href="/api/photo/{{contentkey}}/rating/4">4</a>
+<li><a href="/api/photo/{{contentkey}}/rating/5">5</a>
 <li>Thumbs up
 <li>Thumbs down
 <li>Star
