@@ -41,11 +41,11 @@ urlpatterns = patterns('',
     (r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.image_by_contentkey'),  # 
     (r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.page_by_base32'),
     (r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.image_by_base32'),
-    (r'^action/(?P<actiontext>\w+)/(?P<md5list>[[0123456789abcdefghjkmnpqrstvwxyz,]+)$', 'exo.views.update_privacy'),
+#    (r'^action/(?P<actiontext>\w+)/(?P<md5list>[[0123456789abcdefghjkmnpqrstvwxyz,]+)$', 'exo.views.update_privacy'),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    #url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 )
