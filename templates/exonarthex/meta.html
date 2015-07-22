@@ -43,6 +43,8 @@ ul li{
 <a href="{{destination}}"><img src="{{imagesource}}"></a>
 <p>{{description}}</p>
 
+{% if user.is_authenticated %}
+
 <ul>
 {% for tag in pagetags %}
 <li><strong>{{tag.slug}}</strong>
@@ -83,6 +85,8 @@ ul li{
 <pre>
 {{exifdata}}
 </pre>
+
+{% endif %}
 
 </body>
 </html>
