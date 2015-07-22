@@ -19,9 +19,9 @@ class ContentKey(models.Model):
         return "%s|%s" % (self.id, self.key)
     key = models.CharField(max_length=4, null=False, unique=True)
 
-class Tag(ContentKey):
-    slug = models.CharField(max_length=32)
-    description = models.CharField(max_length=64)
+class Tag2(models.Model):
+    slug = models.CharField(max_length=32, null=False)
+    description = models.CharField(max_length=64, null=True)
 
 class Redirect(ContentKey):
     '''
@@ -38,6 +38,7 @@ class ContentSignature(models.Model):
     sha2 = models.CharField(max_length=64)
     content_size = models.IntegerField()
     content_key = models.ForeignKey(ContentKey, null=True)
+    tags = models.ManyToManyField(Tag2)
 
 class ContentContainer(models.Model):
     def __unicode__(self):
@@ -70,6 +71,9 @@ class ContentInstance(models.Model):
     content_signature = models.ForeignKey(ContentSignature, null=True)
 
 class Picture(models.Model):
+    '''
+    Need to add NSFW tag
+    '''
     signature = models.OneToOneField(ContentSignature, primary_key=True)
     rotation = models.IntegerField(choices=ROTATION, null=True)
     width = models.IntegerField(null=True)

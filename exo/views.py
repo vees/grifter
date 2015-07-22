@@ -10,7 +10,7 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from exo.models import PictureSimple, ContentKey, ContentInstance, ContentSignature
+from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
 from eso.base32 import randspace
 
@@ -41,8 +41,12 @@ def page_by_contentkey(request, contentkey):
         except:
                 del exifhash[key]
     exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
+    pagetags = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all().order_by('slug')
+    alltags = Tag2.objects.all().order_by('slug')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
+        'pagetags': pagetags,
+        'alltags': alltags,
         'contentkey': contentkey,
         'description': filename,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
@@ -52,12 +56,17 @@ def page_by_contentkey(request, contentkey):
 
 def image_by_contentkey(request, contentkey):
     try:
-        zerothfile=ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
+        sig = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first()
+        zerothfile=sig.contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
-    except:
+        rotation=0
+        if hasattr(sig, 'picture'):
+            if (hasattr(sig.picture, 'rotation') and sig.picture.rotation!=None):
+                rotation=360-sig.picture.rotation
+    except IOError:
         filename="File not found"
     return HttpResponse(
-        image_it(filename),
+        image_it(filename, rotation=rotation),
         content_type="image/jpeg"
         )
 
@@ -94,36 +103,36 @@ def image_by_base32(request, base32md5):
     key=cs.content_key.key
     return HttpResponseRedirect("/file/%s/" % key)
 
-def privacy_unchecked(request):
-    batchsize=24
-    unchecked=PictureSimple.objects.filter(private=None).order_by('directory','filename')
-    remaining=unchecked.count()/batchsize
-    pictures = unchecked[0:batchsize]
-    allbutton = ",".join([x.b32md5 for x in pictures])
-    template = loader.get_template("private.html")
-    context = RequestContext(request, {'pictures': pictures, 'allbutton': allbutton, 'remaining':remaining})
-    return HttpResponse(template.render(context))
-
-def update_privacy(request, actiontext, md5list):
-    """Take a comma delimited string of base32 md5 plus an action text of private or public
-and iterate over the results to change the status of individual images"""
-    if actiontext not in ['private','public','reset']:
-        return HttpResponse("Invalid command")
-
-    try:
-        md5hexlist = [binascii.hexlify(base32.b32decode(md5)) for md5 in md5list.split(",")]
-    except:
-        return HttpResponse("Bad list of elements")
-
-    privacy=None
-    if actiontext=='private':
-        privacy=1
-    if actiontext=='public':
-        privacy=0
-
-    PictureSimple.objects.filter(file_hash__in=md5hexlist).update(private = privacy)
-
-    return HttpResponseRedirect("/")
+#def privacy_unchecked(request):
+#    batchsize=24
+#    unchecked=PictureSimple.objects.filter(private=None).order_by('directory','filename')
+#    remaining=unchecked.count()/batchsize
+#    pictures = unchecked[0:batchsize]
+#    allbutton = ",".join([x.b32md5 for x in pictures])
+#    template = loader.get_template("private.html")
+#    context = RequestContext(request, {'pictures': pictures, 'allbutton': allbutton, 'remaining':remaining})
+#    return HttpResponse(template.render(context))
+#
+#def update_privacy(request, actiontext, md5list):
+#    """Take a comma delimited string of base32 md5 plus an action text of private or public
+#and iterate over the results to change the status of individual images"""
+#    if actiontext not in ['private','public','reset']:
+#        return HttpResponse("Invalid command")
+#
+#    try:
+#        md5hexlist = [binascii.hexlify(base32.b32decode(md5)) for md5 in md5list.split(",")]
+#    except:
+#        return HttpResponse("Bad list of elements")
+#
+#    privacy=None
+#    if actiontext=='private':
+#        privacy=1
+#    if actiontext=='public':
+#        privacy=0
+#
+#    PictureSimple.objects.filter(file_hash__in=md5hexlist).update(private = privacy)
+#
+#    return HttpResponseRedirect("/")
 
 def image(request, image_id):
     p=Picture.objects.get(pk=image_id)
@@ -139,19 +148,19 @@ def thumbnail(request, image_id):
         content_type="image/jpeg"
         )
 
-def randomold(request):
-    match=0
-    while 1:
-        try:
-            g=Random()
-            p=Old_Picture.objects.get(pk=g.randint(1,Old_Picture.objects.count()))
-            break
-        except Old_Picture.DoesNotExist:
-            pass
-    return HttpResponse(
-        thumbnail_it('/local/img/'+p.theme.directory+"/"+p.filename+'.jpg'),
-        content_type="image/jpeg"
-        )
+#def randomold(request):
+#    match=0
+#    while 1:
+#        try:
+#            g=Random()
+#            p=Old_Picture.objects.get(pk=g.randint(1,Old_Picture.objects.count()))
+#            break
+#        except Old_Picture.DoesNotExist:
+#            pass
+#    return HttpResponse(
+#        thumbnail_it('/local/img/'+p.theme.directory+"/"+p.filename+'.jpg'),
+#        content_type="image/jpeg"
+#        )
 
 def thumbnail_it(path_to_original):
     im = Image.open(path_to_original)
@@ -161,8 +170,10 @@ def thumbnail_it(path_to_original):
     im.save(buf, format= 'JPEG')
     return buf.getvalue()
 
-def image_it(path_to_original):
+def image_it(path_to_original, rotation=0):
     im = Image.open(path_to_original)
+    if rotation!=0:
+        im=im.rotate(rotation)
     size = 1024,1024,180
     im.thumbnail(size, Image.ANTIALIAS)
     buf= StringIO.StringIO()
@@ -191,4 +202,34 @@ def export(request):
     ci=ContentInstance.objects.select_related().prefetch_related('content_signature__content_key').first()
     response = json.dumps(ci, cls=MyEncoder, sort_keys=True, indent=4)
     return HttpResponse(response, content_type="application/json")
+
+def addrotation(key, rotation):
+    sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
+    p,new=Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
+    return sig,p.rotation,new
     
+def addrating(key, rating):
+    sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
+    p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
+    return sig,p.rotation,new
+
+def addtag(key, tag):
+    t,created=Tag2.objects.update_or_create(slug=tag)
+    sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
+    sig.tags.add(t)
+
+def api_action(request, contentkey, action, attribute=''):
+    try:
+        if attribute=='':
+            attribute=request.GET.get('attribute')
+        if action=='rotate':
+            addrotation(contentkey,attribute)
+        if action=='rating':
+            addrating(contentkey,attribute)
+        if action=='tag':
+            addtag(contentkey,attribute)
+    except:
+        payload=(contentkey, action, attribute)
+        response=json.dumps(payload, indent=4)
+        return HttpResponse(response, content_type="application/json")
+    return HttpResponseRedirect("/%s/" % contentkey)
