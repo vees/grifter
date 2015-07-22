@@ -213,10 +213,11 @@ def addrating(key, rating):
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
     return sig,p.rotation,new
 
-def addtag(key, tag):
-    t,created=Tag2.objects.update_or_create(slug=tag)
+def addtag(key, tags):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
-    sig.tags.add(t)
+    for tag in tags.split(","):
+        t,created=Tag2.objects.update_or_create(slug=tag)
+        sig.tags.add(t)
 
 def api_action(request, contentkey, action, attribute=''):
     try:
