@@ -280,12 +280,20 @@ def api_rotatedump(request):
 
 @csrf_exempt
 def api_rotateload(request):
+    ignored=0
+    nomatch=0
+    added=0
     posted=json.loads(request.body)
     for rotation,sha2list in posted.iteritems():
         skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
         for sha2 in sha2list:
-            if sha2 in skipsig: continue
+            if sha2 in skipsig:
+                ignored+=1                
+                continue
         sig = ContentSignature.objects.filter(sha2=sha2).first()
-        if not sig: continue
+        if not sig:
+            nomatch+=1
+            continue
         Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
-    return HttpResponse(json.dumps({'status': 0}), content_type="application/json")
+        added+=1
+    return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch}), content_type="application/json")
