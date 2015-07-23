@@ -70,3 +70,12 @@ contentkey='h7zg'
 ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all()
 Tag2.objects.all()
 
+def tagrelpath(tag,relpath):
+    t,created=Tag2.objects.get_or_create(slug=tag)
+    for sig in ContentSignature.objects.filter(contentinstance__relpath=relpath):
+        sig.tags.add(t)
+
+tagrelpath('playadelfuego','pdf04f2')
+
+# Deleting a tag from everything in a relpath when added by accident
+Tag2.objects.filter(contentsignature__contentinstance__relpath='suzystaff04sep').filter(slug='2014').delete()
