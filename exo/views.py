@@ -12,7 +12,7 @@ from django.conf import settings
 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-
+from django.http import Http404  
 
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
@@ -304,4 +304,17 @@ def api_rotateload(request):
                 added+=1
                 addlist+=[sig.sha2]
     return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch,'addlist':addlist}), content_type="application/json")
-        
+
+def alltags(request):
+    pass
+
+def taglist(request,slug):
+    try:
+        tagdict = dict([(sig.content_key.key, " ".join([t.slug for t in sig.tags.order_by('slug')])) for sig in Tag2.objects.get(slug=slug).contentsignature_set.all()])
+    except:
+        raise Http404
+    template = loader.get_template("tags.html")
+    context = RequestContext(request, {
+        'slug': slug,        
+        'tagdict': tagdict })
+    return HttpResponse(template.render(context))

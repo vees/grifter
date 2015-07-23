@@ -1,0 +1,9 @@
+<h1>{{slug}}</h1>
+
+<ul>
+{% for key,value in tagdict.items %}
+
+<li><a href="/{{key}}/"><strong>{{key}}</strong>: {{value}}</a></li>
+
+{% endfor %}
+</ul>
