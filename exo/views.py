@@ -270,19 +270,22 @@ def api_tagload(request):
     return HttpResponse(json.dumps({'status': 0}), content_type="application/json")
 
 def api_rotatedump(request):
-    rotatedump = dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filter(rotation__isnull=False).prefetch_related('signature')])
+    rotatedump = {'0': [], '90': [], '180': [], '270': []}
+    for p in Picture.objects.filter(rotation__isnull=False).prefetch_related('signature'):
+        rotation = str(p.rotation)
+        rotatedump[rotation] += [p.signature.sha2]
     response = json.dumps(rotatedump, indent=4)
     return HttpResponse(response, content_type="application/json")
 
 
 @csrf_exempt
 def api_rotateload(request):
-    '''
-    This function might be more efficient if the dictionary were inverted
-    '''
     posted=json.loads(request.body)
-    for sha2,defaults in posted.iteritems():
+    for rotation,sha2list in posted.iteritems():
+        skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
+        for sha2 in sha2list:
+            if sha2 in skipsig: continue
         sig = ContentSignature.objects.filter(sha2=sha2).first()
         if not sig: continue
-        Picture.objects.update_or_create(signature=sig, defaults=defaults)
+        Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
     return HttpResponse(json.dumps({'status': 0}), content_type="application/json")
