@@ -10,6 +10,10 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
 from eso.base32 import randspace
@@ -42,13 +46,16 @@ def page_by_contentkey(request, contentkey):
                 del exifhash[key]
     exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
     pagetags = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all().order_by('slug')
+    description = " ".join([tag.slug for tag in pagetags])
+    if not description:
+        description = filename
     alltags = Tag2.objects.all().order_by('slug')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
         'pagetags': pagetags,
         'alltags': alltags,
         'contentkey': contentkey,
-        'description': filename,
+        'description': description,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
         'imagesource': '/file/%s/' % contentkey,
         'exifdata': exifdata })
@@ -234,3 +241,51 @@ def api_action(request, contentkey, action, attribute=''):
         response=json.dumps(payload, indent=4)
         return HttpResponse(response, content_type="application/json")
     return HttpResponseRedirect("/%s/" % contentkey)
+
+def api_tagdump(request):
+    tagdump = dict([(t.slug, [s.sha2 for s in t.contentsignature_set.all()]) for t in Tag2.objects.order_by('slug')])
+    response = json.dumps(tagdump, indent=4)
+    return HttpResponse(response, content_type="application/json")
+
+@csrf_exempt
+def api_tagload(request):
+    '''
+    This function might be more efficient if the dictionary were inverted,
+    and also we can pre-check with
+    [a.sha2 for a in Tag2.objects.filter(slug='playadelfuego').first().contentsignature_set.all()]
+    for a slug name and save our selves some loading time (later)
+    '''
+    posted=json.loads(request.body)
+    for tag,shalist in posted.iteritems():
+        print tag
+        t,created=Tag2.objects.update_or_create(slug=tag)
+        sha2ignore = [a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()]
+        for sha2 in shalist:
+            if sha2 in sha2ignore: continue
+            print sha2
+            sig=ContentSignature.objects.filter(sha2=sha2).first()
+            if not sig: continue
+            sig.tags.add(t)
+            sig.save()
+    return HttpResponse(json.dumps({'status': 0}), content_type="application/json")
+
+def api_rotatedump(request):
+    rotatedump = {'0': [], '90': [], '180': [], '270': []}
+    for p in Picture.objects.filter(rotation__isnull=False).prefetch_related('signature'):
+        rotation = str(p.rotation)
+        rotatedump[rotation] += [p.signature.sha2]
+    response = json.dumps(rotatedump, indent=4)
+    return HttpResponse(response, content_type="application/json")
+
+
+@csrf_exempt
+def api_rotateload(request):
+    posted=json.loads(request.body)
+    for rotation,sha2list in posted.iteritems():
+        skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
+        for sha2 in sha2list:
+            if sha2 in skipsig: continue
+        sig = ContentSignature.objects.filter(sha2=sha2).first()
+        if not sig: continue
+        Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
+    return HttpResponse(json.dumps({'status': 0}), content_type="application/json")

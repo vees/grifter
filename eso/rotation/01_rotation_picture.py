@@ -79,3 +79,63 @@ tagrelpath('playadelfuego','pdf04f2')
 
 # Deleting a tag from everything in a relpath when added by accident
 Tag2.objects.filter(contentsignature__contentinstance__relpath='suzystaff04sep').filter(slug='2014').delete()
+
+tagdump = dict([(t.slug, [s.md5 for s in t.contentsignature_set.all()]) for t in Tag2.objects.all().order_by('slug')])
+import json
+response = json.dumps(tagdump)
+response[1:1000]
+
+Tag2.objects.first().contentsignature_set.all()
+
+Picture.objects.filter(rotation__isnull=False).count()
+[(p.rotation, p.signature.sha2) for p in Picture.objects.filter(rotation__isnull=False)]
+dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filter(rotation__isnull=False).prefetch_related()[1:1000]])
+
+
+source = 'https://vees.net/'
+dest = 'http://127.0.0.1:8000/'
+import requests
+
+def crosssync(source,dest,endpoint):
+    payload=requests.get(source+'api/%s/dumpall' % (endpoint)).text
+    veestags=json.loads(payload)
+    for key,shalist in veestags.iteritems():
+        print key
+        r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: shalist}))
+        print r.text
+
+import requests
+import json
+source = 'https://vees.net/'
+dest = 'http://127.0.0.1:8000/'
+crosssync(source,dest,'tags')
+crosssync(dest,source,'tags')
+
+crosssync(source,dest,'rotation')
+crosssync(dest,source,'rotation')
+
+source = 'http://127.0.0.1:8000/'
+dest = 'https://vees.net/'
+import requests
+payload=requests.get(source+'api/tags/dumpall').text
+veestags=json.loads(payload)
+for key,shalist in veestags.iteritems():
+    print key
+    data=json.dumps({key: shalist})
+    print data
+    r=requests.post(dest+"api/tags/load", data=data)
+    print r.text
+
+
+
+r=requests.post("http://127.0.0.1:8000/api/tags/load", data=payload)
+print r.text
+payload=requests.get('http://127.0.0.1:8000/api/tags/dumpall').text
+r=requests.post("https://vees.net/api/tags/load", data=payload)
+print r.text
+
+import requests
+payload=requests.get('https://vees.net/api/rotation/dumpall').text
+r=requests.post("http://127.0.0.1:8000/api/rotation/load", data=payload)
+payload=requests.get('http://127.0.0.1:8000/api/tags/dumpall').text
+r=requests.post("https://vees.net/api/tags/load", data=payload)
