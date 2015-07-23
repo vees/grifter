@@ -92,39 +92,26 @@ Picture.objects.filter(rotation__isnull=False).count()
 dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filter(rotation__isnull=False).prefetch_related()[1:1000]])
 
 
-source = 'https://vees.net/'
-dest = 'http://127.0.0.1:8000/'
 import requests
-
-def crosssync(source,dest,endpoint):
-    payload=requests.get(source+'api/%s/dumpall' % (endpoint)).text
-    veestags=json.loads(payload)
-    for key,shalist in veestags.iteritems():
-        print key
-        r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: shalist}))
-        print r.text
-
 import requests
 import json
-source = 'https://vees.net/'
-dest = 'http://127.0.0.1:8000/'
-crosssync(source,dest,'tags')
-crosssync(dest,source,'tags')
 
-crosssync(source,dest,'rotation')
-crosssync(dest,source,'rotation')
+vees = 'https://vees.net/'
+local = 'http://127.0.0.1:8000/'
 
-source = 'http://127.0.0.1:8000/'
-dest = 'https://vees.net/'
-import requests
-payload=requests.get(source+'api/tags/dumpall').text
-veestags=json.loads(payload)
-for key,shalist in veestags.iteritems():
-    print key
-    data=json.dumps({key: shalist})
-    print data
-    r=requests.post(dest+"api/tags/load", data=data)
-    print r.text
+def crosssync(source,dest,endpoint):
+    payload=requests.get(source+'api/%s/dumpall' % (endpoint), verify=False).text
+    veestags=json.loads(payload)
+    for key,itemlist in veestags.iteritems():
+        print key
+        r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: itemlist}), verify=False)
+        print r.text
+
+crosssync(vees,local,'tags')
+crosssync(local,vees,'tags')
+
+crosssync(vees,local,'rotation')
+crosssync(local,vees,'rotation')
 
 
 
@@ -135,7 +122,13 @@ r=requests.post("https://vees.net/api/tags/load", data=payload)
 print r.text
 
 import requests
-payload=requests.get('https://vees.net/api/rotation/dumpall').text
+
+
+
+payload=requests.get('https://vees.net/api/rotation/dumpall', verify=False).text
 r=requests.post("http://127.0.0.1:8000/api/rotation/load", data=payload)
-payload=requests.get('http://127.0.0.1:8000/api/tags/dumpall').text
-r=requests.post("https://vees.net/api/tags/load", data=payload)
+r.text
+
+payload=requests.get('http://127.0.0.1:8000/api/rotation/dumpall').text
+r=requests.post("https://vees.net/api/rotation/load", data=payload, verify=False)
+r.text
