@@ -264,19 +264,16 @@ def api_tagload(request):
     for tag,shalist in posted.iteritems():
         print tag
         t,created=Tag2.objects.update_or_create(slug=tag)
-        sha2ignore = [a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()]
-        for sha2 in shalist:
-            if sha2 in sha2ignore:
-                ignored+=1                
-                continue
-            print sha2
+        sha2ignore = set([a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()])
+        ignored=len(sha2ignore)
+        for sha2 in set(shalist) - sha2ignore:
             sig=ContentSignature.objects.filter(sha2=sha2).first()
             if not sig:
                 nomatch+=1                
-                continue
-            sig.tags.add(t)
-            sig.save()
-            added+=1
+            else:
+                sig.tags.add(t)
+                sig.save()
+                added+=1
     return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch}), content_type="application/json")
 
 def api_rotatedump(request):
