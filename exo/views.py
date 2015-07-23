@@ -250,13 +250,18 @@ def api_tagdump(request):
 @csrf_exempt
 def api_tagload(request):
     '''
-    This function might be more efficient if the dictionary were inverted
+    This function might be more efficient if the dictionary were inverted,
+    and also we can pre-check with
+    [a.sha2 for a in Tag2.objects.filter(slug='playadelfuego').first().contentsignature_set.all()]
+    for a slug name and save our selves some loading time (later)
     '''
     posted=json.loads(request.body)
     for tag,shalist in posted.iteritems():
         print tag
         t,created=Tag2.objects.update_or_create(slug=tag)
+        sha2ignore = [a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()]
         for sha2 in shalist:
+            if sha2 in sha2ignore: continue
             print sha2
             sig=ContentSignature.objects.filter(sha2=sha2).first()
             if not sig: continue
