@@ -10,6 +10,10 @@ from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
 from eso.base32 import randspace
@@ -243,6 +247,7 @@ def api_tagdump(request):
     response = json.dumps(tagdump, indent=4)
     return HttpResponse(response, content_type="application/json")
 
+@csrf_exempt
 def api_tagload(request):
     '''
     This function might be more efficient if the dictionary were inverted
@@ -257,12 +262,15 @@ def api_tagload(request):
             if not sig: continue
             sig.tags.add(t)
             sig.save()
+    return HttpResponse(json.dumps({'status': 0}), content_type="application/json")
 
 def api_rotatedump(request):
     rotatedump = dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filter(rotation__isnull=False).prefetch_related('signature')])
     response = json.dumps(rotatedump, indent=4)
     return HttpResponse(response, content_type="application/json")
 
+
+@csrf_exempt
 def api_rotateload(request):
     '''
     This function might be more efficient if the dictionary were inverted
@@ -272,3 +280,4 @@ def api_rotateload(request):
         sig = ContentSignature.objects.filter(sha2=sha2).first()
         if not sig: continue
         Picture.objects.update_or_create(signature=sig, defaults=defaults)
+    return HttpResponse(json.dumps({'status': 0}), content_type="application/json")

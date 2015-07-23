@@ -70,3 +70,13 @@ contentkey='h7zg'
 ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all()
 Tag2.objects.all()
 
+tagdump = dict([(t.slug, [s.md5 for s in t.contentsignature_set.all()]) for t in Tag2.objects.all().order_by('slug')])
+import json
+response = json.dumps(tagdump)
+response[1:1000]
+
+Tag2.objects.first().contentsignature_set.all()
+
+Picture.objects.filter(rotation__isnull=False).count()
+[(p.rotation, p.signature.sha2) for p in Picture.objects.filter(rotation__isnull=False)]
+dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filter(rotation__isnull=False).prefetch_related()[1:1000]])
