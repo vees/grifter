@@ -93,20 +93,24 @@ dict([(p.signature.sha2, {'rotation': p.rotation}) for p in Picture.objects.filt
 
 
 import requests
-import requests
 import json
 
 vees = 'https://vees.net/'
 local = 'http://127.0.0.1:8000/'
 
 def crosssync(source,dest,endpoint):
+    totals={"ignored": 0, "added": 0, "nomatch": 0}
     payload=requests.get(source+'api/%s/dumpall' % (endpoint), verify=False).text
     veestags=json.loads(payload)
     for key,itemlist in veestags.iteritems():
         print key
         r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: itemlist}), verify=False)
-        print r.text
-
+        subtotal=json.loads(r.text)
+        for cat,count in subtotal.iteritems():
+            if cat == 'addlist': continue
+            totals[cat]+=count
+    print totals
+    
 crosssync(vees,local,'tags')
 crosssync(local,vees,'tags')
 
@@ -132,3 +136,40 @@ r.text
 payload=requests.get('http://127.0.0.1:8000/api/rotation/dumpall').text
 r=requests.post("https://vees.net/api/rotation/load", data=payload, verify=False)
 r.text
+
+#debugging rotational imports
+
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
+import django
+django.setup()
+
+from django.conf import settings
+
+from exo.models import ContentInstance, ContentContainer, ContentSignature, ContentKey, Picture, Tag2
+import json
+import requests
+
+
+payload=requests.get('https://vees.net/api/rotation/dumpall', verify=False).text
+veestags=json.loads(payload)
+skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=90).prefetch_related('signature')])
+'90e72d272eeee8f0b1af6c484e734c6200ab5eb9643a9940ecf97a527dd02f32' in skipsig
+
+ignored=0
+nomatch=0
+added=0
+addlist=[]
+#posted=json.loads(request.body)
+for rotation,sha2list in posted.iteritems():
+    skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
+    ignored=len(skipsig)
+    for sha2 in set(sha2list) - skipsig:
+        sig = ContentSignature.objects.filter(sha2=sha2).first()
+        if not sig:
+            nomatch+=1
+        else:
+            Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
+            added+=1
+            addlist+=[sig.sha2]
+return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch,'addlist':addlist}), content_type="application/json")

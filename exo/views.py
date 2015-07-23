@@ -30,7 +30,8 @@ returns a page containing an image url"""
 
 def page_by_contentkey(request, contentkey):
     try:
-        zerothfile=ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
+        sig=ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first()
+        zerothfile=sig.contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
             return HttpResponse('No file for this key %s' % contentkey, content_type="text/html")
@@ -52,6 +53,7 @@ def page_by_contentkey(request, contentkey):
     alltags = Tag2.objects.all().order_by('slug')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
+        'signature': sig,
         'pagetags': pagetags,
         'alltags': alltags,
         'contentkey': contentkey,
@@ -291,17 +293,18 @@ def api_rotateload(request):
     ignored=0
     nomatch=0
     added=0
+    addlist=[]
     posted=json.loads(request.body)
     for rotation,sha2list in posted.iteritems():
         skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
-        for sha2 in sha2list:
-            if sha2 in skipsig:
-                ignored+=1                
-                continue
-        sig = ContentSignature.objects.filter(sha2=sha2).first()
-        if not sig:
-            nomatch+=1
-            continue
-        Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
-        added+=1
-    return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch}), content_type="application/json")
+        ignored=len(skipsig)
+        for sha2 in set(sha2list) - skipsig:
+            sig = ContentSignature.objects.filter(sha2=sha2).first()
+            if not sig:
+                nomatch+=1
+            else:
+                Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
+                added+=1
+                addlist+=[sig.sha2]
+    return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch,'addlist':addlist}), content_type="application/json")
+        
