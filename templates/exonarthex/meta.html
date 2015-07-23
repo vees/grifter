@@ -43,8 +43,15 @@ ul li{
 </head>
 
 <body>
-
-<a href="{{destination}}"><img src="{{imagesource}}"></a>
+<p>
+{% if user.is_authenticated %}
+<a href="{{destination}}">
+{% endif %}
+<img src="{{imagesource}}">
+{% if user.is_authenticated %}
+</a>
+{% endif %}
+</p>
 <p>Description: {{description}}</p>
 Tags: <ul>
 {% for tag in pagetags %}
