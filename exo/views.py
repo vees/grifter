@@ -305,10 +305,17 @@ def api_rotateload(request):
                 addlist+=[sig.sha2]
     return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch,'addlist':addlist}), content_type="application/json")
 
-def alltags(request):
-    pass
+def taglist(request):
+    try:
+        tags=Tag2.objects.order_by('slug')
+    except:
+        raise Http404
+    template = loader.get_template("alltags.html")
+    context = RequestContext(request, {
+        'tags': tags })
+    return HttpResponse(template.render(context))
 
-def taglist(request,slug):
+def tagbyslug(request,slug):
     try:
         tagdict = dict([(sig.content_key.key, " ".join([t.slug for t in sig.tags.order_by('slug')])) for sig in Tag2.objects.get(slug=slug).contentsignature_set.all()])
     except:
