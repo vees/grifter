@@ -20,25 +20,24 @@
 </script>
 <style>
 ul li{
-
+  display: inline;
+  list-style:none;
+  list-style-type: none;
+  margin:0;
+  padding:0;
 }
 </style>
-<title>{{slug}}</title>
+<title>All tags</title>
 
 </head>
 
 <body>
-
-<h1>{{slug}}</h1>
+<h1>All tags</h1>
 
 <ul>
-{% for key,value in tagdict.items %}
-
-<li><a href="/{{key}}/"><strong>{{key}}</strong>: {{value}}</a></li>
-
+{% for tag in tags %}
+<li><a href="/tags/{{tag.slug}}">{{tag.slug}}</a></li>
 {% endfor %}
 </ul>
-
-<p><a href="/tags">All tags</a>
 </body>
 </html>
