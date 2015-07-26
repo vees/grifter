@@ -173,3 +173,34 @@ for rotation,sha2list in posted.iteritems():
             added+=1
             addlist+=[sig.sha2]
 return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatch,'addlist':addlist}), content_type="application/json")
+
+
+
+u'kuşadası'
+#u'ku\u015fadas\u0131'
+print a.encode('utf-8')
+#kuşadası
+print a
+#kuşadası
+a.encode('utf-8')
+#'ku\xc5\x9fadas\xc4\xb1'
+a.encode('utf-16')
+'\xff\xfek\x00u\x00_\x01a\x00d\x00a\x00s\x001\x01'
+
+# And yet
+#{
+#    "ku\u015fadas\u0131": [
+#        "3c1db9147bf8035a18a39a0f7e08fb45ad1d10e7b38b5e67b253dd76531f5c24"
+#    ]
+#}
+
+Tag2.objects.filter(slug='kuşadası').first().slug
+#u'ku\u015fadas\u0131'
+
+Tag2.objects.filter(slug='kuşadası').first().slug.encode('utf-8')
+#'ku\xc5\x9fadas\xc4\xb1'
+
+# Here's the answer!!! Is it the way we loaded it in from the console into 
+# the database? Either way they are conflicting encodings and this is why
+# The import-export code is annoyed when it can't figure it out.
+# To be continued...

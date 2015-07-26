@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import StringIO
 import binascii
 import pprint
