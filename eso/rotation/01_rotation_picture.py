@@ -204,3 +204,29 @@ Tag2.objects.filter(slug='kuşadası').first().slug.encode('utf-8')
 # the database? Either way they are conflicting encodings and this is why
 # The import-export code is annoyed when it can't figure it out.
 # To be continued...
+
+import django.utils.http
+a=u'kuşadası'
+a
+#u'ku\u015fadas\u0131'
+a.encode('utf-8')
+#'ku\xc5\x9fadas\xc4\xb1'
+django.utils.http.urlquote(a)
+#u'ku%C5%9Fadas%C4%B1'
+django.utils.http.urlquote(a.encode('utf-8'))
+#u'ku%C5%9Fadas%C4%B1'
+
+b=django.utils.http.unquote(u'ku%C5%9Fadas%C4%B1')
+#u'ku\xc5\x9fadas\xc4\xb1'
+
+u'ku\u015fadas\u0131'.encode('utf-8')
+#'ku\xc5\x9fadas\xc4\xb1'
+import urllib
+urllib.quote(_)
+#'ku%C5%9Fadas%C4%B1'
+urllib.unquote(_)
+#'ku\xc5\x9fadas\xc4\xb1'
+_.decode('utf-8')
+#u'ku\u015fadas\u0131'
+
+# What is the difference between these \u015f and \xc5\x9f quotes?
