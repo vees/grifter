@@ -76,7 +76,10 @@ Tags: <ul>
 <li><a href="/api/photo/{{contentkey}}/rating/4/">4</a>
 <li><a href="/api/photo/{{contentkey}}/rating/5/">5</a>
 {% for tag in alltags %}
-<li><a href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+<li>
+{% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
+<a href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+</li>
 {% endfor %}
 <!--
 <li>Thumbs up

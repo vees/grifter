@@ -8,13 +8,11 @@ from PIL import Image
 
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext, loader
-from django.core.urlresolvers import reverse
-from django.conf import settings
-
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
 from django.http import Http404  
+from django.template import RequestContext, loader
+from django.conf import settings
+from django.db.models import Count
+from django.views.decorators.csrf import csrf_exempt
 
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
@@ -52,7 +50,7 @@ def page_by_contentkey(request, contentkey):
     description = " ".join([tag.slug for tag in pagetags])
     if not description:
         description = filename
-    alltags = Tag2.objects.all().order_by('slug')
+    alltags = Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
         'signature': sig,
@@ -309,12 +307,14 @@ def api_rotateload(request):
 
 def taglist(request):
     try:
-        tags=Tag2.objects.order_by('slug')
+        toptags=Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')[0:9]
+        alltags=Tag2.objects.order_by('slug')
     except:
         raise Http404
     template = loader.get_template("alltags.html")
     context = RequestContext(request, {
-        'tags': tags })
+        'toptags': toptags,
+        'alltags': alltags })
     return HttpResponse(template.render(context))
 
 def tagbyslug(request,slug):
