@@ -241,10 +241,12 @@ def api_action(request, contentkey, action, attribute=''):
         if action=='tag':
             addtag(contentkey,attribute)
     except:
-        payload=(contentkey, action, attribute)
-        response=json.dumps(payload, indent=4)
-        return HttpResponse(response, content_type="application/json")
-    return HttpResponseRedirect("/%s/" % contentkey)
+        pass
+    
+    payload=(contentkey, action, attribute)
+    response=json.dumps(payload, indent=4)
+    return HttpResponse(response, content_type="application/json")
+#    return HttpResponseRedirect("/%s/" % contentkey)
 
 def api_tagdump(request):
     tagdump = dict([(t.slug, [s.sha2 for s in t.contentsignature_set.all()]) for t in Tag2.objects.order_by('slug')])
