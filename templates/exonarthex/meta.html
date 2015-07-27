@@ -75,12 +75,25 @@ Tags: <ul>
 <li><a href="/api/photo/{{contentkey}}/rating/3/">3</a>
 <li><a href="/api/photo/{{contentkey}}/rating/4/">4</a>
 <li><a href="/api/photo/{{contentkey}}/rating/5/">5</a>
+</ul>
+
+<ul>
+{% for tag in commontags %}
+<li>
+{% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
+<a href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+</li>
+{% endfor %}
+</ul>
+
+<ul>
 {% for tag in alltags %}
 <li>
 {% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
 <a href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
 </li>
 {% endfor %}
+</ul>
 <!--
 <li>Thumbs up
 <li>Thumbs down

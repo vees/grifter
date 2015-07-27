@@ -51,9 +51,11 @@ def page_by_contentkey(request, contentkey):
     if not description:
         description = filename
     alltags = Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
+    commontags = Tag2.objects.filter(contentsignature__contentinstance__relpath=zerothfile.relpath).annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     template = loader.get_template("meta.html")
     context = RequestContext(request, {
         'signature': sig,
+        'commontags': commontags,
         'pagetags': pagetags,
         'alltags': alltags,
         'contentkey': contentkey,
