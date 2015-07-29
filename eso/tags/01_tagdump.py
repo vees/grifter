@@ -22,7 +22,14 @@ tags=Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagg
 [(t.slug, t.tagged_sig) for t in tags][0:9]
 
 # [(u'playadelfuego', 5693), (u'thailand', 2624), (u'2013', 1326), (u'alaska', 1322), (u'newjersey', 1024), (u'2008', 927), (u'wedding', 919), (u'2002', 918), (u'16mile', 593)]
+
+# How many untagged pictures are left
 ContentSignature.objects.annotate(tags_count=Count('tags')).filter(tags_count=0).count()
+# First off the stack
+ContentSignature.objects.annotate(tags_count=Count('tags')).filter(tags_count=0).first().content_key.key
+
+
+
 
 ContentInstance.objects.first().relpath
 ContentInstance.objects.filter(relpath='JWC/Slides D All')

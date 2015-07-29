@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style>
+td{
+font-family: verdana, arial, helvetica, sans-serif;
+font-size: 10pt;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+}
+</style>
+</head>
+<body>
+<table border="1">
+<tr>
+<td>Key</td>
+<td>Signatures</td>
+<td>Instances</td>
+<td>Tags</td>
+<td>Total Copies</td>
+</tr>
+{% for signature in signatures %}
+<tr>
+<td>
+{{signature.content_key.key}}
+</td>
+<td>
+{{signature.md5}}<br/>
+{{signature.sha2}}
+</td>
+<td>
+{% for instance in signature.contentinstance_set.all %}
+{{instance.content_container}}:{{instance.relpath}}<br/>
+{% endfor %}
+</td>
+<td>
+{% for tag in signature.tags.all %}
+{{tag.slug}}&nbsp;
+{% endfor %}
+</td>
+<td>
+{{signature.content_instance_count}}
+</td>
+</tr>
+{% endfor %}
+</body>
+</html>

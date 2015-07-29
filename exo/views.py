@@ -8,17 +8,27 @@ from PIL import Image
 
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.http import Http404  
+from django.http import Http404
 from django.template import RequestContext, loader
 from django.conf import settings
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
 from eso.base32 import randspace
 
 import json
+
+def redundancy(request):
+    signatures = ContentSignature.objects.select_related(
+        'content_key').prefetch_related('tags').prefetch_related(
+        'contentinstance_set').prefetch_related(
+        'contentinstance_set__content_container').annotate(
+        content_instance_count=Count(
+        'contentinstance')).order_by('-content_instance_count')
+    return render(request, "redundancy.html", {'signatures': signatures})
 
 def random(request):
     """Given a / URL, return another URL encoded as /meta/abcdefghij which
@@ -53,7 +63,12 @@ def page_by_contentkey(request, contentkey):
     alltags = Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     commontags = Tag2.objects.filter(contentsignature__contentinstance__relpath=zerothfile.relpath).annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     template = loader.get_template("meta.html")
+    untagged = ContentSignature.objects.annotate(tags_count=Count('tags')).filter(tags_count=0).filter(contentinstance__content_container=settings.NARTHEX_CONTAINER_ID)
+    nextuntagged = untagged.exclude(content_key__key=contentkey).order_by('contentinstance__relpath','contentinstance__filename').first().content_key.key
+    untaggedremain = untagged.count()
     context = RequestContext(request, {
+        'nextuntagged': nextuntagged,
+        'untaggedremain': untaggedremain,
         'signature': sig,
         'commontags': commontags,
         'pagetags': pagetags,
