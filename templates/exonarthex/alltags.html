@@ -34,8 +34,20 @@ ul li{
 <body>
 <h1>All tags</h1>
 
+<h2>Top 10 tags</h2>
+
 <ul>
-{% for tag in tags %}
+{% for tag in toptags %}
+<li>
+<a href="/tags/{{tag.slug}}/">{{tag.slug}}</a> ({{ tag.tagged_sig }})
+</li>
+{% endfor %}
+</ul>
+
+<h2>Alphabetical by tag</h2>
+
+<ul>
+{% for tag in alltags %}
 <li><a href="/tags/{{tag.slug}}">{{tag.slug}}</a></li>
 {% endfor %}
 </ul>

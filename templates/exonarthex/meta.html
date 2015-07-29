@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Pragma" CONTENT="no-cache">
 <meta http-equiv="Expires" CONTENT="-1">
@@ -29,6 +29,17 @@
   })();
 
 </script>
+<script src="/exo/static/jquery-2.1.4.js"></script>
+<script>
+$( document ).ready(function() {
+    $( ".apiclick" ).click(function( event ) {
+        var link = $(this).attr('href');
+        $.get(link);
+        $(this).css("font-weight","Bold");
+        event.preventDefault();
+   });
+});
+</script>
 <style>
 ul li{
   display: inline;
@@ -43,6 +54,7 @@ ul li{
 </head>
 
 <body>
+
 <p>
 {% if user.is_authenticated %}
 <a href="{{destination}}">
@@ -65,19 +77,35 @@ Tags: <ul>
 {% if user.is_authenticated %}
 
 <ul>
-<li><a href="/api/photo/{{contentkey}}/rotate/0/">0</a>
-<li><a href="/api/photo/{{contentkey}}/rotate/90/">90</a>
-<li><a href="/api/photo/{{contentkey}}/rotate/180/">180</a>
-<li><a href="/api/photo/{{contentkey}}/rotate/270/">270</a>
-<li><a href="/api/photo/{{contentkey}}/rating/0/">0</a>
-<li><a href="/api/photo/{{contentkey}}/rating/1/">1</a>
-<li><a href="/api/photo/{{contentkey}}/rating/2/">2</a>
-<li><a href="/api/photo/{{contentkey}}/rating/3/">3</a>
-<li><a href="/api/photo/{{contentkey}}/rating/4/">4</a>
-<li><a href="/api/photo/{{contentkey}}/rating/5/">5</a>
-{% for tag in alltags %}
-<li><a href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/0/">0</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/90/">90</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/180/">180</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/270/">270</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/0/">0</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/1/">1</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/2/">2</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/3/">3</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/4/">4</a>
+<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/5/">5</a>
+</ul>
+
+<ul>
+{% for tag in commontags %}
+<li>
+{% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
+<a class="apiclick" href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+</li>
 {% endfor %}
+</ul>
+
+<ul>
+{% for tag in alltags %}
+<li>
+{% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
+<a class="apiclick" href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+</li>
+{% endfor %}
+</ul>
 <!--
 <li>Thumbs up
 <li>Thumbs down
