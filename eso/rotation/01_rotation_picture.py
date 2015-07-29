@@ -103,12 +103,16 @@ def crosssync(source,dest,endpoint):
     payload=requests.get(source+'api/%s/dumpall' % (endpoint), verify=False).text
     veestags=json.loads(payload)
     for key,itemlist in veestags.iteritems():
+        #if key==u'kuşadası': continue
         print key
         r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: itemlist}), verify=False)
-        subtotal=json.loads(r.text)
-        for cat,count in subtotal.iteritems():
-            if cat == 'addlist': continue
-            totals[cat]+=count
+        try:
+            subtotal=json.loads(r.text)
+            for cat,count in subtotal.iteritems():
+                if cat == 'addlist': continue
+                totals[cat]+=count
+        except:
+            print r.text
     print totals
     
 crosssync(vees,local,'tags')
