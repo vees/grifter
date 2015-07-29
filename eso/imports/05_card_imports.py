@@ -8,13 +8,15 @@ Created on Tue Jul 28 21:33:48 2015
 import os
 import django
 
-from eso.imports import walk
-from exo.models import ContentInstance, ContentContainer, ContentSignature
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 django.setup()
 
+from eso.imports import walk
+from exo.models import ContentInstance, ContentContainer, ContentSignature
+
+
 def walk_card(path):
+    # /media/rob/3838-3431
     # 43 minutes 43 seconds for 50347 records
     from datetime import datetime
     start = datetime.now()
@@ -44,3 +46,24 @@ def data_load(walked, server, drive, path):
             content_signature=cs)
         print "Sig",createds,"Instance", createdi,walkunit[2]
 
+
+# 8909006990  990 imported
+# 905 empty
+# 365 empty
+# 3838-3431 431  caitlin's old phone - imported
+#  b6f linux distro - can be formatted
+# 5500392008  008 empty
+# 2668872787 787 imported along with spotlight crap to ID and remove
+# 1473001575 575 imported with spotlight crap
+# 9387033553 553 empty 
+# 876F-D108 108  old android backup, archive folder from main drive, lots of stuff, imported
+# 132 1996691132 pictures loaded
+# 65e 265A-465E pictures loaded
+# 9900773857 857 empty
+# EURO1 ireland photos
+
+def cardload(drivename):
+    walked=walk_card('/media/rob/'+drivename)
+    data_load(walked,'wrath',drivename,'/media/rob/'+drivename)
+
+cardload('EURO1')

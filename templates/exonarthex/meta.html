@@ -48,6 +48,10 @@ ul li{
   margin:0;
   padding:0;
 }
+
+img { border-style: solid; color: #000; }
+
+#pictureframe { float: left; padding: 7px;}
 </style>
 <title>{{description}}</title>
 
@@ -55,7 +59,7 @@ ul li{
 
 <body>
 
-<div style="float: left; border: 7px;">
+<div id="pictureframe">
 <p>
 {% if user.is_authenticated %}
 <a href="/{{nextuntagged}}/">

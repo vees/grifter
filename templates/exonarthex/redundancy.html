@@ -8,6 +8,12 @@ font-style: normal;
 font-variant: normal;
 font-weight: normal;
 }
+
+tr.critical { background-color: #faa; }
+tr.warning { background-color: #faa; }
+tr.good { background-color: #6f6; }
+tr.overkill { background-color: #aff; }
+
 </style>
 </head>
 <body>
@@ -20,7 +26,7 @@ font-weight: normal;
 <td>Total Copies</td>
 </tr>
 {% for signature in signatures %}
-<tr>
+<tr class="{{signature.severity}}">
 <td>
 {{signature.content_key.key}}
 </td>
@@ -30,7 +36,7 @@ font-weight: normal;
 </td>
 <td>
 {% for instance in signature.contentinstance_set.all %}
-{{instance.content_container}}:{{instance.relpath}}<br/>
+{{instance.content_container}}:{{instance.relpath}}/{{instance.filename}}<br/>
 {% endfor %}
 </td>
 <td>

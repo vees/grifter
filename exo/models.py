@@ -34,6 +34,17 @@ won't get a backwards relation to this model:
 class ContentSignature(models.Model):
     def __unicode__(self):
         return "%s|%s|%s|%s" % (self.id, self.md5, self.sha2, self.content_size)    
+    def severity(self):
+        instances=self.contentinstance_set.count()
+        if instances==0:
+            return "warning"
+        elif instances==1:
+            return "critical"
+        elif instances<=3:
+            return "good"
+        elif instances>3:
+            return "overkill"
+        return "warning"
     md5 = models.CharField(max_length=32)
     sha2 = models.CharField(max_length=64)
     content_size = models.IntegerField()
