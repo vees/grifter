@@ -40,6 +40,8 @@ class ContentSignature(models.Model):
             return "warning"
         elif instances==1:
             return "critical"
+        elif instances==2:
+            return "warning"
         elif instances<=3:
             return "good"
         elif instances>3:

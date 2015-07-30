@@ -27,7 +27,7 @@ def redundancy(request):
         'contentinstance_set').prefetch_related(
         'contentinstance_set__content_container').annotate(
         content_instance_count=Count(
-        'contentinstance')).order_by('md5')[0:500]
+        'contentinstance')).order_by('md5')[0:99]
     return render(request, "redundancy.html", {'signatures': signatures})
 
 def random(request):

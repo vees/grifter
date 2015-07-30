@@ -12,15 +12,15 @@ from datetime import datetime
 def hash_parse(filename):
     """Open file, compute md5 and sha2 hash and return as tuple"""
     try:
-        f = open(filename, 'rb')
-        content = f.read()
-        md5hash = hashlib.md5(content).hexdigest()
-        sha2hash = hashlib.sha256(content).hexdigest()
-        return (md5hash,sha2hash)
+        with open(filename, 'rb') as f:
+            content = f.read()
+            md5hash = hashlib.md5(content).hexdigest()
+            sha2hash = hashlib.sha256(content).hexdigest()
+            return (md5hash,sha2hash)
     except ValueError:
-        return 'No hash'
-    finally:
-        f.close()
+        return 'No hash'    
+    except IOError:
+        return 'Access denied'
 
 def get_stat_hash(filename):
     '''Given a filename, returns a unique value for its state
@@ -45,9 +45,13 @@ def file_dir_stat_size(dirname):
     matches = []
     for root, dirnames, filenames in os.walk(dirname):
         for filename in filenames:
-            fullpath = os.path.join(root, filename)
-            hashes = hash_parse(fullpath)
-            matches.append((fullpath,dirname,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath),)+hashes)
+            try:
+                fullpath = os.path.join(root, filename)
+                print fullpath
+                hashes = hash_parse(fullpath)
+                matches.append((fullpath,dirname,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath),)+hashes)
+            except OSError:
+                pass
     return matches
     
 def files_and_stat(files):

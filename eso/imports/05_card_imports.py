@@ -63,7 +63,7 @@ def data_load(walked, server, drive, path):
 # EURO1 ireland photos
 
 def cardload(drivename):
-    walked=walk_card('/media/rob/'+drivename)
-    data_load(walked,'wrath',drivename,'/media/rob/'+drivename)
+    walked=walk_card('/Volumes/'+drivename)
+    data_load(walked,'love','304','/Volumes/'+drivename)
 
-cardload('EURO1')
+cardload('Miscellany')
