@@ -17,6 +17,24 @@ tr.overkill { background-color: #aff; }
 </style>
 </head>
 <body>
+<p>
+<div class="pagination">
+    <span class="step-links">
+        {% if signatures.has_previous %}
+            <a href="/admin/redundancy/{{ signatures.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ signatures.number }} of {{ signatures.paginator.num_pages }}.
+        </span>
+
+        {% if signatures.has_next %}
+            <a href="/admin/redundancy/{{ signatures.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+</p>
+
 <table border="1">
 <tr>
 <td>Key</td>
@@ -41,7 +59,7 @@ tr.overkill { background-color: #aff; }
 </td>
 <td>
 {% for tag in signature.tags.all %}
-{{tag.slug}}&nbsp;
+{{tag.slug}}
 {% endfor %}
 </td>
 <td>
@@ -49,5 +67,7 @@ tr.overkill { background-color: #aff; }
 </td>
 </tr>
 {% endfor %}
+
+
 </body>
 </html>

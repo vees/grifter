@@ -53,6 +53,7 @@ urlpatterns = patterns('',
     #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    url(r'^admin/redundancy/(?P<offset>\d+)', 'exo.views.redundancy'),
     url(r'^admin/redundancy/', 'exo.views.redundancy'),
     url(r'^admin/', include(admin.site.urls)),
 )

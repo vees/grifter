@@ -19,15 +19,26 @@ from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, T
 from eso.base32 import base32
 from eso.base32 import randspace
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 import json
 
-def redundancy(request):
-    signatures = ContentSignature.objects.select_related(
+def redundancy(request, offset=1):
+    allsignatures = ContentSignature.objects.select_related(
         'content_key').prefetch_related('tags').prefetch_related(
         'contentinstance_set').prefetch_related(
         'contentinstance_set__content_container').annotate(
         content_instance_count=Count(
-        'contentinstance')).order_by('md5')[0:99]
+        'contentinstance')).order_by('contentinstance__id')
+    paginator = Paginator(allsignatures, 1000)
+    try:
+        signatures = paginator.page(offset)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        signatures = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        signatures = paginator.page(paginator.num_pages)
     return render(request, "redundancy.html", {'signatures': signatures})
 
 def random(request):
