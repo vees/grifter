@@ -39,4 +39,10 @@ ContentSignature.objects.filter(contentinstance__relpath='JWC/Slides D All')
 tl=Tag2.objects.filter(contentsignature__contentinstance__relpath='JWC/Slides D All').annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
 [(t.slug, t.tagged_sig) for t in tl]
 
+from exo.models import Tag2
 
+def tagrelpath(tag,relpath):
+    t,created=Tag2.objects.get_or_create(slug=tag)
+    for sig in ContentSignature.objects.filter(contentinstance__relpath=relpath):
+        sig.tags.add(t)
+        

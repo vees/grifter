@@ -185,3 +185,67 @@ ContentInstance.objects.all()
 from exo.models import PictureSimple
 PictureSimple.objects.all()
 
+# Abbreviated version for updates
+
+>>> from eso.imports import walk
+>>> test_path='/home/veesprod/vees.net/photos/rickettsglen15'
+>>> walked = walk.file_dir_stat_size(test_path)
+
+#>>> walked[0]
+#('/home/veesprod/vees.net/photos/rickettsglen15/IMG_2211.JPG', '/home/veesprod/vees.net/photos/rickettsglen15', 'IMG_2211.JPG', '.', 140071267384044659, 7431398, 'd7be8bb8cbd0342a0fed1765e47d8edb', '21712f2df91a39da7601cfdf4aff1780ed00a7f23a6801c1b1d84966d107205e')
+
+# Just need to either change walkunit[3] to rickettsglen15 in situ
+# or modify the import function accordingly. Method 1 seems easier, 
+# except that they are tuples so the following doesn't work
+
+for walkunit in walked:
+    walkunit[3] = 'rickettsglen15'
+
+# TypeError: 'tuple' object does not support item assignment
+
+# So instead lets copy the whole function over
+
+from exo.models import ContentInstance, ContentContainer, ContentSignature
+
+n=0
+c, created = ContentContainer.objects.get_or_create(
+    server="skymaster", drive="veesprod", path='/home/veesprod/vees.net/photos')
+for walkunit in walked:
+    n+=1
+    if (n % 1000 == 0):
+        print n
+    cs, createds = ContentSignature.objects.get_or_create(
+        md5=walkunit[6], sha2=walkunit[7], 
+        content_size=walkunit[5])
+    ci, createdi = ContentInstance.objects.get_or_create(
+        filename = walkunit[2],
+        content_container = c,
+        relpath='rickettsglen15',
+        stat_hash=walkunit[4],
+        content_signature=cs)
+    print "Sig",createds,"Instance", createdi,walkunit[2]
+
+# ...100 records...
+# Sig True Instance True IMG_2386.JPG
+
+#>>> ContentInstance.objects.filter(relpath='rickettsglen15').count()
+#218
+#>>> ContentSignature.objects.filter(content_key=None).count()
+#218
+
+#So we are safe to do the following:
+# Give everything a content key (accession number)
+
+#>>> from exo.models import Tag2
+#>>> 
+#>>> def tagrelpath(tag,relpath):
+#...     t,created=Tag2.objects.get_or_create(slug=tag)
+#...     for sig in ContentSignature.objects.filter(contentinstance__relpath=relpath):
+#...         sig.tags.add(t)
+#... 
+#>>> tagrelpath('rickettsglen','rickettsglen15')
+#>>> tagrelpath('pennsylvania','rickettsglen15')
+#>>> tagrelpath('by:cindycarlson','rickettsglen15')
+#>>> tagrelpath('2015','rickettsglen15')
+
+#TODO: Automate the above
