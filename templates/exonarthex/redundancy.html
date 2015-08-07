@@ -46,7 +46,7 @@ tr.overkill { background-color: #aff; }
 {% for signature in signatures %}
 <tr class="{{signature.severity}}">
 <td>
-{{signature.content_key.key}}
+<a href="/{{signature.content_key.key}}/">{{signature.content_key.key}}</a>
 </td>
 <td>
 {{signature.md5}}<br/>
