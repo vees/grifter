@@ -62,8 +62,25 @@ def data_load(walked, server, drive, path):
 # 9900773857 857 empty
 # EURO1 ireland photos
 
-def cardload(drivename):
-    walked=walk_card('/Volumes/'+drivename)
-    data_load(walked,'love','304','/Volumes/'+drivename)
+import pickle
+def cardload(drivename, volume):
+    walked=walk_card('/Users/rob/Books')
+    pickle.dump(walked, open("/Users/rob/Dropbox/NarthexDatabases/"+drivename+volume+"-walked.p", 'wb'))
+    data_load(walked,'bontemps','312','/home/rob/')    
 
-cardload('Miscellany')
+from django.db import connection; connection.close()
+cardload('303','filament')
+
+#import pickle
+#walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/304misc-walked.p", "rb" ) )
+#
+#
+#import pickle
+#pickle.dump(walked, open("/Users/rob/Dropbox/NarthexDatabases/304misc-walked.p", 'wb'))
+
+
+pickle.dump(walked, open("/Users/rob/Dropbox/NarthexDatabases/Books-walked.p", 'wb'))
+
+ContentContainer.objects.filter(id=15).first().contentinstance_set.filter(relpath__startswith='gnuradio').count()
+ContentContainer.objects.filter(id=15).first().contentinstance_set.filter(relpath__startswith='.cache/spotify').all().delete()
+
