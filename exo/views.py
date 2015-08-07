@@ -242,19 +242,16 @@ def export(request):
     response = json.dumps(ci, cls=MyEncoder, sort_keys=True, indent=4)
     return HttpResponse(response, content_type="application/json")
 
-@login_required
 def addrotation(key, rotation):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
     return sig,p.rotation,new
 
-@login_required 
 def addrating(key, rating):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
     return sig,p.rotation,new
 
-@login_required
 def addtag(key, tags):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     for tag in tags.split(","):
