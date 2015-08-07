@@ -14,6 +14,7 @@ from django.conf import settings
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
@@ -23,6 +24,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
 
+@login_required
 def redundancy(request, offset=1):
     allsignatures = ContentSignature.objects.select_related(
         'content_key').prefetch_related('tags').prefetch_related(
@@ -240,22 +242,26 @@ def export(request):
     response = json.dumps(ci, cls=MyEncoder, sort_keys=True, indent=4)
     return HttpResponse(response, content_type="application/json")
 
+@login_required
 def addrotation(key, rotation):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rotation': rotation})
     return sig,p.rotation,new
-    
+
+@login_required 
 def addrating(key, rating):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     p,new=Picture.objects.update_or_create(signature=sig, defaults={'rating': rating})
     return sig,p.rotation,new
 
+@login_required
 def addtag(key, tags):
     sig=ContentKey.objects.filter(key=key).first().contentsignature_set.all().first()
     for tag in tags.split(","):
         t,created=Tag2.objects.update_or_create(slug=tag)
         sig.tags.add(t)
 
+@login_required
 def api_action(request, contentkey, action, attribute=''):
     try:
         if attribute=='':
@@ -280,6 +286,7 @@ def api_tagdump(request):
     return HttpResponse(response, content_type="application/json")
 
 @csrf_exempt
+@login_required
 def api_tagload(request):
     '''
     This function might be more efficient if the dictionary were inverted,
@@ -316,6 +323,7 @@ def api_rotatedump(request):
 
 
 @csrf_exempt
+@login_required
 def api_rotateload(request):
     ignored=0
     nomatch=0
