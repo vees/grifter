@@ -57,7 +57,7 @@ def page_by_contentkey(request, contentkey):
         zerothfile=sig.contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
         filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
     except:
-            return HttpResponse('No file for this key %s' % contentkey, content_type="text/html")
+        raise Http404('No file for this key %s' % contentkey) # , content_type="text/html")
     import eso.exif.EXIF
     f = open(filename, 'rb')
     exifhash = eso.exif.EXIF.process_file(f)

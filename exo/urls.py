@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     (r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/', 'exo.views.api_action'),
     #(r'^$', 'exo.views.privacy_unchecked'),
     (r'^random/$', 'exo.views.random'),
-    (r'^tags/(?P<slug>\w+)', 'exo.views.tagbyslug'),
+    (r'^tags/(?P<slug>[\w:]+)', 'exo.views.tagbyslug'),
     (r'^tags', 'exo.views.taglist'),
     (r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.page_by_contentkey'),  # 
     (r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.image_by_contentkey'),  # 
