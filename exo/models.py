@@ -14,10 +14,20 @@ ROTATION = (
     (180, '180'),
 )
 
+RESILIENCY = (
+    (1, 'Temporary'), (2, 'Sentimental'), (3, 'Destroy'), (4, 'Limited'),
+)
+
 class ContentKey(models.Model):
     def __unicode__(self):
         return "%s|%s" % (self.id, self.key)
     key = models.CharField(max_length=4, null=False, unique=True)
+    '''
+    If you need to create a relationship on a model that has not yet been 
+defined, you can use the name of the model, rather than the model object itself.
+    Can also probably use a OneToOneKey instead of ForeignKey here.
+    '''
+    canonical = models.ForeignKey('ContentSignature', null=True, related_name='+', unique=True)
 
 class Tag2(models.Model):
     slug = models.CharField(max_length=32, null=False)
@@ -52,6 +62,8 @@ class ContentSignature(models.Model):
     content_size = models.IntegerField()
     content_key = models.ForeignKey(ContentKey, null=True)
     tags = models.ManyToManyField(Tag2)
+    resiliency = models.IntegerField(choices=RESILIENCY, null=True)
+    derived_from = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
 
 class ContentContainer(models.Model):
     def __unicode__(self):
@@ -84,20 +96,26 @@ class ContentInstance(models.Model):
     content_signature = models.ForeignKey(ContentSignature, null=True)
 
 class Picture(models.Model):
-    '''
-    Need to add NSFW tag
-    '''
     signature = models.OneToOneField(ContentSignature, primary_key=True)
-    rotation = models.IntegerField(choices=ROTATION, null=True)
+    orientation = models.IntegerField(choices=ROTATION, null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     rating = models.IntegerField(null=True)
     taken_on = models.DateTimeField(null=True)
 
-class PictureSimple(models.Model):
-    filename = models.CharField(max_length=200)
-    directory = models.CharField(max_length=200)
-    stamp = models.DateTimeField(null=False)
-    file_hash = models.CharField(max_length=200)
-    rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
-    private = models.NullBooleanField(null=True)
+class TransformedPicture(models.Model):
+    signature = models.OneToOneField(ContentSignature, primary_key=True)
+    request_width = models.IntegerField(null=True)
+    request_height = models.IntegerField(null=True)
+    request_rotation = models.IntegerField(null=True)
+    result_width = models.IntegerField(null=True)
+    result_height = models.IntegerField(null=True)
+    result_rotation = models.IntegerField(null=True)
+
+#class PictureSimple(models.Model):
+#    filename = models.CharField(max_length=200)
+#    directory = models.CharField(max_length=200)
+#    stamp = models.DateTimeField(null=False)
+#    file_hash = models.CharField(max_length=200)
+#    rotation = models.IntegerField(default=0, choices=ROTATION, null=False)
+#    private = models.NullBooleanField(null=True)
