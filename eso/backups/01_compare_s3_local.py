@@ -58,3 +58,40 @@ for key in bucket.objects.all():
 bucket.objects.all()
 
 bucket.objects.all()[1]
+
+import pickle
+meta2 = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/walked-dhd.p", "rb" ) )
+hanjin = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/keyhash.p", "rb" ) )
+
+hanjin1 = set([x.replace('dreamhost-rsync.sparsebundle','') for x in hanjin.keys() if x.startswith('dreamhost-rsync.sparsebundle/')])
+hanjin2 = set([x.replace('dreamhost-rsync-2.sparsebundle','') for x in hanjin.keys() if x.startswith('dreamhost-rsync-2.sparsebundle/')])
+
+hanjin1-hanjin2
+hanjin2-hanjin1
+
+metafo = set([x[0].replace('/Volumes/Meta2/dreamhost-rsync.sparsebundle','') for x in meta2])
+
+metafo-hanjin2
+hanjin2-metafo
+
+hanjin3 = {x.replace('dreamhost-rsync-2.sparsebundle',''): hanjin[x][2].replace('"','') for x in hanjin.keys() if x.startswith('dreamhost-rsync-2.sparsebundle/')}
+
+hanjin.keys()[0]
+hanjin['dreamhost-rsync-2.sparsebundle/bands/b03']
+
+meta3 = {x[0].replace('/Volumes/Meta2/dreamhost-rsync.sparsebundle',''): x[6] for x in meta2}
+
+for name,md5 in meta3.iteritems():
+    if (hanjin3[name] != md5):
+        print name,md5 
+    
+#/bands/e0 246cf878a052700a9257d553412bcc1a
+#/bands/75 f8ed2fb8af768fc4fd205d701ad90b6a
+#/bands/76 2a3bd3bb50f5017edf075ef429ce261d
+#/bands/78 37ccaaa70ab19a3eb611b8e07a8dd029
+#/bands/79 c73dbeaae97795bfacbd204f4314ff54
+#/bands/11d9 d0b7126fe69712e5ef23b261af9d791c
+#/bands/c b81d20d62499f87f7347b0ba993fb68e
+#/bands/0 0845c9b2952918c8319a611935247e49
+
+set(meta3.keys())-set(hanjin3.keys())
