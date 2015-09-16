@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
+# http://docs.dreamobjects.net/s3-examples/python.html
+# http://wiki.dreamhost.com/Boto
+# https://github.com/boto/boto
+# http://boto.readthedocs.org/en/latest/ref/s3.html
+
 import os
 import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 django.setup()
 
-#TODO: Link to Django settings or some other secure location
 from django.conf import settings
 
 import boto3
@@ -37,11 +41,10 @@ access_key = 'put your access key here!'
 secret_key = 'put your secret key here!'
 
 conn = boto.connect_s3(
-        aws_access_key_id=settings.NARTHEX_DO_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.NARTHEX_DO_ACCESS_KEY_SECRET)
-        host = 'objects.dreamhost.com',
-        calling_format = boto.s3.connection.OrdinaryCallingFormat(),
-        )
+aws_access_key_id=settings.NARTHEX_DO_ACCESS_KEY_ID,
+aws_secret_access_key=settings.NARTHEX_DO_ACCESS_KEY_SECRET,
+host = 'objects.dreamhost.com',
+calling_format = boto.s3.connection.OrdinaryCallingFormat())
         
 for bucket in conn.get_all_buckets():
     print "{name}\t{created}".format(
@@ -50,6 +53,7 @@ for bucket in conn.get_all_buckets():
         )
 
 i=0
+keyhash={}
 for key in bucket.list():
     print "{name}\t{size}\t{modified}\t{etag}".format(
         name = key.name,
@@ -57,10 +61,12 @@ for key in bucket.list():
         modified = key.last_modified,
         etag = key.etag,
         )
-    i+=1
-    if i>5:
-        break
+    keyhash[key.name]=(key.size,key.last_modified,key.etag)
+#    i+=1
+#    if i>5:
+#        break
     
 list = bucket.list()
 
-    
+import pickle
+pickle.dump(keyhash, open("keyhash.p", 'wb'))
