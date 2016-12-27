@@ -1,0 +1,127 @@
+[veesprod@skymaster]$ mysql -h mysql.harfordpark.org -u exodev -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13799542
+Server version: 5.1.56-log MySQL Server
+
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| veesnet_exodev     |
++--------------------+
+2 rows in set (1.51 sec)
+
+mysql> use veesnet_exodev
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------------------+
+| Tables_in_veesnet_exodev   |
++----------------------------+
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
+| django_site                |
+| exo_contentcontainer       |
+| exo_contentinstance        |
+| exo_contentkey             |
+| exo_contentsignature       |
+| exo_contentsignature_tags  |
+| exo_picture                |
+| exo_redirect               |
+| exo_tag2                   |
+| exo_transformedpicture     |
++----------------------------+
+20 rows in set (0.00 sec)
+
+mysql> select * from exo_contentkey limit 10;
+^CCtrl-C -- sending "KILL QUERY 13799542" to server ...
+Ctrl-C -- query aborted.
+ERROR 1317 (70100): Query execution was interrupted
+mysql> show processlist;
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+| Id       | User   | Host                                             | db             | Command | Time | State        | Info                                                                                                 |
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+| 13792177 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:62801 | veesnet_exodev | Query   | 3292 | Sending data | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id`, COUNT(`exo_co |
+| 13793220 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:62860 | veesnet_exodev | Query   | 2952 | Sending data | SELECT COUNT('*') FROM (SELECT `exo_contentkey`.`id` AS Col1, COUNT(`exo_contentsignature`.`id`) AS  |
+| 13793924 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:62999 | veesnet_exodev | Query   | 2469 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13794571 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63030 | veesnet_exodev | Query   | 2272 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13795266 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63389 | veesnet_exodev | Query   | 1927 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13795435 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63493 | veesnet_exodev | Query   | 1685 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = NULL WHERE `exo_contentkey`.`id` = 1    |
+| 13796280 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63634 | veesnet_exodev | Query   | 1545 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = NULL WHERE `exo_contentkey`.`id` = 1    |
+| 13796517 | exodev | skymaster.dreamhost.com:37340                    | veesnet_exodev | Query   | 1442 | Locked       | SELECT * FROM `exo_contentkey`
+ LIMIT 0, 30                                                          |
+| 13796838 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63921 | veesnet_exodev | Query   | 1273 | Locked       | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13797220 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64042 | veesnet_exodev | Query   | 1048 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id` FROM `exo_cont |
+| 13797234 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64044 | veesnet_exodev | Query   | 1037 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id` FROM `exo_cont |
+| 13797363 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64046 | veesnet_exodev | Query   |  998 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id`, COUNT(`exo_co |
+| 13797608 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64058 | veesnet_exodev | Query   |  905 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id`, COUNT(`exo_co |
+| 13798089 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64256 | veesnet_exodev | Query   |  705 | Locked       | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13799542 | exodev | skymaster.dreamhost.com:51546                    | veesnet_exodev | Query   |    0 | NULL         | show processlist                                                                                     |
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+15 rows in set (0.03 sec)
+
+mysql> kill 13792177
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show processlist;
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+| Id       | User   | Host                                             | db             | Command | Time | State        | Info                                                                                                 |
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+| 13793220 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:62860 | veesnet_exodev | Query   | 3027 | Sending data | SELECT COUNT('*') FROM (SELECT `exo_contentkey`.`id` AS Col1, COUNT(`exo_contentsignature`.`id`) AS  |
+| 13793924 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:62999 | veesnet_exodev | Query   | 2544 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13794571 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63030 | veesnet_exodev | Query   | 2347 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13795266 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63389 | veesnet_exodev | Query   | 2002 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = 1 WHERE `exo_contentkey`.`id` = 1       |
+| 13795435 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63493 | veesnet_exodev | Query   | 1760 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = NULL WHERE `exo_contentkey`.`id` = 1    |
+| 13796280 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63634 | veesnet_exodev | Query   | 1620 | Locked       | UPDATE `exo_contentkey` SET `key` = 't2en', `canonical_id` = NULL WHERE `exo_contentkey`.`id` = 1    |
+| 13796517 | exodev | skymaster.dreamhost.com:37340                    | veesnet_exodev | Query   | 1517 | Locked       | SELECT * FROM `exo_contentkey`
+ LIMIT 0, 30                                                          |
+| 13796838 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63921 | veesnet_exodev | Query   | 1348 | Locked       | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13797220 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64042 | veesnet_exodev | Query   | 1123 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id` FROM `exo_cont |
+| 13797234 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64044 | veesnet_exodev | Query   | 1112 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id` FROM `exo_cont |
+| 13797363 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64046 | veesnet_exodev | Query   | 1073 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id`, COUNT(`exo_co |
+| 13797608 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64058 | veesnet_exodev | Query   |  980 | Locked       | SELECT `exo_contentkey`.`id`, `exo_contentkey`.`key`, `exo_contentkey`.`canonical_id`, COUNT(`exo_co |
+| 13798089 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64256 | veesnet_exodev | Query   |  780 | Locked       | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13799542 | exodev | skymaster.dreamhost.com:51546                    | veesnet_exodev | Query   |    0 | NULL         | show processlist                                                                                     |
++----------+--------+--------------------------------------------------+----------------+---------+------+--------------+------------------------------------------------------------------------------------------------------+
+14 rows in set (0.00 sec)
+
+mysql> kill 13793220
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show processlist;
++----------+--------+--------------------------------------------------+----------------+---------+------+----------------------+------------------------------------------------------------------------------------------------------+
+| Id       | User   | Host                                             | db             | Command | Time | State                | Info                                                                                                 |
++----------+--------+--------------------------------------------------+----------------+---------+------+----------------------+------------------------------------------------------------------------------------------------------+
+| 13796838 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:63921 | veesnet_exodev | Query   | 1360 | Copying to tmp table | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13798089 | exodev | pool-108-15-116-50.bltmmd.fios.verizon.net:64256 | veesnet_exodev | Query   |  792 | Copying to tmp table | SELECT `exo_contentsignature`.`id`, `exo_contentsignature`.`md5`, `exo_contentsignature`.`sha2`, `ex |
+| 13799542 | exodev | skymaster.dreamhost.com:51546                    | veesnet_exodev | Query   |    0 | NULL                 | show processlist                                                                                     |
+| 13800105 | exodev | skymaster.dreamhost.com:54391                    | NULL           | Query   |    1 | executing            | SHOW DATABASES                                                                                       |
+| 13800107 | exodev | skymaster.dreamhost.com:54396                    | NULL           | Query   |    1 | executing            | SHOW DATABASES                                                                                       |
+| 13800108 | exodev | skymaster.dreamhost.com:54397                    | NULL           | Init DB |    1 | NULL                 | NULL                                                                                                 |
++----------+--------+--------------------------------------------------+----------------+---------+------+----------------------+------------------------------------------------------------------------------------------------------+
+6 rows in set (0.00 sec)
+

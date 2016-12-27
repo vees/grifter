@@ -36,7 +36,7 @@ walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/veesprod-walked.
 #--or--
 
 import pickle
-pickle.dump(walked, open("walked.p", 'wb'))
+pickle.dump(walked, open("walked-dhd.p", 'wb'))
 
 walked[766][7]
 walkunit=walked[766]
@@ -187,9 +187,9 @@ PictureSimple.objects.all()
 
 # Abbreviated version for updates
 
->>> from eso.imports import walk
->>> test_path='/home/veesprod/vees.net/photos/rickettsglen15'
->>> walked = walk.file_dir_stat_size(test_path)
+from eso.imports import walk
+test_path='/home/veesprod/vees.net/photos/iPhone-20150621'
+walked = walk.file_dir_stat_size(test_path)
 
 #>>> walked[0]
 #('/home/veesprod/vees.net/photos/rickettsglen15/IMG_2211.JPG', '/home/veesprod/vees.net/photos/rickettsglen15', 'IMG_2211.JPG', '.', 140071267384044659, 7431398, 'd7be8bb8cbd0342a0fed1765e47d8edb', '21712f2df91a39da7601cfdf4aff1780ed00a7f23a6801c1b1d84966d107205e')
@@ -198,8 +198,8 @@ PictureSimple.objects.all()
 # or modify the import function accordingly. Method 1 seems easier, 
 # except that they are tuples so the following doesn't work
 
-for walkunit in walked:
-    walkunit[3] = 'rickettsglen15'
+#for walkunit in walked:
+#    walkunit[3] = 'iPhone-20150621'
 
 # TypeError: 'tuple' object does not support item assignment
 
@@ -220,7 +220,7 @@ for walkunit in walked:
     ci, createdi = ContentInstance.objects.get_or_create(
         filename = walkunit[2],
         content_container = c,
-        relpath='rickettsglen15',
+        relpath='iPhone-20150621',
         stat_hash=walkunit[4],
         content_signature=cs)
     print "Sig",createds,"Instance", createdi,walkunit[2]

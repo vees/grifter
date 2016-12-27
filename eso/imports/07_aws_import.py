@@ -84,11 +84,11 @@ object = s3.Object(bucket_name='201302-JWC', key='Slides AH All/Scan-130902-0018
 #>>> 
 
 import os
-
+bucketname='201303-CaitlinMemories'
 n=0
 c, created = ContentContainer.objects.get_or_create(
-    server="s3.amazonaws.com", drive="201302-JWC", path='/')
-bucket = s3.Bucket('201302-JWC')
+    server="s3.amazonaws.com", drive=bucketname, path='/')
+bucket = s3.Bucket(bucketname)
 for key in bucket.objects.all():
     (relpath,filename)=os.path.split(key.key)
     n+=1

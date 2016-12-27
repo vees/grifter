@@ -1,0 +1,18 @@
+sudo dd bs=1m if=/Users/rob/Desktop/2015-05-05-raspbian-wheezy.img of=/dev/rdisk2
+sudo diskutil eject /dev/rdisk2
+
+
+from eso.imports import walk
+
+def walk_card(path):
+    # /media/rob/3838-3431
+    # 43 minutes 43 seconds for 50347 records
+    from datetime import datetime
+    start = datetime.now()
+    walked = walk.file_dir_stat_size(path)
+    end = datetime.now()
+    duration = end-start
+    print duration
+    return walked
+
+walked=walk_card('/home/rob')
