@@ -1,4 +1,5 @@
-#Motivation
+Motivation
+===
 
 So why create yet another content management system when so many others exist? As I explore the different requirements of this system I find myself again and again saying "Flickr has all these features" or "This is basically how Sitecore does things" or "This is the essence of Git." So why not just use a system like Sitecore or the open-source equivalent to publish my content? Why not find one of the multitude of projects on Github which meet 80% of my requirements and build from there? Why not just use the terabyte of data offered by Flickr for nothing.
 
@@ -12,7 +13,7 @@ To do this I will focus on the following aspects:
 
 1. Caching
 1. Version control
-1. Permanent URL structure 
+1. Permanent URL structure
 1. Simple tagging
 1. Set logic
 1. Access to original files
@@ -31,7 +32,7 @@ This ties into the URL structure. So we're going to start from a source file tha
 	IMG_9362.JPG JPEG 2272x1704 2272x1704+0+0 8-bit DirectClass 1.002MB 0.000u 0:00.000
 	[veesprod@skymaster]$ md5sum IMG_9362.JPG
 	c67cbd95f6f9e09912f1b51fa2e111e8  IMG_9362.JPG
-	veesprod@skymaster:~/tmp$ sha256sum IMG_9362.JPG 
+	veesprod@skymaster:~/tmp$ sha256sum IMG_9362.JPG
 	0055b0a8a697ced47f0f1b215ea800aa00ce83863bf835ac382fe735326d8438  IMG_9362.JPG
 
 Lets assume that this is the primary representation of this image so it gets an ID of nxe7. The database row associated with this entry would look roughly like:
@@ -57,11 +58,11 @@ would be the full sized image in this situation, so we'll render a few temporary
 Which is roughly what happens when we run the following shell commands:
 
 	veesprod@skymaster:~/tmp$ convert -geometry 500x IMG_9362.JPG 500x.jpg
-	veesprod@skymaster:~/tmp$ ls -l 500x.jpg 
+	veesprod@skymaster:~/tmp$ ls -l 500x.jpg
 	-rw-rw-r-- 1 veesprod pg938548 54131 Dec 22 21:32 500x.jpg
-	veesprod@skymaster:~/tmp$ md5sum 500x.jpg 
+	veesprod@skymaster:~/tmp$ md5sum 500x.jpg
 	6bc569718546721b1035c909ab864cbc  500x.jpg
-	veesprod@skymaster:~/tmp$ sha256sum 500x.jpg 
+	veesprod@skymaster:~/tmp$ sha256sum 500x.jpg
 	7727c3d56dba9d335272561c88953f857ea4afef22dd0fa3e00abbf7374fc5b7  500x.jpg
 
 Which would result in a database row similar to:
@@ -69,7 +70,7 @@ Which would result in a database row similar to:
 	Key: nxe7
 	Dir: /home/veesprod/vees.net/cache/
 	File: df2pjwc58ss1p41ns44tq1jcqg.jpg
-	MD5: 6bc569718546721b1035c909ab864cbc 
+	MD5: 6bc569718546721b1035c909ab864cbc
 	ShortMd5: df2pjwc58ss1p41ns44tq1jcqg
 	SHA2: 7727c3d56dba9d335272561c88953f857ea4afef22dd0fa3e00abbf7374fc5b7
 	ShortSha2: ewkw7nbdqaek6mkjare8h59zgnza9bzf4begz8z01axzedtfrpvg
@@ -117,7 +118,7 @@ The purpose of version control is to:
 
 * Detect when files are added to the system and process them into the database
 * Detect when files are modified and take actions accordingly
-* Allow a user to access a previous version of a base file if it is modified 
+* Allow a user to access a previous version of a base file if it is modified
 
 Since the focus of this site is adding and updating content through the file system primarily, it should be some method that allows multiple versions of the same file to be accessed through the same filename or creating a past version space.
 

@@ -12,17 +12,17 @@ For example we will have a picture with a perm URL and a short URL.
 Using an image file with a base64 encoded SHA-2 and MD5, base32 
 encoded MD5 and then truncated to 4 characters.
 
-	https://vees.net/218c1e394...(48)...578570df
-	https://vees.net/218c/
+    https://vees.net/218c1e394...(48)...578570df
+    https://vees.net/218c/
 
-	https://vees.net/4661wea9q...(36)...8nw5e3fg
-	https://vees.net/4661/
+    https://vees.net/4661wea9q...(36)...8nw5e3fg
+    https://vees.net/4661/
 
-	https://vees.net/32c1a215b9d342e657b3046294952176
-	https://vees.net/32c1/
+    https://vees.net/32c1a215b9d342e657b3046294952176
+    https://vees.net/32c1/
 
-	https://vees.net/mcwwsjjjqvg28q9k5y0pt8bfkr
-	https://vees.net/mcww/
+    https://vees.net/mcwwsjjjqvg28q9k5y0pt8bfkr
+    https://vees.net/mcww/
 
 In either case the shortened bit space will be 32^n where n is the 
 number of characters.
@@ -48,13 +48,13 @@ For example, already the vees.net domain has the following space
 reserved for file management:
 
     https://vees.net/file/
-	https://vees.net/meta/
-	https://vees.net/tags/
-	https://vees.net/slug/
+    https://vees.net/meta/
+    https://vees.net/tags/
+    https://vees.net/slug/
 
 And also for an unrelated application and API space:
 
-	https://vees.net/apps/
+    https://vees.net/apps/
 
 And several legacy static site URLs:
 
@@ -103,22 +103,22 @@ so any algoritm with a sequence factor  wouldn't be usable.
 
 Some examples of the combinations ([created with prototype randspace function][2]) would be:
 
-	c1fa
-	wt2n
-	nxe7
-	sh1r
-	dr0n
-	0grv
-	h1km
-	7zkj
-	h5mk
-	tb7h
+    c1fa
+    wt2n
+    nxe7
+    sh1r
+    dr0n
+    0grv
+    h1km
+    7zkj
+    h5mk
+    tb7h
 
 To form a URL such as:
 
-	https://vees.net/nxe7/ 
-	https://vees.net/meta/tb7h/
-	https://vees.net/file/tb7h/
+    https://vees.net/nxe7/ 
+    https://vees.net/meta/tb7h/
+    https://vees.net/file/tb7h/
 
 # Consideration
 
@@ -135,10 +135,13 @@ resolutions, rotations, and cropping of that file.
 
 This is where the base32 encoded SHA2 can be useful.
 
-	https://vees.net/nxe7/mcwwsjjjqvg28q9k5y0pt8bfkr
-	https://vees.net/nxe7/gc3ywbbecdr3cdwhgk87tfak8470bqhzc2kgm0krv8dtsrgk5d9g
+    https://vees.net/nxe7/mcwwsjjjqvg28q9k5y0pt8bfkr
+    https://vees.net/nxe7/gc3ywbbecdr3cdwhgk87tfak8470bqhzc2kgm0krv8dtsrgk5d9g
 
-Although the SHA2 seems excessive, we can truncate it until it is unique in the majority of cases and extend when necessary. The ID marker will be the canonical portion of the URL so simply redirecting the user back to the four character URL will be sufficient in most cases.
+Although the SHA2 seems excessive, we can truncate it until it is unique in 
+the majority of cases and extend when necessary. The ID marker will be the 
+canonical portion of the URL so simply redirecting the user back to the four 
+character URL will be sufficient in most cases.
 
 [1]: http://4ve.es/JyO "High Programmer"
 [2]: https://github.com/vees/narthex/blob/master/eso/base32/randspace.py
