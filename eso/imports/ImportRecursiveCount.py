@@ -1,6 +1,6 @@
 class ImportRecursiveCount:
     def __init__(self, success, ignored, failure):
-        print "Created IRC"
+        print("Created IRC")
         self._import_success = success
         self._import_ignored = ignored
         self._import_failure = failure
@@ -19,7 +19,7 @@ class ImportRecursiveCount:
             self._import_ignored += count_to_add._import_ignored
             self._import_failure += count_to_add._import_failure
         else:
-            print "Failed to add object"
+            print("Failed to add object")
             pass
 
     def add_success(self):

@@ -1,6 +1,6 @@
 # Create your views here.
 from PIL import Image
-import StringIO
+import io
 from regatta.models import PictureSimple
 from django.http import HttpResponse
 from random import Random
@@ -101,7 +101,7 @@ def thumbnail_it(path_to_original, rotation):
 	im.thumbnail(size, Image.ANTIALIAS)
 	if (rotation!=180):
 		im = im.rotate(360-rotation)
-	buf= StringIO.StringIO()
+	buf= io.StringIO()
 	im.save(buf, format= 'JPEG')
 	return buf.getvalue()
 
@@ -113,7 +113,7 @@ def image_it(path_to_original, rotation):
 	im.thumbnail(size, Image.ANTIALIAS)
 	if (rotation!=180):
 		im = im.rotate(360-rotation)
-	buf= StringIO.StringIO()
+	buf= io.StringIO()
 	#im.save(buf, format= 'JPEG')
 	out = watermark.watermark(im, mark, "scale", 0.4)
 	out.save(buf, format='JPEG')

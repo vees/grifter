@@ -66,7 +66,7 @@ def page_by_contentkey(request, contentkey):
     f = open(filename, 'rb')
     exifhash = eso.exif.EXIF.process_file(f)
 
-    for key in exifhash.keys():
+    for key in list(exifhash.keys()):
         try:
             if len(str(exifhash[key])) > 50:
                 del exifhash[key]
@@ -299,7 +299,7 @@ def api_tagload(request):
     nomatch=0
     added=0
     posted=json.loads(request.body)
-    for tag,shalist in posted.iteritems():
+    for tag,shalist in posted.items():
         print(tag)
         t,created=Tag2.objects.update_or_create(slug=tag)
         sha2ignore = set([a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()])
@@ -331,7 +331,7 @@ def api_rotateload(request):
     added=0
     addlist=[]
     posted=json.loads(request.body)
-    for rotation,sha2list in posted.iteritems():
+    for rotation,sha2list in posted.items():
         skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
         ignored=len(skipsig)
         for sha2 in set(sha2list) - skipsig:

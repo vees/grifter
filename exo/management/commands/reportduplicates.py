@@ -7,8 +7,8 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		try:
-			print "Started duplicates check"
+			print("Started duplicates check")
 			eso.imports.load_masterfile.report_duplicates_2()
 		except KeyboardInterrupt:
-			print "Interrupted"
+			print("Interrupted")
 			exit

@@ -29,7 +29,7 @@ start = datetime.now()
 walked = walk.file_dir_stat_size(test_path)
 end = datetime.now()
 duration = end-start
-print duration
+print(duration)
 #--or--
 import pickle
 walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/veesprod-walked.p", "rb" ) )
@@ -52,7 +52,7 @@ c, created = ContentContainer.objects.get_or_create(
 for walkunit in walked:
     n+=1
     if (n % 1000 == 0):
-        print n
+        print(n)
     cs, createds = ContentSignature.objects.get_or_create(
         md5=walkunit[6], sha2=walkunit[7], 
         content_size=walkunit[5])
@@ -62,7 +62,7 @@ for walkunit in walked:
         relpath=walkunit[3],
         stat_hash=walkunit[4],
         content_signature=cs)
-    print "Sig",createds,"Instance", createdi,walkunit[2]
+    print("Sig",createds,"Instance", createdi,walkunit[2])
     
     
 #https://docs.djangoproject.com/en/dev/topics/db/queries/#following-relationships-backward
@@ -74,10 +74,10 @@ from django.db.models import Count
 ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).count()
 
 for hashitem in ContentSignature.objects.annotate(instance_count=Count('contentinstance')).filter(instance_count__gt=1).exclude(content_key=None):
-    print hashitem.content_key.key,hashitem.md5,hashitem.sha2,hashitem.content_size
+    print(hashitem.content_key.key,hashitem.md5,hashitem.sha2,hashitem.content_size)
     for location in hashitem.contentinstance_set.all():
-        print location.content_container.server,location.content_container.drive,location.content_container.path,location.relpath,location.filename
-    print
+        print(location.content_container.server,location.content_container.drive,location.content_container.path,location.relpath,location.filename)
+    print()
 
 #Not exactly what I anticipated, so lets reload
 ContentInstance.objects.all().delete()
@@ -102,13 +102,13 @@ start = datetime.now()
 foo = walk.files_and_stat(walk.files_under_dir(test_path))
 end = datetime.now()
 duration = end-start
-print duration
+print(duration)
 
 start = datetime.now()
 foo = walk.files_and_stat(walk.files_under_dir(test_path))
 end = datetime.now()
 duration = end-start
-print duration
+print(duration)
 
 [load_masterfile.hash_parse(file[0]) for file in walk]
 
@@ -152,7 +152,7 @@ for sig in cs:
         sig.content_key=ck
         sig.save()
     except django.db.utils.IntegrityError:
-        print "duplicate key %s for sig id %s" % (newkey, cs.id)
+        print("duplicate key %s for sig id %s" % (newkey, cs.id))
         continue        
     
 # Blow away content keys
@@ -213,7 +213,7 @@ c, created = ContentContainer.objects.get_or_create(
 for walkunit in walked:
     n+=1
     if (n % 1000 == 0):
-        print n
+        print(n)
     cs, createds = ContentSignature.objects.get_or_create(
         md5=walkunit[6], sha2=walkunit[7], 
         content_size=walkunit[5])
@@ -223,7 +223,7 @@ for walkunit in walked:
         relpath='iPhone-20150621',
         stat_hash=walkunit[4],
         content_signature=cs)
-    print "Sig",createds,"Instance", createdi,walkunit[2]
+    print("Sig",createds,"Instance", createdi,walkunit[2])
 
 # ...100 records...
 # Sig True Instance True IMG_2386.JPG

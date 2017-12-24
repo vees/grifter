@@ -21,8 +21,8 @@ class DuplicateCounter:
             self._dirdict[dir1][dir1]-=1
 
     def results(self):
-        for dir1 in self._dirdict.keys():
+        for dir1 in list(self._dirdict.keys()):
             # http://stackoverflow.com/q/8717395/682915
-            shares = ', '.join(['%s (%s)' % (key, value) for (key, value) in self._dirdict[dir1].items() if value != 0])
-            print "%s shares files with: %s" % (dir1, shares)
+            shares = ', '.join(['%s (%s)' % (key, value) for (key, value) in list(self._dirdict[dir1].items()) if value != 0])
+            print("%s shares files with: %s" % (dir1, shares))
 

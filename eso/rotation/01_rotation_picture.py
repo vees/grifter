@@ -102,18 +102,18 @@ def crosssync(source,dest,endpoint):
     totals={"ignored": 0, "added": 0, "nomatch": 0}
     payload=requests.get(source+'api/%s/dumpall' % (endpoint), verify=False).text
     veestags=json.loads(payload)
-    for key,itemlist in veestags.iteritems():
+    for key,itemlist in veestags.items():
         #if key==u'kuşadası': continue
-        print key
+        print(key)
         r=requests.post(dest+"api/%s/load" % (endpoint), data=json.dumps({key: itemlist}), verify=False)
         try:
             subtotal=json.loads(r.text)
-            for cat,count in subtotal.iteritems():
+            for cat,count in subtotal.items():
                 if cat == 'addlist': continue
                 totals[cat]+=count
         except:
-            print r.text
-    print totals
+            print(r.text)
+    print(totals)
     
 crosssync(vees,local,'tags')
 crosssync(local,vees,'tags')
@@ -124,10 +124,10 @@ crosssync(local,vees,'rotation')
 
 
 r=requests.post("http://127.0.0.1:8000/api/tags/load", data=payload)
-print r.text
+print(r.text)
 payload=requests.get('http://127.0.0.1:8000/api/tags/dumpall').text
 r=requests.post("https://vees.net/api/tags/load", data=payload)
-print r.text
+print(r.text)
 
 import requests
 
@@ -165,7 +165,7 @@ nomatch=0
 added=0
 addlist=[]
 #posted=json.loads(request.body)
-for rotation,sha2list in posted.iteritems():
+for rotation,sha2list in posted.items():
     skipsig = set([p.signature.sha2 for p in Picture.objects.filter(rotation=rotation).prefetch_related('signature')])
     ignored=len(skipsig)
     for sha2 in set(sha2list) - skipsig:
@@ -180,11 +180,11 @@ return HttpResponse(json.dumps({'ignored':ignored,'added':added,'nomatch':nomatc
 
 
 
-u'kuşadası'
+'kuşadası'
 #u'ku\u015fadas\u0131'
-print a.encode('utf-8')
+print(a.encode('utf-8'))
 #kuşadası
-print a
+print(a)
 #kuşadası
 a.encode('utf-8')
 #'ku\xc5\x9fadas\xc4\xb1'
@@ -210,7 +210,7 @@ Tag2.objects.filter(slug='kuşadası').first().slug.encode('utf-8')
 # To be continued...
 
 import django.utils.http
-a=u'kuşadası'
+a='kuşadası'
 a
 #u'ku\u015fadas\u0131'
 a.encode('utf-8')
@@ -220,15 +220,15 @@ django.utils.http.urlquote(a)
 django.utils.http.urlquote(a.encode('utf-8'))
 #u'ku%C5%9Fadas%C4%B1'
 
-b=django.utils.http.unquote(u'ku%C5%9Fadas%C4%B1')
+b=django.utils.http.unquote('ku%C5%9Fadas%C4%B1')
 #u'ku\xc5\x9fadas\xc4\xb1'
 
-u'ku\u015fadas\u0131'.encode('utf-8')
+'ku\u015fadas\u0131'.encode('utf-8')
 #'ku\xc5\x9fadas\xc4\xb1'
-import urllib
-urllib.quote(_)
+import urllib.request, urllib.parse, urllib.error
+urllib.parse.quote(_)
 #'ku%C5%9Fadas%C4%B1'
-urllib.unquote(_)
+urllib.parse.unquote(_)
 #'ku\xc5\x9fadas\xc4\xb1'
 _.decode('utf-8')
 #u'ku\u015fadas\u0131'

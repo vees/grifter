@@ -2,7 +2,7 @@ import sys
 import os
 import string
 import random
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
 ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
@@ -17,7 +17,7 @@ def fetch_link(uri):
 
 def set_link(url):
 	try:
-		url = urllib.urlopen(url).geturl()
+		url = urllib.request.urlopen(url).geturl()
 	except:
 		return False
 	existing = Shortlink.objects.filter(location=url)

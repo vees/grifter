@@ -6,10 +6,11 @@ Created on Wed Jul 15 14:23:31 2015
 """
 
 import csv
+import imp
 with open('/home/rob/Dropbox/With Work/photo_md5.csv', 'rb') as photomd5:
     photomd5reader = csv.reader(photomd5, delimiter=',', quotechar='"')
     for row in photomd5reader:
-        print row[0], row[1]
+        print(row[0], row[1])
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
@@ -26,7 +27,7 @@ b.name
 getattr(b,'name')
 
 import exo.models
-reload(exo.models)
+imp.reload(exo.models)
 
 Picture.objects.all()
 
@@ -52,7 +53,7 @@ with open('photo_md5.csv', 'rb') as photomd5:
     for row in photomd5reader:
         if int(row[0]) < 29234:
             continue
-        print row[0], row[1]
+        print(row[0], row[1])
         signatures = ContentSignature.objects.filter(md5=row[1])
         for sig in signatures:
             ci=sig.contentinstance_set.first()

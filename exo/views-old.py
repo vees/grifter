@@ -1,6 +1,6 @@
 # Create your views here.
 from PIL import Image
-import StringIO
+import io
 from exo.models import Picture, Old_Picture
 from django.http import HttpResponse
 from random import Random
@@ -67,7 +67,7 @@ def thumbnail_it(path_to_original):
 	im = Image.open(path_to_original)
 	size = 240,180
 	im.thumbnail(size, Image.ANTIALIAS)
-	buf= StringIO.StringIO()
+	buf= io.StringIO()
 	im.save(buf, format= 'JPEG')
 	return buf.getvalue()
 
@@ -75,7 +75,7 @@ def image_it(path_to_original):
 	im = Image.open(path_to_original)
 	size = 500,375,180
 	im.thumbnail(size, Image.ANTIALIAS)
-	buf= StringIO.StringIO()
+	buf= io.StringIO()
 	im.save(buf, format= 'JPEG')
 	return buf.getvalue()
 

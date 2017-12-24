@@ -1,7 +1,7 @@
 import os
 import glob
 from regatta.models import Picture, Moment, PictureSimple
-import EXIF
+from . import EXIF
 import itertools
 from datetime import datetime
 import hashlib

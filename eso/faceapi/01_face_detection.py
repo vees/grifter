@@ -5,15 +5,15 @@ Created on Thu Aug 13 13:54:32 2015
 @author: rob
 """
 
-import urllib
-import httplib
+import urllib.request, urllib.parse, urllib.error
+import http.client
 from django.conf import settings
 
 from exo.models import ContentSignature
 
 def callFaceApi(filecontent):
     # Using sample from http://4ve.es/AlI
-    params = urllib.urlencode({
+    params = urllib.parse.urlencode({
         'subscription-key': settings.NARTHEX_FACEAPI_PRIMARYKEY,
         'analyzesFaceLandmarks': 'true',
         'analyzesAge': 'true',
@@ -24,7 +24,7 @@ def callFaceApi(filecontent):
     headers = {
         'Content-type': 'application/octet-stream',
     }
-    conn = httplib.HTTPSConnection('api.projectoxford.ai')
+    conn = http.client.HTTPSConnection('api.projectoxford.ai')
     conn.request("POST", "/face/v0/detections?%s" % params, filecontent, headers)
     response = conn.getresponse("")
     data = response.read()

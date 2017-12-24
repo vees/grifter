@@ -35,4 +35,4 @@ for table in tableList:
     none = cursor.execute(rowsQuery)
     numberOfRows = cursor.fetchone()[0]
     if numberOfRows != 0:
-        print table[0],numberOfRows
+        print(table[0],numberOfRows)

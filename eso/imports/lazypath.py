@@ -21,7 +21,7 @@ def import_images(dirname):
 	for f in os.listdir(dirname):
 		fullpath = os.path.join(dirname, f)
 		if os.path.isfile(fullpath):
-			print os.path.splitext(f)[1]
+			print(os.path.splitext(f)[1])
 			if os.path.splitext(f)[1] in [".jpg",".JPG"]:
 				p=Picture()
 				p.directory=dirname
@@ -31,7 +31,7 @@ def import_images(dirname):
 				m.exim = exim_fetch(fullpath)
 				m.save()
 				p.taken_on=m
-				print "saved" + dirname + " and " + f 
+				print("saved" + dirname + " and " + f) 
 				p.save()
 		if os.path.isdir(fullpath):
 			import_images(fullpath)

@@ -31,7 +31,7 @@ session = Session(aws_access_key_id=settings.NARTHEX_AWS_ACCESS_KEY_ID,
                   
 s3 = session.resource('s3')
 for bucket in s3.buckets.all():
-    print (bucket.name)
+    print((bucket.name))
 
 bucket = s3.Bucket('201302-JWC')
 for key in bucket.objects.all():
@@ -93,7 +93,7 @@ for key in bucket.objects.all():
     (relpath,filename)=os.path.split(key.key)
     n+=1
     if (n % 1000 == 0):
-        print n
+        print(n)
     cs, createds = ContentSignature.objects.get_or_create(
         md5=key.e_tag.replace('"',""),
         content_size=key.size)
@@ -102,7 +102,7 @@ for key in bucket.objects.all():
         content_container = c,
         relpath=relpath,
         content_signature=cs)
-    print "Sig",createds,"Instance", createdi,key.key
+    print("Sig",createds,"Instance", createdi,key.key)
 
 #Sig True Instance True 01860794.ROL/60794_03.SFW
 #Sig True Instance True 01860794.ROL/60794_04.SFW

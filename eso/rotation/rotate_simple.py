@@ -26,7 +26,7 @@ directory="/local/photos/sd600-20090906"
 pix=PictureSimple.objects.filter(directory=directory) #, filename="IMG_6952.JPG")
 #pic=pix[0]
 for pic in pix:
-	print pic.directory, pic.filename, exim_fetch(pic.directory+"/"+pic.filename)
+	print(pic.directory, pic.filename, exim_fetch(pic.directory+"/"+pic.filename))
 #tags = exim_tags(pic.directory+"/"+pic.filename)
 
 

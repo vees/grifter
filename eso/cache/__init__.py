@@ -4,7 +4,7 @@ from exo.models import PictureSimple
 def main():
     unchecked=PictureSimple.objects.filter(private=None).order_by('directory','filename')
     for p in unchecked:
-        print p.b32md5
+        print(p.b32md5)
         image_cache(p.get_local_path(), p.b32md5)
 
 def image_cache(path_to_original, output_filename):

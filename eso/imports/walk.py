@@ -47,7 +47,7 @@ def file_dir_stat_size(dirname):
         for filename in filenames:
             try:
                 fullpath = os.path.join(root, filename)
-                print fullpath
+                print(fullpath)
                 hashes = hash_parse(fullpath)
                 matches.append((fullpath,dirname,filename,os.path.relpath(root,dirname),get_stat_hash(fullpath),get_stat_size(fullpath),)+hashes)
             except OSError:
@@ -66,5 +66,5 @@ if __name__ == "__main__":
     start = datetime.now()
     foo = files_and_stat(files_under_dir("/media/dev/photos"))
     end = datetime.now()
-    print end-start
-    print len(foo)
+    print(end-start)
+    print(len(foo))

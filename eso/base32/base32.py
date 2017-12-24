@@ -16,13 +16,13 @@ import base64, string, hashlib, binascii
 
 # translate fails on unicode strings if maketrans object is not also unicode
 __std2crock = str.maketrans(
-    u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
-    u"0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+    "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 )
 
 __crock2std = str.maketrans(
-    u"0123456789ABCDEFGHJKMNPQRSTVWXYZ",
-    u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+    "0123456789ABCDEFGHJKMNPQRSTVWXYZ",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 )
 
 def b32encode(s):

@@ -23,7 +23,7 @@ def walk_card(path):
     walked = walk.file_dir_stat_size(path)
     end = datetime.now()
     duration = end-start
-    print duration
+    print(duration)
     return walked
 
 def data_load(walked, server, drive, path):
@@ -34,7 +34,7 @@ def data_load(walked, server, drive, path):
     for walkunit in walked:
         n+=1
         if (n % 1000 == 0):
-            print n
+            print(n)
         cs, createds = ContentSignature.objects.get_or_create(
             md5=walkunit[6], sha2=walkunit[7], 
             content_size=walkunit[5])
@@ -44,7 +44,7 @@ def data_load(walked, server, drive, path):
             relpath=walkunit[3],
             stat_hash=walkunit[4],
             content_signature=cs)
-        print "Sig",createds,"Instance", createdi,walkunit[2]
+        print("Sig",createds,"Instance", createdi,walkunit[2])
 
 
 # 8909006990  990 imported

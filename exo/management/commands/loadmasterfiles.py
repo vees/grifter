@@ -7,9 +7,9 @@ class Command(BaseCommand):
 
 	def handle(self, *args, **options):
 		try:
-			print "Started import"
-			print eso.imports.load_masterfile.files_under_dir_2("/media/dev/photos")
-			print "Done"
+			print("Started import")
+			print(eso.imports.load_masterfile.files_under_dir_2("/media/dev/photos"))
+			print("Done")
 		except KeyboardInterrupt:
-			print "Interrupted"
+			print("Interrupted")
 			exit

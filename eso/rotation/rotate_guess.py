@@ -89,7 +89,7 @@ def old_main():
         dr = dimensions_translate(size)
         pic.rotation=rotation_guess(er,dr)
         pic.save()
-        print "Saved", pic.directory, pic.filename, rotation_guess(er,dr)
+        print("Saved", pic.directory, pic.filename, rotation_guess(er,dr))
 
 def main():
     directory1="/media/dev/photos/pdf03f"
@@ -100,11 +100,11 @@ def main():
     for pic in pix:
         try:
             #print exif_fetch(pic.directory+"/"+pic.filename)
-            print ExifReduced(exif_tags(pic.get_local_path()))
+            print(ExifReduced(exif_tags(pic.get_local_path())))
             er = exif_translate(exif_fetch(pic.get_local_path()))
-            print "%s/%s as %s" % (pic.directory, pic.filename, er)
+            print("%s/%s as %s" % (pic.directory, pic.filename, er))
         except KeyboardInterrupt:
-            print "Done loading: Interrupted by user"
+            print("Done loading: Interrupted by user")
             break
         #pic.rotation=rotation_guess(er,dr)
         #pic.save()

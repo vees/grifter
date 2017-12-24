@@ -10,7 +10,7 @@ from exo.models import Picture, Moment, PictureSimple
 
 class ImportRecursiveCount:
     def __init__(self, success, ignored, failure):
-        print "Created IRC"
+        print("Created IRC")
         self._import_success = success
         self._import_ignored = ignored
         self._import_failure = failure
@@ -29,7 +29,7 @@ class ImportRecursiveCount:
             self._import_ignored += count_to_add._import_ignored
             self._import_failure += count_to_add._import_failure
         else:
-            print "Failed to add object"
+            print("Failed to add object")
             pass
 
     def add_success(self):
@@ -91,19 +91,19 @@ def import_images(reldirname):
                         f,reldirname,datetime.fromtimestamp(
                             os.stat(fullpath).st_mtime), md5_parse(fullpath))
                     if import_debug == True:
-                        print "Import of " + fullpath
+                        print("Import of " + fullpath)
                     else:
                         import_stats.add_success()
                 else:
                     if import_debug == True:
-                        print "Cowardly not importing " + fullpath
+                        print("Cowardly not importing " + fullpath)
                     else:
                         import_stats.add_ignored()
         if os.path.isdir(fullpath):
             subrecurse_stats = import_images(fullpath.replace(basepath + "/",''))
-            print subrecurse_stats
+            print(subrecurse_stats)
             import_stats.add(subrecurse_stats)
-            print import_stats
+            print(import_stats)
     return import_stats
 
 def import_simple_picture(filename, directory, stamp, file_hash):
@@ -139,9 +139,9 @@ def create_moment( mtime, ctime, exim):
 def main():
     """Import images from the default path"""
     try:
-        print import_images("")
+        print(import_images(""))
     except KeyboardInterrupt:
-        print "Done."
+        print("Done.")
         exit
 
 if __name__ == '__main__':

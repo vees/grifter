@@ -6,7 +6,7 @@ Created on Wed Aug 12 13:54:20 2015
 """
 
 from PIL import Image
-import StringIO
+import io
 
 
 im=Image.open('/media/dev/photos/pdfpan-08s/Playa_del_Fuego_Spring_2008_Panorama_Cloned.jpg')
@@ -16,7 +16,7 @@ im.size
 im=im.rotate(90)
 size = 1024,1024
 im.thumbnail(size, Image.ANTIALIAS)
-buf= StringIO.StringIO()
+buf= io.StringIO()
 im.save(buf, format= 'JPEG')
 
 im.size

@@ -14,7 +14,7 @@ import sys
 
 def print_dupline(a,b):
 	#print a + " duplicates " + b
-	print "rm " + a
+	print("rm " + a)
 
 def dedupe(filename):
 	duplist = {}
@@ -35,7 +35,7 @@ def test():
 	s = '4461e8920a8e541b2a065799602c67f1  /media/dev/photos/santa2k2/dscn9694.jpg'
 	p = re.compile('^([0-9a-f]*)\ \ (.*)$')
 	a = p.findall(s)
-	print a
+	print(a)
 
 if __name__ == '__main__':
 	dedupe(sys.argv[1])

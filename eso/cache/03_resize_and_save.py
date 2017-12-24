@@ -6,7 +6,7 @@ Created on Wed Aug 12 13:54:20 2015
 """
 
 from PIL import Image
-import StringIO
+import io
 
 import os
 import django
@@ -34,7 +34,7 @@ if r!=0:
     im=im.rotate(r)
 size = (w,h)
 im.thumbnail(size, Image.ANTIALIAS)
-buf= StringIO.StringIO()
+buf= io.StringIO()
 im.save(buf, format= 'JPEG')
 content=buf.getvalue()
 

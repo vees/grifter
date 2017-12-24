@@ -15,7 +15,7 @@ import binascii
 
 bin=binascii.unhexlify('8c60a791e3c296e0036bb2e45d2af025')
 ascii=base32.b32encode(bin)
-print ascii
+print(ascii)
 # hhgaf4f3rabe00vbpbj5taqg4m
 
 hmackey = "oldmcdonaldhadafarm"
@@ -26,19 +26,19 @@ b64sig = base64.b64encode(binhmac)
 b32sig = base32.b32encode(binhmac)
 # '66ftgn32mx02p3typ5v43pgfsw75s0zz4b2q4qe0c6yskzptg10g'
 stamp = datetime.datetime.utcnow().isoformat()
-import urllib
-finalurl = originalurl + '?' + urllib.urlencode({ 'signature': b32sig, 'timestamp': stamp })
+import urllib.request, urllib.parse, urllib.error
+finalurl = originalurl + '?' + urllib.parse.urlencode({ 'signature': b32sig, 'timestamp': stamp })
 finalurl
 
 signedpayload=json.dumps({'numberlist':numberlist,'signature': calchmac})
 
-print signedpayload
+print(signedpayload)
 
 signedpayload2=json.loads(signedpayload)
 payload2 = json.dumps(signedpayload2["numberlist"], indent=4)
 calchmac2 = base64.b64encode(hmac.new(hmackey, payload2, digestmod=hashlib.sha256).digest())
 
-print calchmac
-print calchmac2
+print(calchmac)
+print(calchmac2)
 
 #recalchmac=base64.b64encode(hmac.new(hmackey, payload, digestmod=hashlib.sha256).digest())

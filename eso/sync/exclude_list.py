@@ -1,6 +1,6 @@
 from exo.models import PictureSimple
 
-print """*.avi
+print("""*.avi
 *.dat
 *.pl
 *.py
@@ -21,11 +21,11 @@ print """*.avi
 *.THM
 *.xvpics*
 *.html
-"""
+""")
 
 def main():
     excluded=PictureSimple.objects.filter(private=True)
     for p in excluded:
-        print p.directory+'/'+p.filename
+        print(p.directory+'/'+p.filename)
     return True
 

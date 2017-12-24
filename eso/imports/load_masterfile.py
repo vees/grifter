@@ -9,7 +9,7 @@ import glob
 import datetime
 import itertools
 import hashlib
-import ImportRecursiveCount
+from . import ImportRecursiveCount
 
 from datetime import datetime
 from django.conf import settings
@@ -20,7 +20,7 @@ import_debug = settings.NARTHEX_DEBUG_IMPORT
 def hash_parse(filename):
     """Open file, compute md5 and sha2 hash and return as tuple"""
     try:
-        print filename
+        print(filename)
         f = open(filename, 'rb')
         content = f.read()
         md5hash = hashlib.md5(content).hexdigest()
@@ -126,13 +126,13 @@ def files_under_dir_2(dirname):
                     mfile.stat_hash = stat_hash
                     mfile.updated = datetime.now()
                     mfile.save()
-                    print "Updated %s from %s to %s" % (mfile.filename, oldstathash, stat_hash)
+                    print("Updated %s from %s to %s" % (mfile.filename, oldstathash, stat_hash))
                     stats_updated+=1
                 del compare_list[mfilepath]
             else:
-                print "File not in db so I need to add it"
+                print("File not in db so I need to add it")
 
-        for cfilekey in compare_list.keys():
+        for cfilekey in list(compare_list.keys()):
             cfile = compare_list[cfilekey]
             cfilepath = os.path.join(cfile[0],cfile[1],cfile[2])
             mfiles=MasterFile.objects.filter(base_directory=dirname)\
@@ -154,11 +154,11 @@ def files_under_dir_2(dirname):
                 stats_inserted+=1
         #return compare_list
     except KeyboardInterrupt:
-        print "Keyboard interrupt recorded"
+        print("Keyboard interrupt recorded")
         pass
     finally:
-        print "%s walked %s ignored, %s updated, %s inserted" % \
-            (stats_total, stats_ignored, stats_updated, stats_inserted)
+        print("%s walked %s ignored, %s updated, %s inserted" % \
+            (stats_total, stats_ignored, stats_updated, stats_inserted))
 
 def files_and_stat(files):
     return [get_stat_hash(filename) for filename in files]
@@ -172,7 +172,7 @@ def report_duplicates():
 	from django.db.models import Count
 	duplicates = MasterFile.objects.values('hash_sha2').annotate(filecopies=Count("id")).filter(filecopies__gt=1)
 	dupcount = len(duplicates)
-	print "Found %s duplicates" % dupcount
+	print("Found %s duplicates" % dupcount)
 	dircount = {}
 	for duplicate in duplicates:
 		for info in [[m.filename,m.directory,m.hash_md5[:8],m.hash_sha2[:8]] for m in MasterFile.objects.filter(hash_sha2=duplicate["hash_sha2"])]:
@@ -180,9 +180,9 @@ def report_duplicates():
 				dircount[m.directory]+=1
 			else:
 				dircount[m.directory]=1
-			print info
-	for dk in dircount.keys():
-		print "%s: %s" % (dk, dircount[dk])
+			print(info)
+	for dk in list(dircount.keys()):
+		print("%s: %s" % (dk, dircount[dk]))
 	return dupcount
 
 def report_duplicates_2():
@@ -203,9 +203,9 @@ def report_duplicates_2():
 def main():
     """Import images from the default path"""
     try:
-        print import_images("")
+        print(import_images(""))
     except KeyboardInterrupt:
-        print "Done."
+        print("Done.")
         exit
 
 if __name__ == '__main__':

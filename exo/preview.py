@@ -43,8 +43,8 @@ def import_images(dirname):
 		if os.path.isfile(fullpath):
 			#print os.path.splitext(f)[1]
 			if os.path.splitext(f)[1] in [".jpg",".JPG"]:
-				print fullpath, datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath), md5_parse(fullpath)
-				print fullpath, create_moment(datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath)), md5_parse(fullpath)
+				print(fullpath, datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath), md5_parse(fullpath))
+				print(fullpath, create_moment(datetime.fromtimestamp(os.stat(fullpath).st_mtime), datetime.fromtimestamp(os.stat(fullpath).st_ctime), exim_fetch(fullpath)), md5_parse(fullpath))
 
 		if os.path.isdir(fullpath):
 			import_images(fullpath)
@@ -72,7 +72,7 @@ def create_moment( mtime, ctime, exim):
 try:
 	import_images(path)
 except KeyboardInterrupt:
-	print "Done."
+	print("Done.")
 	exit
 
 #for infile in glob.glob( os.path.join(path, '*.JPG' ) ):

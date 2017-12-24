@@ -30,6 +30,6 @@ def main_menu():
         exit()
 
 def test():
-    print(settings.ROB_TEST)
+    print((settings.ROB_TEST))
     print("Success") 
 

@@ -32,7 +32,7 @@ ContentKey.objects.filter(contentsignature__picture__isnull=False).annotate(sign
 keys.first().contentsignature_set.first()
 
 for key in keys:
-    print key.id,key.key
+    print(key.id,key.key)
     key.canonical = key.contentsignature_set.first()
     key.save()
 

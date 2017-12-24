@@ -11,20 +11,20 @@ def compare_md5_file(filename):
             pass
         elif count==1:
             already_matched += 1
-            print "rm %s" % path
+            print("rm %s" % path)
         elif count>1:
-            print "WARNING: Multiple matches in database already"
+            print("WARNING: Multiple matches in database already")
         else:
-            print "WARNING: Nothing matched"
-    print "Files already matched: %s" % already_matched
+            print("WARNING: Nothing matched")
+    print("Files already matched: %s" % already_matched)
 
 def main():
-    print "Starting card dump"
+    print("Starting card dump")
     """Import images from the default path"""
     try:
-        print compare_md5_file('/home/rob/cardsrun/all.txt')
+        print(compare_md5_file('/home/rob/cardsrun/all.txt'))
     except KeyboardInterrupt:
-        print "Done."
+        print("Done.")
         exit
 
 if __name__ == '__main__':
