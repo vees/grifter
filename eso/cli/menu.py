@@ -10,12 +10,12 @@ def take_commands():
     exit()
 
 def main_menu():
-    print 'What do you want to do?'
-    print '1) Test'
-    print '2) Load simple'
-    print '3) Rotation check'
-    print '4) Find dump'
-    print 'x) Exit'
+    print('What do you want to do?')
+    print('1) Test')
+    print('2) Load simple')
+    print('3) Rotation check')
+    print('4) Find dump')
+    print('x) Exit')
     user_response = sys.stdin.readline()
     menu_response = user_response[0]
     if menu_response == '1':
@@ -30,6 +30,6 @@ def main_menu():
         exit()
 
 def test():
-    print settings.ROB_TEST 
-    print "Successful"
+    print(settings.ROB_TEST)
+    print("Success") 
 

@@ -27,7 +27,7 @@ class ContentKey(models.Model):
 defined, you can use the name of the model, rather than the model object itself.
     Can also probably use a OneToOneKey instead of ForeignKey here.
     '''
-    canonical = models.ForeignKey('ContentSignature', null=True, related_name='+', unique=True, on_delete=models.PROTECT)
+    canonical = models.OneToOneField('ContentSignature', null=True, related_name='+', unique=True, on_delete=models.PROTECT)
 
 class Tag2(models.Model):
     slug = models.CharField(max_length=32, null=False)

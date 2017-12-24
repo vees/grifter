@@ -48,7 +48,11 @@ def random(request):
 returns a page containing an image url"""
     # If this is slow in production, use this tip instead;
     # http://stackoverflow.com/a/2118712/682915
-    key = ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key
+    instance = ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first()
+    if instance:
+        key = content_signature.content_key.key
+    else:
+        return HttpResponse("No valid instances to show you, add some content first")
     return HttpResponseRedirect("/%s/" % key)
 
 def page_by_contentkey(request, contentkey):
