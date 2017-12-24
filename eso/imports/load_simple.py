@@ -6,7 +6,7 @@ from datetime import datetime
 from django.conf import settings
 
 import eso.exif.EXIF
-from exo.models import Picture, Moment, PictureSimple
+from exo.models import Picture, PictureSimple
 
 class ImportRecursiveCount:
     def __init__(self, success, ignored, failure):
