@@ -1,59 +1,52 @@
-from django.conf.urls import patterns, include, url
+"""hello URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import path, re_path
 
-#from django.conf.urls.defaults import *
+from . import views
 
-#from django.contrib import admin
-#admin.autodiscover()
-
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
-urlpatterns = patterns('',
+urlpatterns = [
     # Example:
-    # (r'^grifter/', include('grifter.foo.urls')),
-
-    #(r'^regatta/(?P<image_id>\d+)/$', 'grifter.regatta.views.index'),
-    #(r'^regatta/image/(?P<image_id>\d+)/$', 'grifter.regatta.views.image'),
-    #(r'^regatta/thumb/(?P<image_id>\d+)/$', 'grifter.regatta.views.thumbnail'),
-    #(r'^regatta/(?P<image_id>\d+)/$', 'grifter.regatta.simple.index'),
-    #(r'^regatta/image/(?P<image_id>\d+)/$', 'grifter.regatta.simple.image'),
-    #(r'^regatta/thumb/(?P<image_id>\d+)/$', 'grifter.regatta.simple.thumbnail'),
-    #(r'^regatta/contact/(?P<image_id>\d+)/$', 'grifter.regatta.simple.hundred'),
-    #(r'^regatta/random/$', 'grifter.regatta.views.random'),
-    #(r'^regatta/randomold/$', 'grifter.regatta.views.randomold'),
-    #(r'^regatta/migration/(?P<image_id>\d+)$', 'grifter.regatta.migration.index'),
-    #(r'^regatta/migration/oldthumb/(?P<image_id>\d+)$', 'grifter.regatta.migration.thumbnail_old'),
-    #(r'^regatta/migration/newthumb/(?P<image_id>\d+)$', 'grifter.regatta.migration.thumbnail_new'),
-    #(r'^regatta/migration/connect/(?P<original>\d+)/(?P<new>\d+)/$', 'grifter.regatta.migration.connect'),
-    (r'^$', 'exo.views.random'),
-    (r'^api/new/id$', 'exo.views.new_id'),
-    (r'^api/id/space$', 'exo.views.remaining_id_space'),
-    (r'^api/export$', 'exo.views.export'),
-    (r'^api/tags/dumpall$', 'exo.views.api_tagdump'),
-    (r'^api/tags/load$', 'exo.views.api_tagload'),
-    (r'^api/rotation/dumpall$', 'exo.views.api_rotatedump'),
-    (r'^api/rotation/load$', 'exo.views.api_rotateload'),
-    (r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/(?P<attribute>[0-9]+)/', 'exo.views.api_action'),
-    (r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/(?P<attribute>[\w,]+)/', 'exo.views.api_action'),
-    (r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/', 'exo.views.api_action'),
-    #(r'^$', 'exo.views.privacy_unchecked'),
-    (r'^random/$', 'exo.views.random'),
-    (r'^tags/(?P<slug>[\w:]+)', 'exo.views.tagbyslug'),
-    (r'^tags', 'exo.views.taglist'),
-    (r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.page_by_contentkey'),  # 
-    (r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', 'exo.views.image_by_contentkey'),  # 
-    (r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.page_by_base32'),
-    (r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', 'exo.views.image_by_base32'),
-#    (r'^action/(?P<actiontext>\w+)/(?P<md5list>[[0123456789abcdefghjkmnpqrstvwxyz,]+)$', 'exo.views.update_privacy'),
+    re_path(r'^$', views.random),
+    re_path(r'^api/new/id$', views.new_id),
+    re_path(r'^api/id/space$', views.remaining_id_space),
+    re_path(r'^api/export$', views.export),
+    re_path(r'^api/tags/dumpall$', views.api_tagdump),
+    re_path(r'^api/tags/load$', views.api_tagload),
+    re_path(r'^api/rotation/dumpall$', views.api_rotatedump),
+    re_path(r'^api/rotation/load$', views.api_rotateload),
+    re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/(?P<attribute>[0-9]+)/', views.api_action),
+    re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/(?P<attribute>[\w,]+)/', views.api_action),
+    re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/(?P<action>\w+)/', views.api_action),
+    re_path(r'^random/$', views.random),
+    re_path(r'^tags/(?P<slug>[\w:]+)', views.tagbyslug),
+    re_path(r'^tags', views.taglist),
+    re_path(r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.page_by_contentkey),  # 
+    re_path(r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.image_by_contentkey),  # 
+    re_path(r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.page_by_base32),
+    re_path(r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.image_by_base32),
+    
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/redundancy/(?P<offset>\d+)', 'exo.views.redundancy'),
-    url(r'^admin/redundancy/', 'exo.views.redundancy'),
-    url(r'^admin/', include(admin.site.urls)),
-)
+    re_path(r'^admin/redundancy/(?P<offset>\d+)', views.redundancy),
+    re_path(r'^admin/redundancy/', views.redundancy),
+#    re_path(r'^admin/', include(admin.site.urls)),
+]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import StringIO
+from io import StringIO
 import binascii
 import pprint
 
@@ -296,7 +296,7 @@ def api_tagload(request):
     added=0
     posted=json.loads(request.body)
     for tag,shalist in posted.iteritems():
-        print tag
+        print(tag)
         t,created=Tag2.objects.update_or_create(slug=tag)
         sha2ignore = set([a.sha2 for a in Tag2.objects.filter(slug=tag).first().contentsignature_set.all()])
         ignored=len(sha2ignore)

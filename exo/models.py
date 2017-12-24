@@ -27,7 +27,7 @@ class ContentKey(models.Model):
 defined, you can use the name of the model, rather than the model object itself.
     Can also probably use a OneToOneKey instead of ForeignKey here.
     '''
-    canonical = models.ForeignKey('ContentSignature', null=True, related_name='+', unique=True)
+    canonical = models.ForeignKey('ContentSignature', null=True, related_name='+', unique=True, on_delete=models.PROTECT)
 
 class Tag2(models.Model):
     slug = models.CharField(max_length=32, null=False)
@@ -39,7 +39,7 @@ class Redirect(ContentKey):
 set related_name to '+'. For example, this will ensure that the User model 
 won't get a backwards relation to this model:
     '''
-    destination = models.ForeignKey(ContentKey, null=False, related_name='+')
+    destination = models.ForeignKey(ContentKey, null=False, related_name='+', on_delete=models.PROTECT)
 
 class ContentSignature(models.Model):
     def __unicode__(self):
@@ -60,10 +60,10 @@ class ContentSignature(models.Model):
     md5 = models.CharField(max_length=32)
     sha2 = models.CharField(max_length=64)
     content_size = models.IntegerField()
-    content_key = models.ForeignKey(ContentKey, null=True)
+    content_key = models.ForeignKey(ContentKey, null=True, on_delete=models.PROTECT)
     tags = models.ManyToManyField(Tag2)
     resiliency = models.IntegerField(choices=RESILIENCY, null=True)
-    derived_from = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    derived_from = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
 
 class ContentContainer(models.Model):
     def __unicode__(self):
@@ -88,15 +88,15 @@ class ContentInstance(models.Model):
 #    def b32md5(self):
 #        return base32.b32encode(binascii.unhexlify(self.file_hash))
     filename = models.CharField(max_length=200)
-    content_container = models.ForeignKey(ContentContainer, null=False)
+    content_container = models.ForeignKey(ContentContainer, null=False, on_delete=models.PROTECT)
     relpath = models.CharField(max_length=200)
     stat_hash = models.BigIntegerField(null=True)
     first_seen = models.DateTimeField(null=True)
     verified_on = models.DateTimeField(null=True)
-    content_signature = models.ForeignKey(ContentSignature, null=True)
+    content_signature = models.ForeignKey(ContentSignature, null=True, on_delete=models.PROTECT)
 
 class Picture(models.Model):
-    signature = models.OneToOneField(ContentSignature, primary_key=True)
+    signature = models.OneToOneField(ContentSignature, primary_key=True, on_delete=models.PROTECT)
     orientation = models.IntegerField(choices=ROTATION, null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
@@ -104,7 +104,7 @@ class Picture(models.Model):
     taken_on = models.DateTimeField(null=True)
 
 class TransformedPicture(models.Model):
-    signature = models.OneToOneField(ContentSignature, primary_key=True)
+    signature = models.OneToOneField(ContentSignature, primary_key=True, on_delete=models.PROTECT)
     request_width = models.IntegerField(null=True)
     request_height = models.IntegerField(null=True)
     request_rotation = models.IntegerField(null=True)

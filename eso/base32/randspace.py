@@ -26,4 +26,4 @@ def randids(n):
     return [randid() for x in range(0,n)]
 
 if __name__ == "__main__":
-    print randids(11)
+    print(randids(11))

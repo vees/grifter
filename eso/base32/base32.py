@@ -15,12 +15,12 @@ import base64, string, hashlib, binascii
 #base64.b32encode(hashlib.md5('test').digest())[:-6].translate(string.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567","0123456789ABCDEFGHJKMNPQRSTVWXYZ"),"=").lower()
 
 # translate fails on unicode strings if maketrans object is not also unicode
-__std2crock = string.maketrans(
+__std2crock = str.maketrans(
     u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
     u"0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 )
 
-__crock2std = string.maketrans(
+__crock2std = str.maketrans(
     u"0123456789ABCDEFGHJKMNPQRSTVWXYZ",
     u"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 )
@@ -39,7 +39,7 @@ def b32decode(b32, casefold=None, map01=None):
 def test():
     binline = hashlib.md5('hello world').digest()
     encoded = b32encode(binline)
-    print encoded
+    print(encoded)
     decoded = b32decode(encoded)
     assert binline == decoded, "Encode and decode values do not match"
 
