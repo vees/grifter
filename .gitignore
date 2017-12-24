@@ -4,3 +4,4 @@ settings.py*
 rmdup.sh
 .spyderworkspace
 db.sqlite3
+env/

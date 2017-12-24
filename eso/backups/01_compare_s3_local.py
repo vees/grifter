@@ -34,13 +34,12 @@ print duration
 import pickle
 pickle.dump(walked, open("walked.p", 'wb'))
 
-
 import boto3
 
 s3 = boto3.resource('s3',
-                    aws_access_key_id=settings.NARTHEX_DO_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.NARTHEX_DO_ACCESS_KEY_SECRET)
-                    endpoint_url='http://objects.dreamhost.com')
+    aws_access_key_id=settings.NARTHEX_DO_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.NARTHEX_DO_ACCESS_KEY_SECRET)
+    endpoint_url='http://objects.dreamhost.com')
 
 for bucket in s3.buckets.all():
     print (bucket.name)
@@ -83,8 +82,8 @@ meta3 = {x[0].replace('/Volumes/Meta2/dreamhost-rsync.sparsebundle',''): x[6] fo
 
 for name,md5 in meta3.iteritems():
     if (hanjin3[name] != md5):
-        print name,md5 
-    
+        print name,md5
+
 #/bands/e0 246cf878a052700a9257d553412bcc1a
 #/bands/75 f8ed2fb8af768fc4fd205d701ad90b6a
 #/bands/76 2a3bd3bb50f5017edf075ef429ce261d
