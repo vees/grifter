@@ -1,12 +1,5 @@
 from django.db import models
 
-#from django.conf import settings
-#from django.core.urlresolvers import reverse
-#
-#from eso.base32 import base32
-#
-#import binascii
-
 ROTATION = (
     (90, '90 CW'),
     (270, '90 CCW'),
@@ -23,11 +16,12 @@ class ContentKey(models.Model):
         return "%s|%s" % (self.id, self.key)
     key = models.CharField(max_length=4, null=False, unique=True)
     '''
-    If you need to create a relationship on a model that has not yet been 
-defined, you can use the name of the model, rather than the model object itself.
-    Can also probably use a OneToOneKey instead of ForeignKey here.
+    If you need to create a relationship on a model that has not yet been
+defined, you can use the name of the model, rather than the model object
+itself. Can also probably use a OneToOneKey instead of ForeignKey here.
     '''
-    canonical = models.OneToOneField('ContentSignature', null=True, related_name='+', unique=True, on_delete=models.PROTECT)
+    canonical = models.OneToOneField('ContentSignature', null=True,
+        related_name='+', unique=True, on_delete=models.PROTECT)
 
 class Tag2(models.Model):
     slug = models.CharField(max_length=32, null=False)
@@ -35,15 +29,17 @@ class Tag2(models.Model):
 
 class Redirect(ContentKey):
     '''
-    If you'd prefer Django didn't create a backwards relation, 
-set related_name to '+'. For example, this will ensure that the User model 
+    If you'd prefer Django didn't create a backwards relation,
+set related_name to '+'. For example, this will ensure that the User model
 won't get a backwards relation to this model:
     '''
-    destination = models.ForeignKey(ContentKey, null=False, related_name='+', on_delete=models.PROTECT)
+    destination = models.ForeignKey(ContentKey, null=False,
+        related_name='+', on_delete=models.PROTECT)
 
 class ContentSignature(models.Model):
     def __unicode__(self):
-        return "%s|%s|%s|%s" % (self.id, self.md5, self.sha2, self.content_size)    
+        return "%s|%s|%s|%s" % (
+            self.id, self.md5, self.sha2, self.content_size)
     def severity(self):
         instances=self.contentinstance_set.count()
         if instances==0:
@@ -60,23 +56,30 @@ class ContentSignature(models.Model):
     md5 = models.CharField(max_length=32)
     sha2 = models.CharField(max_length=64)
     content_size = models.IntegerField()
-    content_key = models.ForeignKey(ContentKey, null=True, on_delete=models.PROTECT)
+    content_key = models.ForeignKey(ContentKey, null=True,
+        on_delete=models.PROTECT)
     tags = models.ManyToManyField(Tag2)
     resiliency = models.IntegerField(choices=RESILIENCY, null=True)
-    derived_from = models.ForeignKey('self', null=True, on_delete=models.PROTECT)
+    derived_from = models.ForeignKey('self', null=True,
+        on_delete=models.PROTECT)
 
 class ContentContainer(models.Model):
+    def __str__(self):
+        return "%s|%s|%s|%s" % (
+            self.id, self.server, self.drive, self.path)
     def __unicode__(self):
-        return "%s|%s|%s|%s" % (self.id, self.server, self.drive, self.path)
+        return u"%s|%s|%s|%s" % (
+            self.id, self.server, self.drive, self.path)
     server = models.CharField(max_length=64)
     drive = models.CharField(max_length=64)
     path = models.CharField(max_length=200)
     class Meta:
         unique_together = ["server", "drive", "path"]
-    
+
 class ContentInstance(models.Model):
     def __unicode__(self):
-        return "%s|%s|%s|%s" % (self.id, self.filename, self.relpath, self.content_signature.id)    
+        return "%s|%s|%s|%s" % (
+            self.id, self.filename, self.relpath, self.content_signature.id)
 #    def __str__(self):
 #        return self.get_local_path()
 #    def get_absolute_url(self):

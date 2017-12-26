@@ -36,17 +36,18 @@ urlpatterns = [
     re_path(r'^random/$', views.random),
     re_path(r'^tags/(?P<slug>[\w:]+)', views.tagbyslug),
     re_path(r'^tags', views.taglist),
-    re_path(r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.page_by_contentkey),  # 
-    re_path(r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.image_by_contentkey),  # 
+    re_path(r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.page_by_contentkey),
+    re_path(r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.image_by_contentkey),
     re_path(r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.page_by_base32),
     re_path(r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.image_by_base32),
-    
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
+
+    path('admin/', admin.site.urls),
+
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
-    #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
     re_path(r'^admin/redundancy/(?P<offset>\d+)', views.redundancy),
     re_path(r'^admin/redundancy/', views.redundancy),
-#    re_path(r'^admin/', include(admin.site.urls)),
 ]

@@ -18,7 +18,7 @@ def hash_parse(filename):
             sha2hash = hashlib.sha256(content).hexdigest()
             return (md5hash,sha2hash)
     except ValueError:
-        return 'No hash'    
+        return 'No hash'
     except IOError:
         return 'Access denied'
 
@@ -53,15 +53,15 @@ def file_dir_stat_size(dirname):
             except OSError:
                 pass
     return matches
-    
+
 def files_and_stat(files):
-    return [(filename,get_stat_hash(filename),get_stat_size(filename)) 
+    return [(filename,get_stat_hash(filename),get_stat_size(filename))
         for filename in files]
 
 if __name__ == "__main__":
     '''This function demonstrates that 50k files run in about 15
-    seconds on my shitty laptop and if you run it and continue
-    the interpreter you'll get a list of all the files and 
+    seconds on my slow laptop and if you run it and continue
+    the interpreter you'll get a list of all the files and
     signed integer representing each'''
     start = datetime.now()
     foo = files_and_stat(files_under_dir("/media/dev/photos"))
