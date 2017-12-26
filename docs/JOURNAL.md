@@ -155,3 +155,35 @@ JSON stuff
 
 serializers.serialize("json", ContentContainer.objects.all())
 https://docs.djangoproject.com/en/1.8/topics/serialization/
+
+
+December 25, 2017
+
+Install atom with
+
+    sudo snap install atom --classic
+
+Not sure why this actually worked. Details [here](
+https://discuss.atom.io/t/detailed-errors-from-the-package-manager-follow-snapd-returned-status-code-400-bad-request/45243/3).
+
+Other links:
+
+* [Atom Basics](http://flight-manual.atom.io/getting-started/sections/atom-basics/)
+* [PEP8](https://pypi.python.org/pypi/pep8)
+* [venv and pip freeze](https://docs.python.org/3/tutorial/venv.html)
+* [Django coding style](https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/)
+* [Preference for OneToOneField](https://docs.djangoproject.com/en/2.0/topics/db/models/#one-to-one-relationships) (see commit id b168d39e2b)
+* [Working with argparse in commands](https://docs.python.org/3/library/argparse.html#type)
+* [python-indent package](https://atom.io/packages/python-indent)
+* [Atom has a built in tool for this](https://stackoverflow.com/questions/41848002/how-to-replace-tabs-with-spaces-in-atom)
+* [Can't reference packages that look like octal numbers](https://stackoverflow.com/questions/36386346/syntaxerror-invalid-token)
+* [StringIO and ByteIO](https://stackoverflow.com/questions/11914472/stringio-in-python3) (see commit 1519834ed0)
+* [Writing custom commands](https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/)
+
+sqlite didn't work because the 3.6.3 version I compiled did its configuration before it was loaded in the system in general.
+
+    sudo apt-get install libsqlite3-dev
+
+More details: https://github.com/sloria/TextBlob/issues/173
+
+* [The Django admin site](https://docs.djangoproject.com/en/2.0/ref/contrib/admin/)
