@@ -79,7 +79,7 @@ def get_hostname():
 def files_under_dir(dirname):
     # Great example from http://stackoverflow.com/a/2186565/682915
     matches = []
-    # Tuple is returned here, we just ignore dirnames because os.walk 
+    # Tuple is returned here, we just ignore dirnames because os.walk
     # is following those on its own
     for root, dirnames, filenames in os.walk(dirname):
         for filename in filenames:
@@ -92,19 +92,19 @@ def files_under_dir_2(dirname):
     """
     # Great example from http://stackoverflow.com/a/2186565/682915
     matches = []
-    # Tuple is returned here, we just ignore dirnames because os.walk 
+    # Tuple is returned here, we just ignore dirnames because os.walk
     # is following those on its own
     stats_total = 0
     stats_ignored = 0
-    stats_updated = 0 
+    stats_updated = 0
     stats_inserted = 0
     try:
         for root, dirnames, filenames in os.walk(dirname):
             for filename in filenames:
                 matches.append([root,filename])
                 stats_total = len(matches)
-        compare_list = {os.path.join(os.path.relpath(root,dirname),filename): 
-            [dirname,os.path.relpath(root,dirname),filename,get_stat_hash(os.path.join(root,filename))] 
+        compare_list = {os.path.join(os.path.relpath(root,dirname),filename):
+            [dirname,os.path.relpath(root,dirname),filename,get_stat_hash(os.path.join(root,filename))]
             for root,filename in matches}
         mfiles = MasterFile.objects.filter(base_directory=dirname)
         for mfile in mfiles:
@@ -197,7 +197,7 @@ def report_duplicates_2():
 	dc=DuplicateCounter.DuplicateCounter()
 	for duplicate in duplicates:
 		dc.add([m.directory for m in MasterFile.objects.filter(hash_sha2=duplicate["hash_sha2"])])
-	dc.results()	
+	dc.results()
 	return None
 
 def main():

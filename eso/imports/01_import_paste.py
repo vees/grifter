@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jul  4 17:48:13 2015
-
 @author: rob
 """
 
@@ -32,7 +31,8 @@ duration = end-start
 print(duration)
 #--or--
 import pickle
-walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/veesprod-walked.p", "rb" ) )
+walked = pickle.load( open( "/home/rob/Dropbox/NarthexDatabases/"
+    "veesprod-walked.p", "rb" ) )
 #--or--
 
 import pickle
@@ -54,7 +54,7 @@ for walkunit in walked:
     if (n % 1000 == 0):
         print(n)
     cs, createds = ContentSignature.objects.get_or_create(
-        md5=walkunit[6], sha2=walkunit[7], 
+        md5=walkunit[6], sha2=walkunit[7],
         content_size=walkunit[5])
     ci, createdi = ContentInstance.objects.get_or_create(
         filename = walkunit[2],
@@ -63,8 +63,8 @@ for walkunit in walked:
         stat_hash=walkunit[4],
         content_signature=cs)
     print("Sig",createds,"Instance", createdi,walkunit[2])
-    
-    
+
+
 #https://docs.djangoproject.com/en/dev/topics/db/queries/#following-relationships-backward
 ContentSignature.objects.all()[1].contentinstance_set.all()
 ContentSignature.objects.filter(n_contentinstance__gt=1)
@@ -153,8 +153,8 @@ for sig in cs:
         sig.save()
     except django.db.utils.IntegrityError:
         print("duplicate key %s for sig id %s" % (newkey, cs.id))
-        continue        
-    
+        continue
+
 # Blow away content keys
 #
 #import os
@@ -195,7 +195,7 @@ walked = walk.file_dir_stat_size(test_path)
 #('/home/veesprod/vees.net/photos/rickettsglen15/IMG_2211.JPG', '/home/veesprod/vees.net/photos/rickettsglen15', 'IMG_2211.JPG', '.', 140071267384044659, 7431398, 'd7be8bb8cbd0342a0fed1765e47d8edb', '21712f2df91a39da7601cfdf4aff1780ed00a7f23a6801c1b1d84966d107205e')
 
 # Just need to either change walkunit[3] to rickettsglen15 in situ
-# or modify the import function accordingly. Method 1 seems easier, 
+# or modify the import function accordingly. Method 1 seems easier,
 # except that they are tuples so the following doesn't work
 
 #for walkunit in walked:
@@ -215,7 +215,7 @@ for walkunit in walked:
     if (n % 1000 == 0):
         print(n)
     cs, createds = ContentSignature.objects.get_or_create(
-        md5=walkunit[6], sha2=walkunit[7], 
+        md5=walkunit[6], sha2=walkunit[7],
         content_size=walkunit[5])
     ci, createdi = ContentInstance.objects.get_or_create(
         filename = walkunit[2],
@@ -237,12 +237,12 @@ for walkunit in walked:
 # Give everything a content key (accession number)
 
 #>>> from exo.models import Tag2
-#>>> 
+#>>>
 #>>> def tagrelpath(tag,relpath):
 #...     t,created=Tag2.objects.get_or_create(slug=tag)
 #...     for sig in ContentSignature.objects.filter(contentinstance__relpath=relpath):
 #...         sig.tags.add(t)
-#... 
+#...
 #>>> tagrelpath('rickettsglen','rickettsglen15')
 #>>> tagrelpath('pennsylvania','rickettsglen15')
 #>>> tagrelpath('by:cindycarlson','rickettsglen15')

@@ -14,12 +14,14 @@ django.setup()
 
 from exo.models import ContentInstance, ContentContainer, ContentSignature
 
-signatures=ContentSignature.objects.annotate(
-    content_instance_count=Count('contentinstance')).filter(content_instance_count=0)
+signatures=ContentSignature.objects
+    .annotate(content_instance_count=Count('contentinstance'))
+    .filter(content_instance_count=0)
 
 signatures = ContentSignature.objects.select_related(
-    'content_key').prefetch_related('contentinstance_set').prefetch_related('contentinstance_set__content_container').annotate(
-    content_instance_count=Count(
-    'contentinstance')).order_by('content_instance_count')
+    'content_key').prefetch_related('contentinstance_set')
+        .prefetch_related('contentinstance_set__content_container')
+        .annotate(content_instance_count=Count('contentinstance'))
+        .order_by('content_instance_count')
 
 signatures.first().severity()

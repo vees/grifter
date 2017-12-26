@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-import eso.imports.load_masterfile 
+import eso.imports.load_masterfile
 
 class Command(BaseCommand):
 	args = '<directory>'
