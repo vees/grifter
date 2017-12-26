@@ -12,6 +12,8 @@ RESILIENCY = (
 )
 
 class ContentKey(models.Model):
+    def __str__(self):
+        return "%s|%s" % (self.id, self.key)
     def __unicode__(self):
         return "%s|%s" % (self.id, self.key)
     key = models.CharField(max_length=4, null=False, unique=True)
@@ -37,6 +39,9 @@ won't get a backwards relation to this model:
         related_name='+', on_delete=models.PROTECT)
 
 class ContentSignature(models.Model):
+    def __str__(self):
+        return "%s|%s|%s|%s" % (
+            self.id, self.md5, self.sha2, self.content_size)
     def __unicode__(self):
         return "%s|%s|%s|%s" % (
             self.id, self.md5, self.sha2, self.content_size)
@@ -77,6 +82,9 @@ class ContentContainer(models.Model):
         unique_together = ["server", "drive", "path"]
 
 class ContentInstance(models.Model):
+    def __str__(self):
+        return "%s|%s|%s|%s" % (
+            self.id, self.filename, self.relpath, self.content_signature.id)
     def __unicode__(self):
         return "%s|%s|%s|%s" % (
             self.id, self.filename, self.relpath, self.content_signature.id)
