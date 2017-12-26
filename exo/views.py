@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from io import StringIO
+import io
 import binascii
 import pprint
 
@@ -50,7 +51,7 @@ returns a page containing an image url"""
     # http://stackoverflow.com/a/2118712/682915
     instance = ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first()
     if instance:
-        key = content_signature.content_key.key
+        key = instance.content_signature.content_key.key
     else:
         return HttpResponse("No valid instances to show you, add some content first")
     return HttpResponseRedirect("/%s/" % key)
@@ -83,7 +84,7 @@ def page_by_contentkey(request, contentkey):
     untagged = ContentSignature.objects.annotate(tags_count=Count('tags')).filter(tags_count=0).filter(contentinstance__content_container=settings.NARTHEX_CONTAINER_ID)
     nextuntagged = untagged.exclude(content_key__key=contentkey).order_by('contentinstance__relpath','contentinstance__filename').first().content_key.key
     untaggedremain = untagged.count()
-    context = RequestContext(request, {
+    context = {
         'nextuntagged': nextuntagged,
         'untaggedremain': untaggedremain,
         'signature': sig,
@@ -94,7 +95,7 @@ def page_by_contentkey(request, contentkey):
         'description': description,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
         'imagesource': '/file/%s/' % contentkey,
-        'exifdata': exifdata })
+        'exifdata': exifdata }
     return HttpResponse(template.render(context))
 
 def image_by_contentkey(request, contentkey):
@@ -219,7 +220,7 @@ def image_it(path_to_original, rotation=0):
         im=im.rotate(rotation)
     size = 1024,1024,180
     im.thumbnail(size, Image.ANTIALIAS)
-    buf= StringIO.StringIO()
+    buf= io.BytesIO()
     im.save(buf, format= 'JPEG')
     return buf.getvalue()
 
@@ -232,7 +233,7 @@ def remaining_id_space(request):
     total=22**3*10*4
     used=ContentKey.objects.all().count()
     remaining=total-used
-    capacity=int(ContentKey.objects.all().count()/(float(total))*100)   
+    capacity=int(ContentKey.objects.all().count()/(float(total))*100)
     payload={'total': total, 'used': used, 'remaining': remaining, 'capacity': capacity}
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
@@ -275,7 +276,7 @@ def api_action(request, contentkey, action, attribute=''):
             addtag(contentkey,attribute)
     except:
         pass
-    
+
     payload=(contentkey, action, attribute)
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
@@ -307,7 +308,7 @@ def api_tagload(request):
         for sha2 in set(shalist) - sha2ignore:
             sig=ContentSignature.objects.filter(sha2=sha2).first()
             if not sig:
-                nomatch+=1                
+                nomatch+=1
             else:
                 sig.tags.add(t)
                 sig.save()
@@ -363,6 +364,6 @@ def tagbyslug(request,slug):
         raise Http404
     template = loader.get_template("tags.html")
     context = RequestContext(request, {
-        'slug': slug,        
+        'slug': slug,
         'tagdict': tagdict })
     return HttpResponse(template.render(context))

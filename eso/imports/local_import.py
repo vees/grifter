@@ -7,6 +7,8 @@ import os
 import socket
 from eso.imports import walk
 from exo.models import ContentInstance, ContentContainer, ContentSignature
+from exo.models import ContentKey
+import eso.base32.randspace
 
 def walk_card(path):
     from datetime import datetime
@@ -18,7 +20,6 @@ def walk_card(path):
     return walked
 
 def data_load(walked, server, drive, path):
-    #server="love", drive="8909006990", path='/Volumes/8909006990'
     # Keep track of files walked in n and report every 1000 with the modulo
     n=0
     c, created = ContentContainer.objects.get_or_create(
@@ -38,7 +39,23 @@ def data_load(walked, server, drive, path):
             content_signature=cs)
         print("Sig",createds,"Instance", createdi,walkunit[2])
 
+def grant_keys():
+    cs = ContentSignature.objects.filter(content_key=None)
+    for sig in cs:
+        try:
+            duplicate_key=1
+            while duplicate_key>0:
+                newkey=eso.base32.randspace.randid()
+                duplicate_key=ContentKey.objects.filter(key=newkey).count()
+            ck = ContentKey.objects.create(key=newkey)
+            sig.content_key=ck
+            sig.save()
+        except django.db.utils.IntegrityError:
+            print("duplicate key %s for sig id %s" % (newkey, cs.id))
+            continue
+
 def load_dir(path):
     servername = socket.gethostname()
     walked=walk_card(path)
     data_load(walked, servername, servername, path)
+    grant_keys()
