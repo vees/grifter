@@ -358,9 +358,9 @@ def taglist(request):
     except:
         raise Http404
     template = loader.get_template("alltags.html")
-    context = RequestContext(request, {
+    context = {
         'toptags': toptags,
-        'alltags': alltags })
+        'alltags': alltags }
     return HttpResponse(template.render(context))
 
 def tagbyslug(request,slug):
@@ -369,7 +369,7 @@ def tagbyslug(request,slug):
     except:
         raise Http404
     template = loader.get_template("tags.html")
-    context = RequestContext(request, {
+    context = {
         'slug': slug,
-        'tagdict': tagdict })
+        'tagdict': tagdict }
     return HttpResponse(template.render(context))
