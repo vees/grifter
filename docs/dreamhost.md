@@ -89,27 +89,16 @@ calling:
     from __future__ import print_function
     import sys, os
     cwd = os.getcwd()
-    sys.path.append(cwd)
-    sys.path.append(os.getcwd()+"/foo")
+    sys.path.append(os.getcwd()+"/env")
+    sys.path.append(os.getcwd()+"/narthex")
 
-
-    #INTERP = "/home/robvees/opt/python-3.6.3/bin/python3.6"
-    INTERP = "/home/robvees/newproject/test/bin/python3"
-
-    #sys.stdout=open("/home/robvees/log.txt","a")
-    #print("hello")
-
-    #if sys.hexversion < 0x2060000: os.execl(INTERP, "python3.6", *sys.argv)
+    INTERP = "/home/robvees/dev.vees.net/env/bin/python3"
 
     if sys.executable != INTERP:
-    	os.execl(INTERP, INTERP, *sys.argv)
+        os.execl(INTERP, INTERP, *sys.argv)
     else:
-    	#raise Exception(sys.path)
+        #raise Exception(sys.path)
        pass
-
-    #def application(environ, start_response):
-    #    start_response('200 OK', [('Content-type', 'text/plain')])
-    #    return ["Hello, world!", sys.executable, sys.argv]
 
     def application(environ, start_response):
         status = '200 OK'
@@ -119,15 +108,46 @@ calling:
         start_response(status, response_headers)
         return [output]
 
-    #raise Exception(sys.executable)
-    #raise Exception(sys.path)
-
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "foo.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exo.settings")
 
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
 
-    #import django.core.handlers.wsgi
-    #application = django.core.handlers.wsgi.WSGIHandler()
+# Static deploys
 
-    #raise Exception(sys.path)
+    STATIC_ROOT = '/home/robvees/dev.vees.net/public/static/'
+
+    $ python3 manage.py collectstatic
+    118 static files copied to '/home/robvees/dev.vees.net/public/static'.
+
+# Template location
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [ "/home/robvees/dev.vees.net/narthex/templates/exonarthex" ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
+
+
+# Settings
+
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+
+# Initial photo import
+
+Use the management function as follows:
+
+    python3 manage.py loadphotos /path/to/photos
