@@ -74,15 +74,21 @@ def page_by_contentkey(request, contentkey):
         except:
                 del exifhash[key]
     exifdata = pprint.pformat(exifhash, indent=1, width=50, depth=1)
-    pagetags = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first().tags.all().order_by('slug')
+    pagetags = ContentKey.objects.filter(
+        key=contentkey).first().contentsignature_set.all().first().tags.all().order_by('slug')
     description = " ".join([tag.slug for tag in pagetags])
     if not description:
         description = filename
     alltags = Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     commontags = Tag2.objects.filter(contentsignature__contentinstance__relpath=zerothfile.relpath).annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     template = loader.get_template("meta.html")
-    untagged = ContentSignature.objects.annotate(tags_count=Count('tags')).filter(tags_count=0).filter(contentinstance__content_container=settings.NARTHEX_CONTAINER_ID)
-    nextuntagged = untagged.exclude(content_key__key=contentkey).order_by('contentinstance__relpath','contentinstance__filename').first().content_key.key
+    untagged = ContentSignature.objects.annotate(tags_count=Count(
+        'tags')).filter(tags_count=0).filter(contentinstance__content_container=settings.NARTHEX_CONTAINER_ID)
+    try:
+        nextuntagged = untagged.exclude(content_key__key=contentkey).order_by(
+            'contentinstance__relpath','contentinstance__filename').first().content_key.key
+    except AttributeError:
+        nextuntagged = None
     untaggedremain = untagged.count()
     context = {
         'nextuntagged': nextuntagged,
