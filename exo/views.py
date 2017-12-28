@@ -16,6 +16,7 @@ from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from exo.models import ContentKey, ContentInstance, ContentSignature, Picture, Tag2
 from eso.base32 import base32
@@ -54,7 +55,7 @@ returns a page containing an image url"""
         key = instance.content_signature.content_key.key
     else:
         return HttpResponse("No valid instances to show you, add some content first")
-    return HttpResponseRedirect("/%s/" % key)
+    return HttpResponseRedirect(reverse('page_by_contentkey', kwargs={'contentkey': key}))
 
 def page_by_contentkey(request, contentkey):
     try:
@@ -100,7 +101,7 @@ def page_by_contentkey(request, contentkey):
         'contentkey': contentkey,
         'description': description,
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
-        'imagesource': '/file/%s/' % contentkey,
+        'imagesource': reverse('image_by_contentkey', kwargs={'contentkey': contentkey}),
         'exifdata': exifdata }
     return HttpResponse(template.render(context))
 

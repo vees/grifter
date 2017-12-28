@@ -36,8 +36,8 @@ urlpatterns = [
     re_path(r'^random/$', views.random),
     re_path(r'^tags/(?P<slug>[\w:]+)', views.tagbyslug),
     re_path(r'^tags', views.taglist),
-    re_path(r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.page_by_contentkey),
-    re_path(r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.image_by_contentkey),
+    re_path(r'^(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.page_by_contentkey, name='page_by_contentkey'),
+    re_path(r'^file/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$', views.image_by_contentkey, name='image_by_contentkey'),
     re_path(r'^meta/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.page_by_base32),
     re_path(r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$', views.image_by_base32),
 
