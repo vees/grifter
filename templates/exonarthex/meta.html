@@ -61,11 +61,11 @@ img { border-style: solid; color: #000; }
 
 <div id="pictureframe">
 <p>
-{% if user.is_authenticated %}
+{% if request.user.is_authenticated %}
 <a href="/{{nextuntagged}}/">
 {% endif %}
 <img src="{{imagesource}}">
-{% if user.is_authenticated %}
+{% if request.user.is_authenticated %}
 </a>
 {% endif %}
 </p>
@@ -80,7 +80,7 @@ Tags: <ul>
 <p>SHA2: {{signature.sha2}}</p>
 
 
-{% if user.is_authenticated %}
+{% if request.user.is_authenticated %}
 
 <p>
 <a href="/{{nextuntagged}}/">Next Untagged</a> {{untaggedremain}}

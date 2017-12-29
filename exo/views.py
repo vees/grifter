@@ -10,7 +10,7 @@ from PIL import Image
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.template import RequestContext, loader
+from django.template import RequestContext, Template, loader
 from django.conf import settings
 from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
@@ -103,7 +103,7 @@ def page_by_contentkey(request, contentkey):
         'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
         'imagesource': reverse('image_by_contentkey', kwargs={'contentkey': contentkey}),
         'exifdata': exifdata }
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(context, request))
 
 def image_by_contentkey(request, contentkey):
     try:
@@ -362,7 +362,7 @@ def taglist(request):
     context = {
         'toptags': toptags,
         'alltags': alltags }
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(context, request))
 
 def tagbyslug(request,slug):
     try:
@@ -373,4 +373,4 @@ def tagbyslug(request,slug):
     context = {
         'slug': slug,
         'tagdict': tagdict }
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(context, request))
