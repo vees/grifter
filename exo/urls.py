@@ -22,7 +22,7 @@ from . import views
 
 urlpatterns = [
     # Example:
-    re_path(r'^$', views.random),
+    re_path(r'^$', views.random, name="main_page"),
     re_path(r'^api/new/id$', views.new_id),
     re_path(r'^api/id/space$', views.remaining_id_space),
     re_path(r'^api/export$', views.export),

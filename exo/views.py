@@ -82,17 +82,25 @@ def page_by_contentkey(request, contentkey):
         description = filename
     alltags = Tag2.objects.annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
     commontags = Tag2.objects.filter(contentsignature__contentinstance__relpath=zerothfile.relpath).annotate(tagged_sig=Count('contentsignature')).order_by('-tagged_sig')
-    template = loader.get_template("meta.html")
     untagged = ContentSignature.objects.annotate(tags_count=Count(
         'tags')).filter(tags_count=0).filter(contentinstance__content_container=settings.NARTHEX_CONTAINER_ID)
     try:
         nextuntagged = untagged.exclude(content_key__key=contentkey).order_by(
             'contentinstance__relpath','contentinstance__filename').first().content_key.key
+        nextuntaggedurl = reverse('page_by_contentkey', kwargs={'contentkey': nextuntagged})
     except AttributeError:
-        nextuntagged = None
+        nextuntaggedurl = reverse('main_page')
+    try:
+        randomkey = (ContentInstance.objects
+            .filter(content_container=settings.NARTHEX_CONTAINER_ID)
+            .order_by('?')
+            .first().content_signature.content_key.key)
+        destination = reverse('page_by_contentkey', kwargs={'contentkey': randomkey})
+    except AttributeError:
+        destination = reverse('main_page')
     untaggedremain = untagged.count()
     context = {
-        'nextuntagged': nextuntagged,
+        'nextuntagged': nextuntaggedurl,
         'untaggedremain': untaggedremain,
         'signature': sig,
         'commontags': commontags,
@@ -100,9 +108,10 @@ def page_by_contentkey(request, contentkey):
         'alltags': alltags,
         'contentkey': contentkey,
         'description': description,
-        'destination': '/%s/' % ContentInstance.objects.filter(content_container=settings.NARTHEX_CONTAINER_ID).order_by('?').first().content_signature.content_key.key,
+        'destination': destination,
         'imagesource': reverse('image_by_contentkey', kwargs={'contentkey': contentkey}),
         'exifdata': exifdata }
+    template = loader.get_template("meta.html")
     return HttpResponse(template.render(context, request))
 
 def image_by_contentkey(request, contentkey):
@@ -147,12 +156,12 @@ def image_by_contentkey(request, contentkey):
 def page_by_base32(request, base32md5):
     cs=ContentSignature.objects.get(md5=binascii.hexlify(base32.b32decode(base32md5)))
     key=cs.content_key.key
-    return HttpResponseRedirect("/%s/" % key)
+    return HttpResponseRedirect(reverse('page_by_contentkey', kwargs={'contentkey': key}))
 
 def image_by_base32(request, base32md5):
     cs=ContentSignature.objects.get(md5=binascii.hexlify(base32.b32decode(base32md5)))
     key=cs.content_key.key
-    return HttpResponseRedirect("/file/%s/" % key)
+    return HttpResponseRedirect(reverse('image_by_contentkey', kwargs={'contentkey': key}))
 
 #def privacy_unchecked(request):
 #    batchsize=24
@@ -287,7 +296,6 @@ def api_action(request, contentkey, action, attribute=''):
     payload=(contentkey, action, attribute)
     response=json.dumps(payload, indent=4)
     return HttpResponse(response, content_type="application/json")
-#    return HttpResponseRedirect("/%s/" % contentkey)
 
 def api_tagdump(request):
     tagdump = dict([(t.slug, [s.sha2 for s in t.contentsignature_set.all()]) for t in Tag2.objects.order_by('slug')])
