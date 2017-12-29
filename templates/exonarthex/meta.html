@@ -63,7 +63,7 @@ img { border-style: solid; color: #000; }
 <div id="pictureframe">
 <p>
 {% if request.user.is_authenticated %}
-<a href="/{{nextuntagged}}/">
+<a href="{{nextuntagged}}">
 {% endif %}
 <img src="{{imagesource}}">
 {% if request.user.is_authenticated %}
@@ -74,7 +74,7 @@ img { border-style: solid; color: #000; }
 <p>Description: {{description}}</p>
 Tags: <ul>
 {% for tag in pagetags %}
-<li><strong><a href="/tags/{{tag.slug}}">{{tag.slug}}</a></strong>
+<li><strong><a href="{% url 'tags_by_slug' tag.slug %}">{{tag.slug}}</a></strong>
 {% endfor %}
 </ul>
 <p>MD5: {{signature.md5}}</p>
@@ -89,23 +89,19 @@ Tags: <ul>
 </p>
 
 <ul>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/0/">0</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/90/">90</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/180/">180</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rotate/270/">270</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/0/">0</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/1/">1</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/2/">2</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/3/">3</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/4/">4</a>
-<li><a class="apiclick" href="/api/photo/{{contentkey}}/rating/5/">5</a>
+{% for rotation in rotationrange %}
+<a class="apiclick" href="{% url 'api_numeric_action' contentkey=contentkey action="rotate" attribute=rotation %}">{{rotation}}</a>
+{% endfor %}
+{% for rating in ratingrange %}
+<a class="apiclick" href="{% url 'api_numeric_action' contentkey=contentkey action="rate" attribute=rating %}">{{rating}}</a>
+{% endfor %}
 </ul>
 
 <ul>
 {% for tag in commontags %}
 <li>
 {% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
-<a class="apiclick" href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+<a class="apiclick" href="{% url 'api_alpha_action' contentkey=contentkey action="tag" attribute=tag.slug %}">{{tag.slug}}</a>
 </li>
 {% endfor %}
 </ul>
@@ -114,7 +110,7 @@ Tags: <ul>
 {% for tag in alltags %}
 <li>
 {% ifchanged %}({{ tag.tagged_sig }}){% endifchanged %}
-<a class="apiclick" href="/api/photo/{{contentkey}}/tag/{{tag.slug}}/">{{tag.slug}}</a>
+<a class="apiclick" href="{% url 'api_alpha_action' contentkey=contentkey action="tag" attribute=tag.slug %}">{{tag.slug}}</a>
 </li>
 {% endfor %}
 </ul>
@@ -126,9 +122,7 @@ Tags: <ul>
 -->
 </ul>
 
-
-
-<form action="/api/photo/{{contentkey}}/tag/" method="get">
+<form action="{% url 'api_bare_action' contentkey=contentkey action="tag" %}" method="get">
 <input name="attribute"> <input type="submit">
 </form>
 

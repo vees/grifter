@@ -26,6 +26,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
 
+ROTATION = (
+    (90, '90 CW'),
+    (270, '90 CCW'),
+    (0, 'None'),
+    (180, '180'),
+)
+
+
 @login_required
 def redundancy(request, offset=1):
     allsignatures = ContentSignature.objects.select_related(
@@ -110,7 +118,10 @@ def page_by_contentkey(request, contentkey):
         'description': description,
         'destination': destination,
         'imagesource': reverse('image_by_contentkey', kwargs={'contentkey': contentkey}),
-        'exifdata': exifdata }
+        'exifdata': exifdata,
+        'ratingrange': range(0,6),
+        'rotationrange': sorted([x[0] for x in ROTATION]),
+        }
     template = loader.get_template("meta.html")
     return HttpResponse(template.render(context, request))
 
