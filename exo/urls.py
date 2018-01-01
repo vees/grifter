@@ -34,7 +34,7 @@ urlpatterns = [
         r'/(?P<action>\w+)/(?P<attribute>[0-9]+)/',
         views.api_action, name="api_numeric_action"),
     re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})'
-        r'/(?P<action>\w+)/(?P<attribute>[\w,]+)/',
+        r'/(?P<action>\w+)/(?P<attribute>[\w:,]+)/',
         views.api_action, name="api_alpha_action"),
     re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})'
         r'/(?P<action>\w+)/',
