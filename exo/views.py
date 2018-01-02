@@ -25,7 +25,10 @@ from eso.base32 import randspace
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
+import smartcrop
 
+# Duplicated from the models class but should be consolidated
+# into a single code location in settings
 ROTATION = (
     (90, '90 CW'),
     (270, '90 CCW'),
@@ -141,6 +144,22 @@ def image_by_contentkey(request, contentkey):
         content_type="image/jpeg"
         )
 
+def crop_by_contentkey(request, contentkey):
+    try:
+        sig = ContentKey.objects.filter(key=contentkey).first().contentsignature_set.all().first()
+        zerothfile=sig.contentinstance_set.filter(content_container=settings.NARTHEX_CONTAINER_ID).first()
+        filename = "/".join([zerothfile.content_container.path,zerothfile.relpath,zerothfile.filename])
+        rotation=0
+        if hasattr(sig, 'picture'):
+            if (hasattr(sig.picture, 'rotation') and sig.picture.rotation!=None):
+                rotation=360-sig.picture.rotation
+    except IOError:
+        filename="File not found"
+    return HttpResponse(
+        thumbnail_it(filename, rotation=rotation),
+        content_type="image/jpeg"
+        )
+
 #def page_by_base32(request, base32md5):
 #    """Return a page with an image link by base32md5 and a link back to / URL
 #for another load"""
@@ -233,13 +252,26 @@ def thumbnail(request, image_id):
 #        content_type="image/jpeg"
 #        )
 
-def thumbnail_it(path_to_original):
+def thumbnail_it(path_to_original, rotation=0):
+    sc = smartcrop.SmartCrop()
+    crop_options = smartcrop.DEFAULTS
+    crop_options['width'] = 300
+    crop_options['height'] = 300
     im = Image.open(path_to_original)
-    size = 240,180
-    im.thumbnail(size, Image.ANTIALIAS)
-    buf= StringIO.StringIO()
-    im.save(buf, format= 'JPEG')
+    if rotation!=0:
+        im=im.rotate(rotation)
+    ret = sc.crop(im, crop_options)
+    box = (ret['topCrop']['x'],
+        ret['topCrop']['y'],
+        ret['topCrop']['width'] + ret['topCrop']['x'],
+        ret['topCrop']['height'] + ret['topCrop']['y'])
+    im = Image.open(path_to_original)
+    img2 = im.crop(box)
+    img2.thumbnail((300, 300), Image.ANTIALIAS)
+    buf= io.BytesIO()
+    img2.save(buf, format='JPEG')
     return buf.getvalue()
+
 
 def image_it(path_to_original, rotation=0):
     im = Image.open(path_to_original)

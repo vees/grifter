@@ -21,8 +21,9 @@ from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
-    # Example:
-    re_path(r'^$', views.random, name="main_page"),
+
+    # API SECTION
+
     re_path(r'^api/new/id$', views.new_id),
     re_path(r'^api/id/space$', views.remaining_id_space),
     re_path(r'^api/export$', views.export),
@@ -39,6 +40,10 @@ urlpatterns = [
     re_path(r'^api/photo/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})'
         r'/(?P<action>\w+)/',
         views.api_action, name="api_bare_action"),
+
+    # Main pages
+
+    re_path(r'^$', views.random, name="main_page"),
     re_path(r'^random/$', views.random),
     re_path(r'^tags/(?P<slug>[\w:]+)',
         views.tagbyslug, name='tags_by_slug'),
@@ -52,14 +57,11 @@ urlpatterns = [
         views.page_by_base32),
     re_path(r'^file/(?P<base32md5>[0123456789abcdefghjkmnpqrstvwxyz]{7,32})$',
         views.image_by_base32),
+    re_path(r'^crop/(?P<contentkey>[0123456789abcdefghjkmnpqrstvwxyz]{4})/$',
+        views.crop_by_contentkey, name='crop_by_contentkey'),
+    # Admin pages
 
     path('admin/', admin.site.urls),
-
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
-    # to INSTALLED_APPS to enable admin documentation:
-    # path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     re_path(r'^admin/redundancy/(?P<offset>\d+)', views.redundancy),
     re_path(r'^admin/redundancy/', views.redundancy),
 ]
